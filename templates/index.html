@@ -167,30 +167,30 @@
         
         /* Стили для профиля */
         .profile-header {
-            margin-bottom: 20px;
-            padding-top: 10px;
+            margin-bottom: 25px;
+            padding-top: 5px;
         }
         
         .profile-welcome {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 2px;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
             color: var(--tg-theme-text-color, #ffffff);
         }
         
         .profile-subtitle {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--tg-theme-hint-color, #888);
         }
         
         .profile-section {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .profile-title {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             color: var(--tg-theme-text-color, #ffffff);
         }
         
@@ -198,8 +198,8 @@
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border: 1px solid var(--tg-theme-hint-color, #333);
             border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
             transition: all 0.2s;
         }
         
@@ -210,9 +210,9 @@
         
         .input-label {
             display: block;
-            font-size: 12px;
+            font-size: 13px;
             color: var(--tg-theme-hint-color, #888);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-weight: 500;
         }
         
@@ -221,7 +221,7 @@
             background: transparent;
             border: none;
             color: var(--tg-theme-text-color, #ffffff);
-            font-size: 14px;
+            font-size: 15px;
             outline: none;
             padding: 0;
         }
@@ -234,15 +234,15 @@
         .center-blocks {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 20px 0;
+            gap: 15px;
+            margin: 25px 0;
         }
         
         .center-block {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border: 1px solid var(--tg-theme-hint-color, #333);
             border-radius: 12px;
-            padding: 18px;
+            padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
@@ -254,19 +254,19 @@
         }
         
         .block-icon {
-            font-size: 22px;
-            margin-bottom: 6px;
+            font-size: 24px;
+            margin-bottom: 8px;
         }
         
         .block-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--tg-theme-text-color, #ffffff);
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
         
         .block-description {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--tg-theme-hint-color, #888);
         }
         
@@ -296,23 +296,6 @@
             color: var(--tg-theme-hint-color, #888);
             font-size: 14px;
             line-height: 1.4;
-            text-align: center;
-        }
-
-        /* Новый стиль для заголовка с логотипом */
-        .app-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
-        }
-        
-        .app-logo {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--tg-theme-text-color, #ffffff);
-            flex: 1;
             text-align: center;
         }
 
@@ -495,14 +478,9 @@
             width: 100%;
         }
 
-        /* Стиль для GoshaStore.com */
-        .store-url {
-            text-align: center;
-            color: var(--tg-theme-hint-color, #888);
-            font-size: 14px;
-            margin-bottom: 20px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
+        /* Убрали лишние отступы в профиле */
+        .profile-page-content {
+            margin-top: -10px;
         }
     </style>
 </head>
@@ -547,54 +525,67 @@
 
     <!-- Страница профиля -->
     <div id="profile-page" class="page">
-        <!-- GoshaStore.com вверху -->
-        <div class="store-url">GoshaStore.com</div>
-        
-        <!-- Приветствие -->
-        <div class="profile-header">
-            <div class="profile-welcome" id="profile-welcome">Привет!</div>
-            <div class="profile-subtitle">Рады тебя видеть</div>
-        </div>
-        
-        <!-- Данные от аккаунта -->
-        <div class="profile-section">
-            <div class="profile-title">Данные от аккаунта</div>
-            
-            <div class="input-card">
-                <label class="input-label">Ваша почта</label>
-                <input type="email" class="input-field" id="user-email" placeholder="example@gmail.com" oninput="autoSaveData()">
+        <div class="profile-page-content">
+            <!-- Приветствие -->
+            <div class="profile-header">
+                <div class="profile-welcome" id="profile-welcome">Привет, Gosha!</div>
+                <div class="profile-subtitle">Рады тебя видеть</div>
             </div>
             
-            <div class="input-card">
-                <label class="input-label">Пароль</label>
-                <input type="password" class="input-field" id="user-password" placeholder="Введите пароль" oninput="autoSaveData()">
+            <!-- Данные от аккаунта -->
+            <div class="profile-section">
+                <div class="profile-title">Данные от аккаунта</div>
+                
+                <div class="input-card">
+                    <label class="input-label">Ваша почта</label>
+                    <input type="email" class="input-field" id="user-email" placeholder="example@gmail.com" oninput="autoSaveData()">
+                </div>
+                
+                <div class="input-card">
+                    <label class="input-label">Пароль</label>
+                    <input type="password" class="input-field" id="user-password" placeholder="Введите пароль" oninput="autoSaveData()">
+                </div>
             </div>
-            
-            <div class="input-card">
-                <label class="input-label">2FA Коды (если есть)</label>
-                <input type="text" class="input-field" id="user-2fa" placeholder="Коды двухфакторной аутентификации" oninput="autoSaveData()">
-            </div>
-        </div>
 
-        <!-- Центральные блоки -->
-        <div class="center-blocks">
-            <div class="center-block" onclick="showHistory()">
-                <div class="block-icon">📋</div>
-                <div class="block-title">История</div>
-                <div class="block-description">Ваши заказы</div>
+            <!-- 2FA Коды -->
+            <div class="profile-section">
+                <div class="profile-title">2FA Коды (если есть)</div>
+                
+                <div class="input-card">
+                    <input type="text" class="input-field" id="user-2fa" placeholder="Коды двухфакторной аутентификации" oninput="autoSaveData()">
+                </div>
             </div>
-            
-            <div class="center-block" onclick="openNewsChannel()">
-                <div class="block-icon">📢</div>
-                <div class="block-title">Новости</div>
-                <div class="block-description">Наш канал</div>
+
+            <!-- Центральные блоки -->
+            <div class="center-blocks">
+                <div class="center-block" onclick="showHistory()">
+                    <div class="block-icon">📋</div>
+                    <div class="block-title">История</div>
+                    <div class="block-description">Ваши заказы</div>
+                </div>
+                
+                <div class="center-block" onclick="openNewsChannel()">
+                    <div class="block-icon">📢</div>
+                    <div class="block-title">Новости</div>
+                    <div class="block-description">Наш канал</div>
+                </div>
+            </div>
+
+            <!-- Поддержка -->
+            <div class="support-section" onclick="openSupport()">
+                <div class="support-text">
+                    @GoshaStoreBot
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Страница истории -->
     <div id="history-page" class="page">
-        <div class="store-url">GoshaStore.com</div>
+        <div class="back-header">
+            <div class="back-arrow" onclick="showProfile()">‹</div>
+            <div class="page-title">История заказов</div>
+        </div>
         
         <div class="empty-state">
             📋<br><br>
@@ -605,9 +596,9 @@
 
     <!-- Новая страница категорий -->
     <div id="categories-page" class="page">
-        <div class="app-header">
+        <div class="back-header">
             <div class="back-arrow" onclick="showSectionHome()">‹</div>
-            <div class="app-logo">Категории игр</div>
+            <div class="page-title">Категории игр</div>
         </div>
         
         <div class="categories-grid" id="categories-container">
@@ -617,9 +608,9 @@
 
     <!-- Новая страница корзины -->
     <div id="cart-page" class="page">
-        <div class="app-header">
+        <div class="back-header">
             <div class="back-arrow" onclick="showSectionHome()">‹</div>
-            <div class="app-logo">Корзина</div>
+            <div class="page-title">Корзина</div>
         </div>
         
         <div id="cart-container">
@@ -637,9 +628,9 @@
 
     <!-- Новая страница избранного -->
     <div id="favorites-page" class="page">
-        <div class="app-header">
+        <div class="back-header">
             <div class="back-arrow" onclick="showSectionHome()">‹</div>
-            <div class="app-logo">Избранное</div>
+            <div class="page-title">Избранное</div>
         </div>
         
         <div id="favorites-container" class="products-grid">
