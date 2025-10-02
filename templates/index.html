@@ -30,48 +30,34 @@
         }
         
         .header {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
             padding-top: 10px;
         }
         
-        .header h1 {
-            color: var(--tg-theme-button-color, #8774e1);
-            font-size: 18px;
-            margin-bottom: 5px;
+        .welcome-text {
+            color: var(--tg-theme-text-color, #ffffff);
+            font-size: 16px;
+            font-weight: 500;
         }
         
-        .header p {
-            color: var(--tg-theme-hint-color, #888);
-            font-size: 14px;
-        }
-        
-        .user-profile {
-            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            border: 1px solid var(--tg-theme-hint-color, #333);
-        }
-        
-        .user-avatar {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-        
-        .user-name {
-            font-size: 18px;
+        .profile-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--tg-theme-button-color, #8774e1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
             font-weight: 600;
-            margin-bottom: 5px;
+            font-size: 16px;
+            color: var(--tg-theme-button-text-color, #ffffff);
         }
         
-        .user-welcome {
-            color: var(--tg-theme-hint-color, #888);
-            font-size: 14px;
-        }
-        
-        .menu-section {
+        .section {
             margin-bottom: 25px;
         }
         
@@ -213,6 +199,66 @@
             margin-top: 8px;
         }
         
+        .form-section {
+            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--tg-theme-hint-color, #333);
+        }
+        
+        .form-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--tg-theme-text-color, #ffffff);
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #888);
+            margin-bottom: 5px;
+        }
+        
+        .input-field {
+            width: 100%;
+            background: var(--tg-theme-bg-color, #1a1a1a);
+            border: 1px solid var(--tg-theme-hint-color, #333);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--tg-theme-text-color, #ffffff);
+            font-size: 14px;
+        }
+        
+        .input-field::placeholder {
+            color: var(--tg-theme-hint-color, #666);
+        }
+        
+        .save-button {
+            background: var(--tg-theme-button-color, #8774e1);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: var(--tg-theme-hint-color, #888);
+            padding: 40px 20px;
+            font-size: 14px;
+        }
+        
         .support-container {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border-radius: 12px;
@@ -242,78 +288,20 @@
             margin-bottom: 10px;
             text-align: center;
         }
-        
-        .empty-state {
-            text-align: center;
-            color: var(--tg-theme-hint-color, #888);
-            padding: 40px 20px;
-            font-size: 14px;
-        }
-        
-        .search-bar {
-            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
-            border: 1px solid var(--tg-theme-hint-color, #333);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            color: var(--tg-theme-text-color, #ffffff);
-            font-size: 14px;
-            width: 100%;
-        }
-        
-        .search-bar::placeholder {
-            color: var(--tg-theme-hint-color, #888);
-        }
     </style>
 </head>
 <body>
-    <!-- Главная страница с профилем -->
+    <!-- Главная страница -->
     <div id="main-page" class="page active">
         <div class="header">
-            <h1>GoshaStore | PS Store</h1>
-            <p>Выберите раздел</p>
-        </div>
-
-        <!-- Профиль пользователя -->
-        <div class="user-profile">
-            <div class="user-avatar">👋</div>
-            <div class="user-name">Привет, Gosha!</div>
-            <div class="user-welcome">Рады тебя видеть</div>
-        </div>
-
-        <!-- Поиск -->
-        <input type="text" class="search-bar" placeholder="Поиск" onclick="showSearch()">
-
-        <!-- Навигационные кнопки -->
-        <div class="nav-button" onclick="showSection('account')">
-            <div class="nav-icon">📧</div>
-            <div class="nav-text">
-                <div class="nav-title">Почта для чеков</div>
-                <div class="nav-subtitle">Данные от аккаунта</div>
+            <div class="welcome-text" id="welcome-text">Привет!</div>
+            <div class="profile-button" onclick="showProfile()" id="profile-button">
+                ?
             </div>
-            <div class="nav-arrow">›</div>
-        </div>
-
-        <div class="nav-button" onclick="showSection('history')">
-            <div class="nav-icon">📋</div>
-            <div class="nav-text">
-                <div class="nav-title">История</div>
-                <div class="nav-subtitle">Ваши последние заказы</div>
-            </div>
-            <div class="nav-arrow">›</div>
-        </div>
-
-        <div class="nav-button" onclick="showSection('news')">
-            <div class="nav-icon">📢</div>
-            <div class="nav-text">
-                <div class="nav-title">Новости</div>
-                <div class="nav-subtitle">Настройте уведомления</div>
-            </div>
-            <div class="nav-arrow">›</div>
         </div>
 
         <!-- PLAYSTATION раздел -->
-        <div class="menu-section">
+        <div class="section">
             <div class="section-title">PLAYSTATION</div>
             <div class="menu-grid">
                 <div class="menu-button" onclick="showProducts('playstation_personal')">
@@ -328,7 +316,7 @@
         </div>
 
         <!-- Пополнение кошелька -->
-        <div class="menu-section">
+        <div class="section">
             <div class="section-title">ПОПОЛНЕНИЕ КОШЕЛЬКА</div>
             <div class="menu-grid">
                 <div class="menu-button" onclick="showProducts('steam')">
@@ -358,6 +346,25 @@
             </div>
         </div>
 
+        <!-- Навигационные кнопки -->
+        <div class="nav-button" onclick="showHistory()">
+            <div class="nav-icon">📋</div>
+            <div class="nav-text">
+                <div class="nav-title">История заказов</div>
+                <div class="nav-subtitle">Ваши последние заказы</div>
+            </div>
+            <div class="nav-arrow">›</div>
+        </div>
+
+        <div class="nav-button" onclick="openNewsChannel()">
+            <div class="nav-icon">📢</div>
+            <div class="nav-text">
+                <div class="nav-title">Новости</div>
+                <div class="nav-subtitle">Наш канал с новостями</div>
+            </div>
+            <div class="nav-arrow">›</div>
+        </div>
+
         <!-- Поддержка -->
         <div class="support-container">
             <div class="support-text">
@@ -366,9 +373,6 @@
             </div>
             <button class="support-button" onclick="openSupport()">
                 💬 Чат с поддержкой
-            </button>
-            <button class="support-button" onclick="openOurChannel()" style="background: #007aff;">
-                📞 Наш магазин
             </button>
         </div>
     </div>
@@ -386,16 +390,51 @@
     </div>
 
     <!-- Страница профиля -->
-    <div id="account-page" class="page">
+    <div id="profile-page" class="page">
         <div class="back-button" onclick="showMain()">
             <div class="back-arrow">‹</div>
-            <div>Аккаунт</div>
+            <div>Профиль</div>
         </div>
         
-        <div class="empty-state">
-            📧<br><br>
-            Раздел "Почта для чеков"<br>
-            Здесь будут данные вашего аккаунта
+        <div class="form-section">
+            <div class="form-title">Данные от аккаунта</div>
+            
+            <div class="input-group">
+                <label class="input-label">Ваша почта</label>
+                <input type="email" class="input-field" id="user-email" placeholder="example@gmail.com">
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Пароль</label>
+                <input type="password" class="input-field" id="user-password" placeholder="Введите пароль">
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">2FA Коды (если есть)</label>
+                <input type="text" class="input-field" id="user-2fa" placeholder="Коды двухфакторной аутентификации">
+            </div>
+            
+            <button class="save-button" onclick="saveUserData()">
+                💾 Сохранить данные
+            </button>
+        </div>
+
+        <div class="nav-button" onclick="showHistory()">
+            <div class="nav-icon">📋</div>
+            <div class="nav-text">
+                <div class="nav-title">История заказов</div>
+                <div class="nav-subtitle">Ваши последние заказы</div>
+            </div>
+            <div class="nav-arrow">›</div>
+        </div>
+
+        <div class="nav-button" onclick="openNewsChannel()">
+            <div class="nav-icon">📢</div>
+            <div class="nav-text">
+                <div class="nav-title">Новости</div>
+                <div class="nav-subtitle">Наш канал с новостями</div>
+            </div>
+            <div class="nav-arrow">›</div>
         </div>
     </div>
 
@@ -413,20 +452,6 @@
         </div>
     </div>
 
-    <!-- Страница новостей -->
-    <div id="news-page" class="page">
-        <div class="back-button" onclick="showMain()">
-            <div class="back-arrow">‹</div>
-            <div>Новости</div>
-        </div>
-        
-        <div class="empty-state">
-            📢<br><br>
-            Настройте какие новости<br>
-            получать от бота
-        </div>
-    </div>
-
     <script>
         // Telegram Web App
         const tg = window.Telegram.WebApp;
@@ -435,6 +460,61 @@
         
         let cart = [];
         let currentCategory = '';
+        let userData = {};
+
+        // Инициализация пользователя
+        function initUser() {
+            const user = tg.initDataUnsafe?.user;
+            
+            if (user) {
+                // Получаем реальное имя пользователя
+                const firstName = user.first_name || 'Пользователь';
+                const lastName = user.last_name || '';
+                const fullName = `${firstName} ${lastName}`.trim();
+                const username = user.username || firstName;
+                
+                // Обновляем приветствие
+                document.getElementById('welcome-text').textContent = `Привет, ${firstName}!`;
+                
+                // Обновляем кнопку профиля
+                const profileButton = document.getElementById('profile-button');
+                profileButton.textContent = firstName.charAt(0).toUpperCase();
+                
+                // Загружаем сохраненные данные пользователя
+                loadUserData();
+            } else {
+                document.getElementById('welcome-text').textContent = 'Привет!';
+                document.getElementById('profile-button').textContent = '?';
+            }
+        }
+
+        // Загрузить данные пользователя
+        function loadUserData() {
+            const savedData = localStorage.getItem('goshaStoreUserData');
+            if (savedData) {
+                userData = JSON.parse(savedData);
+                document.getElementById('user-email').value = userData.email || '';
+                document.getElementById('user-password').value = userData.password || '';
+                document.getElementById('user-2fa').value = userData.twoFA || '';
+            }
+        }
+
+        // Сохранить данные пользователя
+        function saveUserData() {
+            userData = {
+                email: document.getElementById('user-email').value,
+                password: document.getElementById('user-password').value,
+                twoFA: document.getElementById('user-2fa').value,
+                savedAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('goshaStoreUserData', JSON.stringify(userData));
+            
+            tg.showPopup({
+                title: '✅ Данные сохранены',
+                message: 'Ваши данные успешно сохранены'
+            });
+        }
 
         // Показать главную страницу
         function showMain() {
@@ -442,11 +522,22 @@
             document.getElementById('main-page').classList.add('active');
         }
 
+        // Показать профиль
+        function showProfile() {
+            hideAllPages();
+            document.getElementById('profile-page').classList.add('active');
+        }
+
+        // Показать историю
+        function showHistory() {
+            hideAllPages();
+            document.getElementById('history-page').classList.add('active');
+        }
+
         // Показать товары категории
         async function showProducts(category) {
             currentCategory = category;
             
-            // Обновляем название категории
             const categoryNames = {
                 'playstation_personal': 'PlayStation Личный',
                 'playstation_shared': 'PlayStation Общий',
@@ -459,7 +550,6 @@
             };
             document.getElementById('current-category-name').textContent = categoryNames[category] || 'Товары';
             
-            // Загружаем товары
             try {
                 const response = await fetch(`/api/products?category=${category}`);
                 const products = await response.json();
@@ -468,15 +558,13 @@
                 console.error('Ошибка загрузки товаров:', error);
             }
             
-            // Переключаем страницы
             hideAllPages();
             document.getElementById('products-page').classList.add('active');
         }
 
-        // Показать раздел
-        function showSection(section) {
-            hideAllPages();
-            document.getElementById(section + '-page').classList.add('active');
+        // Открыть канал новостей
+        function openNewsChannel() {
+            tg.openLink('https://t.me/GoshaStoreBot');
         }
 
         // Скрыть все страницы
@@ -506,7 +594,7 @@
             `).join('');
         }
 
-        // Открыть поддержку (не закрывая приложение)
+        // Открыть поддержку
         function openSupport() {
             tg.showPopup({
                 title: '💬 Чат с поддержкой',
@@ -518,25 +606,10 @@
                 }]
             });
             
-            // Обработка кнопки в popup
             tg.onEvent('popupButtonClicked', (btn) => {
                 if (btn.id === 'open_chat') {
-                    // Открываем ссылку в WebView (не закрывая приложение)
                     tg.openLink('https://t.me/GoshaPlayStation');
                 }
-            });
-        }
-
-        // Открыть наш канал
-        function openOurChannel() {
-            tg.openLink('https://t.me/GoshaStoreBot');
-        }
-
-        // Поиск
-        function showSearch() {
-            tg.showPopup({
-                title: '🔍 Поиск',
-                message: 'Функция поиска скоро будет доступна'
             });
         }
 
@@ -548,8 +621,11 @@
             });
         }
 
-        // При загрузке показываем главную страницу
-        showMain();
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            initUser();
+            showMain();
+        });
     </script>
 </body>
 </html>
