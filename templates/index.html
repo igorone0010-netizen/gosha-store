@@ -23,6 +23,7 @@
             display: none;
             min-height: 100vh;
             padding: 16px;
+            padding-bottom: 80px; /* Место для навигационной панели */
         }
         
         .active {
@@ -314,6 +315,185 @@
             flex: 1;
             text-align: center;
         }
+
+        /* Навигационная панель */
+        .nav-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--tg-theme-bg-color, #1a1a1a);
+            border-top: 1px solid var(--tg-theme-hint-color, #333);
+            padding: 12px 16px;
+            display: none;
+        }
+
+        .nav-panel.active {
+            display: block;
+        }
+
+        .nav-top {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+
+        .menu-toggle {
+            font-size: 20px;
+            color: var(--tg-theme-text-color, #ffffff);
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .search-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
+            border: 1px solid var(--tg-theme-hint-color, #333);
+            border-radius: 20px;
+            padding: 10px 40px 10px 16px;
+            color: var(--tg-theme-text-color, #ffffff);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: var(--tg-theme-hint-color, #888);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--tg-theme-hint-color, #888);
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:active {
+            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
+        }
+
+        .nav-tab.active {
+            background: var(--tg-theme-button-color, #8774e1);
+        }
+
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .tab-text {
+            font-size: 10px;
+            color: var(--tg-theme-text-color, #ffffff);
+            text-align: center;
+        }
+
+        .nav-tab.active .tab-text {
+            color: var(--tg-theme-button-text-color, #ffffff);
+        }
+
+        /* Страница категорий */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .category-card {
+            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
+            border: 1px solid var(--tg-theme-hint-color, #333);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .category-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .category-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--tg-theme-text-color, #ffffff);
+        }
+
+        /* Страница корзины */
+        .cart-item {
+            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
+            border: 1px solid var(--tg-theme-hint-color, #333);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--tg-theme-text-color, #ffffff);
+            margin-bottom: 4px;
+        }
+
+        .cart-item-price {
+            font-size: 14px;
+            color: var(--tg-theme-button-color, #8774e1);
+            font-weight: 600;
+        }
+
+        .remove-item {
+            color: #ff4444;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .cart-total {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 0;
+            color: var(--tg-theme-text-color, #ffffff);
+        }
+
+        .checkout-button {
+            background: var(--tg-theme-button-color, #8774e1);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -419,6 +599,80 @@
         </div>
     </div>
 
+    <!-- Новая страница категорий -->
+    <div id="categories-page" class="page">
+        <div class="app-header">
+            <div class="back-arrow" onclick="showSectionHome()">‹</div>
+            <div class="app-logo">Категории игр</div>
+        </div>
+        
+        <div class="categories-grid" id="categories-container">
+            <!-- Категории загружаются здесь -->
+        </div>
+    </div>
+
+    <!-- Новая страница корзины -->
+    <div id="cart-page" class="page">
+        <div class="app-header">
+            <div class="back-arrow" onclick="showSectionHome()">‹</div>
+            <div class="app-logo">Корзина</div>
+        </div>
+        
+        <div id="cart-container">
+            <!-- Товары в корзине -->
+        </div>
+        
+        <div class="cart-total" id="cart-total">
+            Итого: 0 руб.
+        </div>
+        
+        <button class="checkout-button" onclick="checkout()">
+            Оформить заказ
+        </button>
+    </div>
+
+    <!-- Новая страница избранного -->
+    <div id="favorites-page" class="page">
+        <div class="app-header">
+            <div class="back-arrow" onclick="showSectionHome()">‹</div>
+            <div class="app-logo">Избранное</div>
+        </div>
+        
+        <div id="favorites-container" class="products-grid">
+            <!-- Избранные товары -->
+        </div>
+    </div>
+
+    <!-- Навигационная панель -->
+    <div id="nav-panel" class="nav-panel">
+        <div class="nav-top">
+            <div class="menu-toggle" onclick="showMain()">☰</div>
+            <div class="search-container">
+                <input type="text" class="search-input" id="search-input" placeholder="Поиск игр..." oninput="searchProducts()">
+                <div class="search-icon">🔍</div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showSectionHome()">
+                <div class="tab-icon">🏠</div>
+                <div class="tab-text">Главная</div>
+            </div>
+            <div class="nav-tab" onclick="showCategories()">
+                <div class="tab-icon">🍀</div>
+                <div class="tab-text">Категории</div>
+            </div>
+            <div class="nav-tab" onclick="showCart()">
+                <div class="tab-icon">🛒</div>
+                <div class="tab-text">Корзина</div>
+            </div>
+            <div class="nav-tab" onclick="showFavorites()">
+                <div class="tab-icon">⭐</div>
+                <div class="tab-text">Избранное</div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Telegram Web App
         const tg = window.Telegram.WebApp;
@@ -429,34 +683,28 @@
         let currentCategory = '';
         let userData = {};
         let autoSaveTimeout;
+        let favorites = [];
+        let currentSection = '';
 
         // Инициализация пользователя
         function initUser() {
             const user = tg.initDataUnsafe?.user;
             
             if (user) {
-                // Получаем реальное имя пользователя
                 const firstName = user.first_name || 'Пользователь';
-                const lastName = user.last_name || '';
-                const fullName = `${firstName} ${lastName}`.trim();
-                const username = user.username || firstName;
-                
-                // Обновляем приветствие в профиле
                 document.getElementById('profile-welcome').textContent = `Привет, ${firstName}!`;
-                
-                // Обновляем кнопку профиля
-                const profileButton = document.getElementById('profile-button');
-                profileButton.textContent = firstName;
-                
-                // Загружаем сохраненные данные пользователя
+                document.getElementById('profile-button').textContent = firstName;
                 loadUserData();
             } else {
                 document.getElementById('profile-welcome').textContent = 'Привет!';
                 document.getElementById('profile-button').textContent = 'Профиль';
             }
+            
+            // Загружаем корзину и избранное из localStorage
+            loadCart();
+            loadFavorites();
         }
 
-        // Загрузить данные пользователя
         function loadUserData() {
             const savedData = localStorage.getItem('goshaStoreUserData');
             if (savedData) {
@@ -467,12 +715,8 @@
             }
         }
 
-        // Автосохранение данных (без уведомления)
         function autoSaveData() {
-            // Очищаем предыдущий таймер
             clearTimeout(autoSaveTimeout);
-            
-            // Устанавливаем новый таймер на 1 секунду
             autoSaveTimeout = setTimeout(() => {
                 userData = {
                     email: document.getElementById('user-email').value,
@@ -480,34 +724,34 @@
                     twoFA: document.getElementById('user-2fa').value,
                     savedAt: new Date().toISOString()
                 };
-                
                 localStorage.setItem('goshaStoreUserData', JSON.stringify(userData));
             }, 1000);
         }
 
-        // Показать главную страницу
+        // Функции навигации
         function showMain() {
             hideAllPages();
             document.getElementById('main-page').classList.add('active');
             document.getElementById('profile-button').classList.remove('active');
+            hideNavPanel();
         }
 
-        // Показать профиль
         function showProfile() {
             hideAllPages();
             document.getElementById('profile-page').classList.add('active');
             document.getElementById('profile-button').classList.add('active');
+            hideNavPanel();
         }
 
-        // Показать историю
         function showHistory() {
             hideAllPages();
             document.getElementById('history-page').classList.add('active');
+            hideNavPanel();
         }
 
-        // Показать товары категории
         async function showProducts(category) {
             currentCategory = category;
+            currentSection = 'products';
             
             try {
                 const response = await fetch(`/api/products?category=${category}`);
@@ -519,20 +763,86 @@
             
             hideAllPages();
             document.getElementById('products-page').classList.add('active');
+            showNavPanel();
+            setActiveTab('home');
         }
 
-        // Открыть канал новостей
-        function openNewsChannel() {
-            tg.openLink('https://t.me/GoshaStoreBot');
+        // Новые функции для навигационной панели
+        function showNavPanel() {
+            document.getElementById('nav-panel').classList.add('active');
         }
 
-        // Скрыть все страницы
-        function hideAllPages() {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.remove('active'));
+        function hideNavPanel() {
+            document.getElementById('nav-panel').classList.remove('active');
         }
 
-        // Отобразить товары
+        function setActiveTab(tabName) {
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            if (tabName === 'home') {
+                tabs[0].classList.add('active');
+            } else if (tabName === 'categories') {
+                tabs[1].classList.add('active');
+            } else if (tabName === 'cart') {
+                tabs[2].classList.add('active');
+            } else if (tabName === 'favorites') {
+                tabs[3].classList.add('active');
+            }
+        }
+
+        function showSectionHome() {
+            if (currentSection === 'products') {
+                hideAllPages();
+                document.getElementById('products-page').classList.add('active');
+                setActiveTab('home');
+            }
+        }
+
+        function showCategories() {
+            hideAllPages();
+            document.getElementById('categories-page').classList.add('active');
+            setActiveTab('categories');
+            loadCategories();
+        }
+
+        function showCart() {
+            hideAllPages();
+            document.getElementById('cart-page').classList.add('active');
+            setActiveTab('cart');
+            updateCartDisplay();
+        }
+
+        function showFavorites() {
+            hideAllPages();
+            document.getElementById('favorites-page').classList.add('active');
+            setActiveTab('favorites');
+            updateFavoritesDisplay();
+        }
+
+        // Функции для работы с данными
+        function loadCart() {
+            const savedCart = localStorage.getItem('goshaStoreCart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+            }
+        }
+
+        function saveCart() {
+            localStorage.setItem('goshaStoreCart', JSON.stringify(cart));
+        }
+
+        function loadFavorites() {
+            const savedFavorites = localStorage.getItem('goshaStoreFavorites');
+            if (savedFavorites) {
+                favorites = JSON.parse(savedFavorites);
+            }
+        }
+
+        function saveFavorites() {
+            localStorage.setItem('goshaStoreFavorites', JSON.stringify(favorites));
+        }
+
         function displayProducts(products) {
             const container = document.getElementById('products-container');
             
@@ -546,25 +856,151 @@
                     <div class="product-icon">${product.image}</div>
                     <div class="product-name">${product.name}</div>
                     <div class="product-price">${product.price} руб.</div>
-                    <button class="buy-button" onclick="addToCart(${product.id})">
+                    <button class="buy-button" onclick="addToCart(${product.id}, '${product.name}', ${product.price}, '${product.image}')">
+                        Купить
+                    </button>
+                    <div style="margin-top: 8px; font-size: 20px; cursor: pointer;" onclick="toggleFavorite(${product.id}, '${product.name}', ${product.price}, '${product.image}')">
+                        ${favorites.some(fav => fav.id === product.id) ? '★' : '☆'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id, name, price, image) {
+            cart.push({ id, name, price, image });
+            saveCart();
+            tg.showPopup({
+                title: '✅ Товар добавлен',
+                message: 'Товар добавлен в корзину'
+            });
+        }
+
+        function toggleFavorite(id, name, price, image) {
+            const index = favorites.findIndex(fav => fav.id === id);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push({ id, name, price, image });
+            }
+            saveFavorites();
+            
+            // Обновляем отображение товаров
+            if (currentSection === 'products') {
+                const event = new Event('productsUpdated');
+                document.dispatchEvent(event);
+            }
+        }
+
+        function updateCartDisplay() {
+            const container = document.getElementById('cart-container');
+            const totalElement = document.getElementById('cart-total');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="empty-state">Корзина пуста</div>';
+                totalElement.textContent = 'Итого: 0 руб.';
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            totalElement.textContent = `Итого: ${total} руб.`;
+            
+            container.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">${item.price} руб.</div>
+                    </div>
+                    <div class="remove-item" onclick="removeFromCart(${index})">🗑️</div>
+                </div>
+            `).join('');
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveCart();
+            updateCartDisplay();
+        }
+
+        function updateFavoritesDisplay() {
+            const container = document.getElementById('favorites-container');
+            
+            if (favorites.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 40px;">Нет избранных товаров</div>';
+                return;
+            }
+            
+            container.innerHTML = favorites.map(product => `
+                <div class="product-card">
+                    <div class="product-icon">${product.image}</div>
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">${product.price} руб.</div>
+                    <button class="buy-button" onclick="addToCart(${product.id}, '${product.name}', ${product.price}, '${product.image}')">
                         Купить
                     </button>
                 </div>
             `).join('');
         }
 
-        // Открыть поддержку (исправленная версия)
+        function loadCategories() {
+            const categories = [
+                { name: 'Экшн', icon: '🔫' },
+                { name: 'Приключения', icon: '🗺️' },
+                { name: 'RPG', icon: '⚔️' },
+                { name: 'Стратегии', icon: '♟️' },
+                { name: 'Спорт', icon: '⚽' },
+                { name: 'Гонки', icon: '🏎️' }
+            ];
+            
+            const container = document.getElementById('categories-container');
+            container.innerHTML = categories.map(category => `
+                <div class="category-card" onclick="searchByCategory('${category.name}')">
+                    <div class="category-icon">${category.icon}</div>
+                    <div class="category-name">${category.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            // Здесь будет логика поиска товаров
+            console.log('Поиск:', query);
+        }
+
+        function searchByCategory(category) {
+            document.getElementById('search-input').value = category;
+            searchProducts();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                tg.showPopup({
+                    title: 'Корзина пуста',
+                    message: 'Добавьте товары в корзину'
+                });
+                return;
+            }
+            
+            tg.showPopup({
+                title: 'Заказ оформлен',
+                message: 'Спасибо за покупку!'
+            });
+            
+            cart = [];
+            saveCart();
+            updateCartDisplay();
+        }
+
+        function openNewsChannel() {
+            tg.openLink('https://t.me/GoshaStoreBot');
+        }
+
         function openSupport() {
-            // Прямой переход в чат через tg:// ссылку
             tg.openTelegramLink('https://t.me/GoshaPlayStation');
         }
 
-        // Добавить в корзину
-        function addToCart(productId) {
-            tg.showPopup({
-                title: '✅ Товар добавлен',
-                message: 'Перейдите в корзину для оформления заказа'
-            });
+        function hideAllPages() {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
         }
 
         // Инициализация при загрузке
