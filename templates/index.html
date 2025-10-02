@@ -22,24 +22,30 @@
         .page {
             display: none;
             min-height: 100vh;
-            padding: 16px;
-            padding-bottom: 80px; /* Место для навигационной панели */
+            padding: 70px 16px 80px; /* Отступы: сверху под фиксированную панель, снизу под навигацию */
         }
         
         .active {
             display: block;
         }
         
-        .main-header {
+        /* Фиксированная верхняя панель */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--tg-theme-bg-color, #1a1a1a);
+            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
+            padding: 12px 16px;
+            z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-top: 10px;
         }
         
-        .main-title {
-            font-size: 20px;
+        .app-logo {
+            font-size: 18px;
             font-weight: 600;
             color: var(--tg-theme-text-color, #ffffff);
         }
@@ -65,10 +71,29 @@
             color: var(--tg-theme-button-text-color, #ffffff);
         }
         
+        /* Главная страница */
+        .main-content {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--tg-theme-text-color, #ffffff);
+        }
+        
+        .main-subtitle {
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #888);
+            margin-bottom: 30px;
+        }
+        
         .menu-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 10px;
+            margin-bottom: 20px;
         }
         
         .menu-button {
@@ -99,12 +124,40 @@
             line-height: 1.3;
         }
         
+        .support-section {
+            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--tg-theme-hint-color, #333);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .support-section:active {
+            background: var(--tg-theme-button-color, #8774e1);
+            transform: scale(0.98);
+        }
+        
+        .support-text {
+            color: var(--tg-theme-hint-color, #888);
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+        
+        .support-bot {
+            color: var(--tg-theme-button-color, #8774e1);
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        /* Остальные стили остаются без изменений */
         .back-header {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
             padding: 10px 0;
-            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
         }
         
         .back-arrow {
@@ -168,7 +221,6 @@
         /* Стили для профиля */
         .profile-header {
             margin-bottom: 25px;
-            padding-top: 5px;
         }
         
         .profile-welcome {
@@ -277,28 +329,6 @@
             font-size: 14px;
         }
         
-        .support-section {
-            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            border: 1px solid var(--tg-theme-hint-color, #333);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .support-section:active {
-            background: var(--tg-theme-button-color, #8774e1);
-            transform: scale(0.98);
-        }
-        
-        .support-text {
-            color: var(--tg-theme-hint-color, #888);
-            font-size: 14px;
-            line-height: 1.4;
-            text-align: center;
-        }
-
         /* Навигационная панель */
         .nav-panel {
             position: fixed;
@@ -310,30 +340,30 @@
             padding: 12px 16px;
             display: none;
         }
-
+        
         .nav-panel.active {
             display: block;
         }
-
+        
         .nav-top {
             display: flex;
             align-items: center;
             margin-bottom: 12px;
             gap: 12px;
         }
-
+        
         .menu-toggle {
             font-size: 20px;
             color: var(--tg-theme-text-color, #ffffff);
             cursor: pointer;
             padding: 8px;
         }
-
+        
         .search-container {
             flex: 1;
             position: relative;
         }
-
+        
         .search-input {
             width: 100%;
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
@@ -344,11 +374,11 @@
             font-size: 14px;
             outline: none;
         }
-
+        
         .search-input::placeholder {
             color: var(--tg-theme-hint-color, #888);
         }
-
+        
         .search-icon {
             position: absolute;
             right: 12px;
@@ -356,13 +386,13 @@
             transform: translateY(-50%);
             color: var(--tg-theme-hint-color, #888);
         }
-
+        
         .nav-tabs {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
         }
-
+        
         .nav-tab {
             display: flex;
             flex-direction: column;
@@ -372,37 +402,37 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
+        
         .nav-tab:active {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
         }
-
+        
         .nav-tab.active {
             background: var(--tg-theme-button-color, #8774e1);
         }
-
+        
         .tab-icon {
             font-size: 20px;
             margin-bottom: 4px;
         }
-
+        
         .tab-text {
             font-size: 10px;
             color: var(--tg-theme-text-color, #ffffff);
             text-align: center;
         }
-
+        
         .nav-tab.active .tab-text {
             color: var(--tg-theme-button-text-color, #ffffff);
         }
-
+        
         /* Страница категорий */
         .categories-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
-
+        
         .category-card {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border: 1px solid var(--tg-theme-hint-color, #333);
@@ -411,18 +441,18 @@
             text-align: center;
             cursor: pointer;
         }
-
+        
         .category-icon {
             font-size: 32px;
             margin-bottom: 8px;
         }
-
+        
         .category-name {
             font-size: 14px;
             font-weight: 500;
             color: var(--tg-theme-text-color, #ffffff);
         }
-
+        
         /* Страница корзины */
         .cart-item {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
@@ -434,30 +464,30 @@
             justify-content: space-between;
             align-items: center;
         }
-
+        
         .cart-item-info {
             flex: 1;
         }
-
+        
         .cart-item-name {
             font-size: 14px;
             font-weight: 500;
             color: var(--tg-theme-text-color, #ffffff);
             margin-bottom: 4px;
         }
-
+        
         .cart-item-price {
             font-size: 14px;
             color: var(--tg-theme-button-color, #8774e1);
             font-weight: 600;
         }
-
+        
         .remove-item {
             color: #ff4444;
             cursor: pointer;
             padding: 8px;
         }
-
+        
         .cart-total {
             text-align: center;
             font-size: 16px;
@@ -465,7 +495,7 @@
             margin: 20px 0;
             color: var(--tg-theme-text-color, #ffffff);
         }
-
+        
         .checkout-button {
             background: var(--tg-theme-button-color, #8774e1);
             color: var(--tg-theme-button-text-color, #ffffff);
@@ -477,36 +507,36 @@
             cursor: pointer;
             width: 100%;
         }
-
-        /* Убрали лишние отступы в профиле */
-        .profile-page-content {
-            margin-top: -10px;
-        }
     </style>
 </head>
 <body>
+    <!-- Фиксированная верхняя панель -->
+    <div class="top-header">
+        <div class="app-logo">GoshaStore | PS Store</div>
+        <div class="profile-button" onclick="showProfile()" id="profile-button">
+            Профиль
+        </div>
+    </div>
+
     <!-- Главная страница -->
     <div id="main-page" class="page active">
-        <div class="main-header">
-            <div class="main-title">Выберите раздел</div>
-            <div class="profile-button" onclick="showProfile()" id="profile-button">
-                Профиль
+        <div class="main-content">
+            <div class="main-title">Выбери раздел</div>
+            <div class="main-subtitle">Покупка игр на ваш личный аккаунт PS4/PS5</div>
+            
+            <div class="menu-grid">
+                <div class="menu-button" onclick="showProducts('playstation_personal')">
+                    <div class="button-name">PlayStation Личный</div>
+                    <div class="button-description">Покупка игр на ваш личный аккаунт PS4/PS5</div>
+                </div>
             </div>
-        </div>
 
-        <!-- Кнопка PlayStation -->
-        <div class="menu-grid">
-            <div class="menu-button" onclick="showProducts('playstation_personal')">
-                <div class="button-name">PlayStation Личный</div>
-                <div class="button-description">Покупка игр на ваш личный аккаунт PS4/PS5</div>
-            </div>
-        </div>
-
-        <!-- Поддержка -->
-        <div class="support-section" onclick="openSupport()">
-            <div class="support-text">
-                Не нашли нужный товар? Остались вопросы?<br>
-                Проблема с заказом? Пиши сюда!
+            <div class="support-section" onclick="openSupport()">
+                <div class="support-text">
+                    Не нашли нужный товар? Остались вопросы?<br>
+                    Проблема с заказом? Пиши сюда!
+                </div>
+                <div class="support-bot">@GoshaStoreBot</div>
             </div>
         </div>
     </div>
@@ -525,61 +555,58 @@
 
     <!-- Страница профиля -->
     <div id="profile-page" class="page">
-        <div class="profile-page-content">
-            <!-- Приветствие -->
-            <div class="profile-header">
-                <div class="profile-welcome" id="profile-welcome">Привет, Gosha!</div>
-                <div class="profile-subtitle">Рады тебя видеть</div>
+        <!-- Приветствие -->
+        <div class="profile-header">
+            <div class="profile-welcome" id="profile-welcome">Привет, Gosha!</div>
+            <div class="profile-subtitle">Рады тебя видеть</div>
+        </div>
+        
+        <!-- Данные от аккаунта -->
+        <div class="profile-section">
+            <div class="profile-title">Данные от аккаунта</div>
+            
+            <div class="input-card">
+                <label class="input-label">Ваша почта</label>
+                <input type="email" class="input-field" id="user-email" placeholder="example@gmail.com" oninput="autoSaveData()">
             </div>
             
-            <!-- Данные от аккаунта -->
-            <div class="profile-section">
-                <div class="profile-title">Данные от аккаунта</div>
-                
-                <div class="input-card">
-                    <label class="input-label">Ваша почта</label>
-                    <input type="email" class="input-field" id="user-email" placeholder="example@gmail.com" oninput="autoSaveData()">
-                </div>
-                
-                <div class="input-card">
-                    <label class="input-label">Пароль</label>
-                    <input type="password" class="input-field" id="user-password" placeholder="Введите пароль" oninput="autoSaveData()">
-                </div>
+            <div class="input-card">
+                <label class="input-label">Пароль</label>
+                <input type="password" class="input-field" id="user-password" placeholder="Введите пароль" oninput="autoSaveData()">
             </div>
+        </div>
 
-            <!-- 2FA Коды -->
-            <div class="profile-section">
-                <div class="profile-title">2FA Коды (если есть)</div>
-                
-                <div class="input-card">
-                    <input type="text" class="input-field" id="user-2fa" placeholder="Коды двухфакторной аутентификации" oninput="autoSaveData()">
-                </div>
+        <!-- 2FA Коды -->
+        <div class="profile-section">
+            <div class="profile-title">2FA Коды (если есть)</div>
+            
+            <div class="input-card">
+                <input type="text" class="input-field" id="user-2fa" placeholder="Коды двухфакторной аутентификации" oninput="autoSaveData()">
             </div>
+        </div>
 
-            <!-- Центральные блоки -->
-            <div class="center-blocks">
-                <div class="center-block" onclick="showHistory()">
-                    <div class="block-icon">📋</div>
-                    <div class="block-title">История</div>
-                    <div class="block-description">Ваши заказы</div>
-                </div>
-                
-                <div class="center-block" onclick="openNewsChannel()">
-                    <div class="block-icon">📢</div>
-                    <div class="block-title">Новости</div>
-                    <div class="block-description">Наш канал</div>
-                </div>
+        <!-- Центральные блоки -->
+        <div class="center-blocks">
+            <div class="center-block" onclick="showHistory()">
+                <div class="block-icon">📋</div>
+                <div class="block-title">История</div>
+                <div class="block-description">Ваши заказы</div>
             </div>
+            
+            <div class="center-block" onclick="openNewsChannel()">
+                <div class="block-icon">📢</div>
+                <div class="block-title">Новости</div>
+                <div class="block-description">Наш канал</div>
+            </div>
+        </div>
 
-            <!-- Поддержка -->
-            <div class="support-section" onclick="openSupport()">
-                <div class="support-text">
-                    @GoshaStoreBot
-                </div>
-            </div>
+        <!-- Поддержка -->
+        <div class="support-section" onclick="openSupport()">
+            <div class="support-bot">@GoshaStoreBot</div>
         </div>
     </div>
 
+    <!-- Остальные страницы остаются без изменений -->
     <!-- Страница истории -->
     <div id="history-page" class="page">
         <div class="back-header">
@@ -669,7 +696,7 @@
     </div>
 
     <script>
-        // Telegram Web App
+        // JavaScript код остается без изменений
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.MainButton.hide();
@@ -681,7 +708,6 @@
         let favorites = [];
         let currentSection = '';
 
-        // Инициализация пользователя
         function initUser() {
             const user = tg.initDataUnsafe?.user;
             
@@ -695,7 +721,6 @@
                 document.getElementById('profile-button').textContent = 'Профиль';
             }
             
-            // Загружаем корзину и избранное из localStorage
             loadCart();
             loadFavorites();
         }
@@ -723,7 +748,6 @@
             }, 1000);
         }
 
-        // Функции навигации
         function showMain() {
             hideAllPages();
             document.getElementById('main-page').classList.add('active');
@@ -762,7 +786,6 @@
             setActiveTab('home');
         }
 
-        // Новые функции для навигационной панели
         function showNavPanel() {
             document.getElementById('nav-panel').classList.add('active');
         }
@@ -815,7 +838,6 @@
             updateFavoritesDisplay();
         }
 
-        // Функции для работы с данными
         function loadCart() {
             const savedCart = localStorage.getItem('goshaStoreCart');
             if (savedCart) {
@@ -879,7 +901,6 @@
             }
             saveFavorites();
             
-            // Обновляем отображение товаров
             if (currentSection === 'products') {
                 const event = new Event('productsUpdated');
                 document.dispatchEvent(event);
@@ -957,7 +978,6 @@
 
         function searchProducts() {
             const query = document.getElementById('search-input').value.toLowerCase();
-            // Здесь будет логика поиска товаров
             console.log('Поиск:', query);
         }
 
@@ -998,7 +1018,6 @@
             pages.forEach(page => page.classList.remove('active'));
         }
 
-        // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
             initUser();
             showMain();
