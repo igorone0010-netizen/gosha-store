@@ -297,6 +297,23 @@
             line-height: 1.4;
             text-align: center;
         }
+
+        /* Новый стиль для заголовка с логотипом */
+        .app-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
+        }
+        
+        .app-logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--tg-theme-text-color, #ffffff);
+            flex: 1;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -340,9 +357,10 @@
 
     <!-- Страница профиля -->
     <div id="profile-page" class="page">
-        <div class="back-header">
+        <!-- Новый заголовок с логотипом и стрелкой -->
+        <div class="app-header">
             <div class="back-arrow" onclick="showMain()">‹</div>
-            <div class="page-title">Профиль</div>
+            <div class="app-logo">GoshaStore | PS Store</div>
         </div>
         
         <!-- Приветствие -->
@@ -389,9 +407,9 @@
 
     <!-- Страница истории -->
     <div id="history-page" class="page">
-        <div class="back-header">
+        <div class="app-header">
             <div class="back-arrow" onclick="showProfile()">‹</div>
-            <div class="page-title">История заказов</div>
+            <div class="app-logo">GoshaStore | PS Store</div>
         </div>
         
         <div class="empty-state">
