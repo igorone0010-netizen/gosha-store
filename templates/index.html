@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoshaStore</title>
+    <title>GoshaStore | PS Store</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -17,6 +17,7 @@
             background: var(--tg-theme-bg-color, #1a1a1a);
             color: var(--tg-theme-text-color, #ffffff);
             padding: 16px;
+            line-height: 1.4;
         }
         
         .header {
@@ -158,15 +159,31 @@
         .support-text {
             color: var(--tg-theme-hint-color, #888);
             font-size: 14px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             line-height: 1.4;
         }
         
+        .support-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
         .support-link {
-            color: var(--tg-theme-button-color, #8774e1);
+            background: var(--tg-theme-button-color, #8774e1);
+            color: var(--tg-theme-button-text-color, #ffffff);
             text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 8px;
             font-weight: 500;
             font-size: 14px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .support-link:active {
+            background: var(--tg-theme-button-color, #6a5bb3);
+            transform: scale(0.98);
         }
         
         .hidden {
@@ -178,7 +195,7 @@
     <!-- Главная страница с категориями -->
     <div id="main-page">
         <div class="header">
-            <h1>GoshaStore</h1>
+            <h1>GoshaStore | PS Store</h1>
             <p>Выберите раздел</p>
         </div>
 
@@ -234,7 +251,14 @@
                 Не нашли нужный товар? Остались вопросы?<br>
                 Проблема с заказом? Пишите сюда!
             </div>
-            <a href="https://t.me/EazyPassBot" class="support-link" target="_blank">@EazyPassBot</a>
+            <div class="support-links">
+                <a href="https://t.me/GoshaPlayStation" class="support-link">
+                    💬 Чат с поддержкой (@GoshaPlayStation)
+                </a>
+                <a href="https://t.me/GoshaStoreBot" class="support-link" style="background: #007aff;">
+                    🛍️ Наш магазин (@GoshaStoreBot)
+                </a>
+            </div>
         </div>
     </div>
 
