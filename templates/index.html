@@ -29,6 +29,18 @@
             display: block;
         }
         
+        .main-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 10px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--tg-theme-text-color, #ffffff);
+        }
+        
         .header {
             display: flex;
             justify-content: space-between;
@@ -62,17 +74,6 @@
         .profile-button.active {
             background: var(--tg-theme-button-color, #8774e1);
             color: var(--tg-theme-button-text-color, #ffffff);
-        }
-        
-        .section {
-            margin-bottom: 25px;
-        }
-        
-        .section-title {
-            color: var(--tg-theme-hint-color, #aaa);
-            font-size: 14px;
-            margin-bottom: 12px;
-            padding-left: 8px;
         }
         
         .menu-grid {
@@ -109,18 +110,25 @@
             line-height: 1.3;
         }
         
-        .back-button {
+        .back-header {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
             padding: 10px 0;
-            cursor: pointer;
-            color: var(--tg-theme-button-color, #8774e1);
+            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
         }
         
         .back-arrow {
-            margin-right: 8px;
+            margin-right: 12px;
+            font-size: 20px;
+            color: var(--tg-theme-button-color, #8774e1);
+            cursor: pointer;
+        }
+        
+        .page-title {
             font-size: 18px;
+            font-weight: 600;
+            color: var(--tg-theme-text-color, #ffffff);
         }
         
         .products-grid {
@@ -170,29 +178,30 @@
         
         /* Стили для профиля */
         .profile-header {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            padding-top: 10px;
         }
         
         .profile-welcome {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
             color: var(--tg-theme-text-color, #ffffff);
         }
         
         .profile-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--tg-theme-hint-color, #888);
         }
         
         .profile-section {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .profile-title {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: var(--tg-theme-text-color, #ffffff);
         }
         
@@ -201,7 +210,7 @@
             border: 1px solid var(--tg-theme-hint-color, #333);
             border-radius: 12px;
             padding: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             transition: all 0.2s;
         }
         
@@ -237,14 +246,14 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin: 25px 0;
+            margin: 20px 0;
         }
         
         .center-block {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border: 1px solid var(--tg-theme-hint-color, #333);
             border-radius: 12px;
-            padding: 20px;
+            padding: 18px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
@@ -256,19 +265,19 @@
         }
         
         .block-icon {
-            font-size: 24px;
-            margin-bottom: 8px;
+            font-size: 22px;
+            margin-bottom: 6px;
         }
         
         .block-title {
             font-size: 14px;
             font-weight: 600;
             color: var(--tg-theme-text-color, #ffffff);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
         
         .block-description {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--tg-theme-hint-color, #888);
         }
         
@@ -305,21 +314,15 @@
 <body>
     <!-- Главная страница -->
     <div id="main-page" class="page active">
-        <div class="header">
-            <div class="welcome-text" id="welcome-text">Привет!</div>
-            <div class="profile-button" onclick="showProfile()" id="profile-button">
-                Профиль
-            </div>
+        <div class="main-header">
+            <div class="main-title">Выберите раздел</div>
         </div>
 
-        <!-- PLAYSTATION раздел -->
-        <div class="section">
-            <div class="section-title">PLAYSTATION</div>
-            <div class="menu-grid">
-                <div class="menu-button" onclick="showProducts('playstation_personal')">
-                    <div class="button-name">PlayStation Личный</div>
-                    <div class="button-description">Личные аккаунты с гарантией</div>
-                </div>
+        <!-- Кнопка PlayStation -->
+        <div class="menu-grid">
+            <div class="menu-button" onclick="showProducts('playstation_personal')">
+                <div class="button-name">PlayStation Личный</div>
+                <div class="button-description">Покупка игр на ваш личный аккаунт PS4/PS5</div>
             </div>
         </div>
 
@@ -334,9 +337,9 @@
 
     <!-- Страница товаров -->
     <div id="products-page" class="page">
-        <div class="back-button" onclick="showMain()">
-            <div class="back-arrow">‹</div>
-            <div id="current-category-name">PlayStation Личный</div>
+        <div class="back-header">
+            <div class="back-arrow" onclick="showMain()">‹</div>
+            <div class="page-title" id="current-category-name">PlayStation Личный</div>
         </div>
         
         <div id="products-container" class="products-grid">
@@ -346,9 +349,9 @@
 
     <!-- Страница профиля -->
     <div id="profile-page" class="page">
-        <div class="back-button" onclick="showMain()">
-            <div class="back-arrow">‹</div>
-            <div>Профиль</div>
+        <div class="back-header">
+            <div class="back-arrow" onclick="showMain()">‹</div>
+            <div class="page-title">Профиль</div>
         </div>
         
         <!-- Приветствие -->
@@ -395,9 +398,9 @@
 
     <!-- Страница истории -->
     <div id="history-page" class="page">
-        <div class="back-button" onclick="showProfile()">
-            <div class="back-arrow">‹</div>
-            <div>История заказов</div>
+        <div class="back-header">
+            <div class="back-arrow" onclick="showProfile()">‹</div>
+            <div class="page-title">История заказов</div>
         </div>
         
         <div class="empty-state">
@@ -429,9 +432,6 @@
                 const fullName = `${firstName} ${lastName}`.trim();
                 const username = user.username || firstName;
                 
-                // Обновляем приветствие на главной
-                document.getElementById('welcome-text').textContent = `Привет, ${firstName}!`;
-                
                 // Обновляем приветствие в профиле
                 document.getElementById('profile-welcome').textContent = `Привет, ${firstName}!`;
                 
@@ -442,7 +442,6 @@
                 // Загружаем сохраненные данные пользователя
                 loadUserData();
             } else {
-                document.getElementById('welcome-text').textContent = 'Привет!';
                 document.getElementById('profile-welcome').textContent = 'Привет!';
                 document.getElementById('profile-button').textContent = 'Профиль';
             }
@@ -474,7 +473,6 @@
                 };
                 
                 localStorage.setItem('goshaStoreUserData', JSON.stringify(userData));
-                // УБРАЛ УВЕДОМЛЕНИЕ - данные сохраняются тихо
             }, 1000);
         }
 
@@ -546,29 +544,10 @@
             `).join('');
         }
 
-        // Открыть поддержку (исправленная версия для прямого перехода в чат)
+        // Открыть поддержку (исправленная версия)
         function openSupport() {
-            // Пробуем открыть через tg:// ссылку для прямого перехода в приложение
-            const username = 'GoshaPlayStation';
-            
-            // Создаем кнопку для перехода в чат
-            tg.showPopup({
-                title: '💬 Поддержка',
-                message: 'Нажмите кнопку ниже чтобы написать в поддержку',
-                buttons: [{
-                    type: 'default',
-                    text: 'Написать в чат',
-                    id: 'open_support_chat'
-                }]
-            });
-            
-            // Обработчик кнопки
-            tg.onEvent('popupButtonClicked', (btn) => {
-                if (btn.id === 'open_support_chat') {
-                    // Открываем через tg:// ссылку для прямого перехода в чат
-                    tg.openTelegramLink(`https://t.me/${username}`);
-                }
-            });
+            // Прямой переход в чат через tg:// ссылку
+            tg.openTelegramLink('https://t.me/GoshaPlayStation');
         }
 
         // Добавить в корзину
