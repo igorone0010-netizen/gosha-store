@@ -14,21 +14,19 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--tg-theme-bg-color, #1e1e1e);
+            background: var(--tg-theme-bg-color, #1a1a1a);
             color: var(--tg-theme-text-color, #ffffff);
-            padding: 0;
+            padding: 16px;
         }
         
         .header {
-            background: var(--tg-theme-bg-color, #1e1e1e);
-            padding: 20px 16px 10px;
             text-align: center;
-            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
+            margin-bottom: 20px;
         }
         
         .header h1 {
             color: var(--tg-theme-button-color, #8774e1);
-            font-size: 20px;
+            font-size: 18px;
             margin-bottom: 5px;
         }
         
@@ -37,148 +35,124 @@
             font-size: 14px;
         }
         
-        .categories {
-            padding: 0;
-        }
-        
-        .category-section {
-            margin-bottom: 0;
+        .section {
+            margin-bottom: 25px;
         }
         
         .section-title {
-            padding: 12px 16px;
-            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             color: var(--tg-theme-hint-color, #aaa);
             font-size: 14px;
-            font-weight: 500;
-            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
+            margin-bottom: 12px;
+            padding-left: 8px;
         }
         
-        .category-item {
-            display: flex;
-            align-items: center;
-            padding: 16px;
-            background: var(--tg-theme-bg-color, #1e1e1e);
-            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
-            cursor: pointer;
-            transition: background 0.2s;
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
         
-        .category-item:active {
+        .category-button {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
+            border: 1px solid var(--tg-theme-hint-color, #333);
+            border-radius: 12px;
+            padding: 15px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
         }
         
-        .category-icon {
-            font-size: 24px;
-            margin-right: 12px;
-            width: 30px;
-            text-align: center;
-        }
-        
-        .category-content {
-            flex: 1;
+        .category-button:active {
+            background: var(--tg-theme-button-color, #8774e1);
+            transform: scale(0.98);
         }
         
         .category-name {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
+            color: var(--tg-theme-text-color, #ffffff);
         }
         
         .category-description {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--tg-theme-hint-color, #888);
-        }
-        
-        .arrow {
-            color: var(--tg-theme-hint-color, #666);
-            font-size: 18px;
+            line-height: 1.3;
         }
         
         .products-page {
             display: none;
-            background: var(--tg-theme-bg-color, #1e1e1e);
+            background: var(--tg-theme-bg-color, #1a1a1a);
             min-height: 100vh;
+            padding: 16px;
         }
         
         .back-button {
             display: flex;
             align-items: center;
-            padding: 16px;
-            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
-            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
+            margin-bottom: 20px;
+            padding: 10px 0;
             cursor: pointer;
+            color: var(--tg-theme-button-color, #8774e1);
         }
         
         .back-arrow {
             margin-right: 8px;
-            color: var(--tg-theme-button-color, #8774e1);
+            font-size: 18px;
         }
         
-        .products-container {
-            padding: 0;
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
         
         .product-card {
-            background: var(--tg-theme-bg-color, #1e1e1e);
-            border-bottom: 1px solid var(--tg-theme-hint-color, #333);
-            padding: 16px;
-        }
-        
-        .product-header {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 12px;
+            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
+            border: 1px solid var(--tg-theme-hint-color, #333);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
         }
         
         .product-icon {
             font-size: 32px;
-            margin-right: 12px;
-            width: 40px;
-            text-align: center;
-        }
-        
-        .product-info {
-            flex: 1;
+            margin-bottom: 8px;
         }
         
         .product-name {
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 500;
-            margin-bottom: 4px;
-        }
-        
-        .product-description {
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #888);
-            line-height: 1.4;
+            margin-bottom: 6px;
+            color: var(--tg-theme-text-color, #ffffff);
         }
         
         .product-price {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--tg-theme-button-color, #8774e1);
-            margin-top: 8px;
         }
         
         .buy-button {
             background: var(--tg-theme-button-color, #8774e1);
             color: var(--tg-theme-button-text-color, #ffffff);
             border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
-            margin-top: 12px;
+            width: 100%;
+            margin-top: 8px;
         }
         
         .support-section {
-            padding: 20px 16px;
-            text-align: center;
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
-            margin-top: 20px;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 25px;
+            border: 1px solid var(--tg-theme-hint-color, #333);
         }
         
         .support-text {
@@ -192,6 +166,7 @@
             color: var(--tg-theme-button-color, #8774e1);
             text-decoration: none;
             font-weight: 500;
+            font-size: 14px;
         }
         
         .hidden {
@@ -207,40 +182,53 @@
             <p>Выберите раздел</p>
         </div>
 
-        <div class="categories">
-            <div class="category-section">
-                <div class="section-title">PLAYSTATION</div>
-                <div class="category-item" onclick="showProducts('playstation_personal')">
-                    <div class="category-icon">🎮</div>
-                    <div class="category-content">
-                        <div class="category-name">PlayStation Личный</div>
-                        <div class="category-description">Личные аккаунты, гарантия</div>
-                    </div>
-                    <div class="arrow">›</div>
+        <!-- PlayStation раздел -->
+        <div class="section">
+            <div class="section-title">PLAYSTATION</div>
+            <div class="grid-container">
+                <div class="category-button" onclick="showProducts('playstation_personal')">
+                    <div class="category-name">PlayStation Личный</div>
+                    <div class="category-description">Личные аккаунты</div>
                 </div>
-                <div class="category-item" onclick="showProducts('playstation_shared')">
-                    <div class="category-icon">💰</div>
-                    <div class="category-content">
-                        <div class="category-name">PlayStation Общий</div>
-                        <div class="category-description">Скидки до 80%</div>
-                    </div>
-                    <div class="arrow">›</div>
-                </div>
-            </div>
-
-            <div class="category-section">
-                <div class="section-title">ПОПОЛНЕНИЕ КОШЕЛЬКА</div>
-                <div class="category-item" onclick="showProducts('wallet_topup')">
-                    <div class="category-icon">💳</div>
-                    <div class="category-content">
-                        <div class="category-name">Steam, FIFA, GamePass</div>
-                        <div class="category-description">Комиссия от 8%</div>
-                    </div>
-                    <div class="arrow">›</div>
+                <div class="category-button" onclick="showProducts('playstation_shared')">
+                    <div class="category-name">PlayStation Общий</div>
+                    <div class="category-description">Скидки до 80%</div>
                 </div>
             </div>
         </div>
 
+        <!-- Пополнение кошелька -->
+        <div class="section">
+            <div class="section-title">ПОПОЛНЕНИЕ КОШЕЛЬКА</div>
+            <div class="grid-container">
+                <div class="category-button" onclick="showProducts('steam')">
+                    <div class="category-name">Steam</div>
+                    <div class="category-description">Комиссия 8%</div>
+                </div>
+                <div class="category-button" onclick="showProducts('fifa')">
+                    <div class="category-name">FC (FIFA)</div>
+                    <div class="category-description">FIFA Points</div>
+                </div>
+                <div class="category-button" onclick="showProducts('gamepass')">
+                    <div class="category-name">GamePass</div>
+                    <div class="category-description">Xbox Game Pass</div>
+                </div>
+                <div class="category-button" onclick="showProducts('valorant')">
+                    <div class="category-name">Valorant VP</div>
+                    <div class="category-description">Valorant Points</div>
+                </div>
+                <div class="category-button" onclick="showProducts('services')">
+                    <div class="category-name">Сервисы</div>
+                    <div class="category-description">Другие сервисы</div>
+                </div>
+                <div class="category-button" onclick="showProducts('nintendo')">
+                    <div class="category-name">Nintendo</div>
+                    <div class="category-description">Nintendo Store</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Поддержка -->
         <div class="support-section">
             <div class="support-text">
                 Не нашли нужный товар? Остались вопросы?<br>
@@ -257,7 +245,7 @@
             <div id="current-category-name">Товары</div>
         </div>
         
-        <div id="products-container" class="products-container">
+        <div id="products-container" class="products-grid">
             <!-- Товары загружаются здесь -->
         </div>
     </div>
@@ -278,8 +266,13 @@
             // Обновляем название категории
             const categoryNames = {
                 'playstation_personal': 'PlayStation Личный',
-                'playstation_shared': 'PlayStation Общий', 
-                'wallet_topup': 'Пополнение кошелька'
+                'playstation_shared': 'PlayStation Общий',
+                'steam': 'Steam',
+                'fifa': 'FC (FIFA)',
+                'gamepass': 'GamePass',
+                'valorant': 'Valorant VP',
+                'services': 'Сервисы',
+                'nintendo': 'Nintendo'
             };
             document.getElementById('current-category-name').textContent = categoryNames[category] || 'Товары';
             
@@ -308,22 +301,17 @@
             const container = document.getElementById('products-container');
             
             if (products.length === 0) {
-                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #888;">Товары скоро появятся</div>';
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 40px;">Товары скоро появятся</div>';
                 return;
             }
             
             container.innerHTML = products.map(product => `
                 <div class="product-card">
-                    <div class="product-header">
-                        <div class="product-icon">${product.image}</div>
-                        <div class="product-info">
-                            <div class="product-name">${product.name}</div>
-                            <div class="product-description">${product.description}</div>
-                            <div class="product-price">${product.price} руб.</div>
-                        </div>
-                    </div>
+                    <div class="product-icon">${product.image}</div>
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">${product.price} руб.</div>
                     <button class="buy-button" onclick="addToCart(${product.id})">
-                        Купить за ${product.price} руб.
+                        Купить
                     </button>
                 </div>
             `).join('');
@@ -331,7 +319,6 @@
 
         // Добавить в корзину
         function addToCart(productId) {
-            // Здесь будет логика добавления в корзину
             tg.showPopup({
                 title: '✅ Товар добавлен',
                 message: 'Перейдите в корзину для оформления заказа'
