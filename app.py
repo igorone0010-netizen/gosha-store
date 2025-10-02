@@ -27,24 +27,7 @@ products = [
     # PlayStation Личный
     {"id": 1, "name": "The Last of Us II", "price": 5000, "image": "🎮", "category": "playstation_personal"},
     {"id": 2, "name": "God of War", "price": 4500, "image": "⚔️", "category": "playstation_personal"},
-    
-    # PlayStation Общий  
-    {"id": 3, "name": "Spider-Man 2", "price": 2500, "image": "🕷️", "category": "playstation_shared"},
-    
-    # Steam
-    {"id": 4, "name": "Steam 1000 руб", "price": 1080, "image": "🎯", "category": "steam"},
-    
-    # FIFA
-    {"id": 5, "name": "FIFA 1000 Points", "price": 1000, "image": "⚽", "category": "fifa"},
-    
-    # GamePass
-    {"id": 6, "name": "GamePass 1 мес", "price": 800, "image": "🎮", "category": "gamepass"},
-    
-    # Valorant
-    {"id": 7, "name": "Valorant 1000 VP", "price": 950, "image": "🔫", "category": "valorant"},
-    
-    # Nintendo
-    {"id": 8, "name": "Nintendo 1000 руб", "price": 1050, "image": "👾", "category": "nintendo"}
+    {"id": 3, "name": "Spider-Man 2", "price": 4800, "image": "🕷️", "category": "playstation_personal"},
 ]
 
 orders = []
