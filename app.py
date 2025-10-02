@@ -25,55 +25,26 @@ categories = [
 
 products = [
     # PlayStation Личный
-    {
-        "id": 1,
-        "name": "The Last of Us Part II",
-        "price": 5000,
-        "description": "Личный аккаунт, гарантия 1 год",
-        "image": "🎮",
-        "category": "playstation_personal",
-        "type": "game"
-    },
-    {
-        "id": 2,
-        "name": "God of War Ragnarok",
-        "price": 4500, 
-        "description": "Личный аккаунт, гарантия 1 год",
-        "image": "⚔️",
-        "category": "playstation_personal",
-        "type": "game"
-    },
+    {"id": 1, "name": "The Last of Us II", "price": 5000, "image": "🎮", "category": "playstation_personal"},
+    {"id": 2, "name": "God of War", "price": 4500, "image": "⚔️", "category": "playstation_personal"},
     
-    # PlayStation Общий
-    {
-        "id": 3,
-        "name": "Spider-Man 2",
-        "price": 2500,
-        "description": "Общий аккаунт, скидка 50%",
-        "image": "🕷️",
-        "category": "playstation_shared", 
-        "type": "game"
-    },
+    # PlayStation Общий  
+    {"id": 3, "name": "Spider-Man 2", "price": 2500, "image": "🕷️", "category": "playstation_shared"},
     
-    # Пополнение кошелька
-    {
-        "id": 4,
-        "name": "Steam (Комиссия 8%)",
-        "price": 1000,
-        "description": "Пополнение Steam кошелька",
-        "image": "🎯",
-        "category": "wallet_topup",
-        "type": "wallet"
-    },
-    {
-        "id": 5, 
-        "name": "FC (FIFA) Points",
-        "price": 1000,
-        "description": "Пополнение FIFA кошелька",
-        "image": "⚽",
-        "category": "wallet_topup",
-        "type": "wallet"
-    }
+    # Steam
+    {"id": 4, "name": "Steam 1000 руб", "price": 1080, "image": "🎯", "category": "steam"},
+    
+    # FIFA
+    {"id": 5, "name": "FIFA 1000 Points", "price": 1000, "image": "⚽", "category": "fifa"},
+    
+    # GamePass
+    {"id": 6, "name": "GamePass 1 мес", "price": 800, "image": "🎮", "category": "gamepass"},
+    
+    # Valorant
+    {"id": 7, "name": "Valorant 1000 VP", "price": 950, "image": "🔫", "category": "valorant"},
+    
+    # Nintendo
+    {"id": 8, "name": "Nintendo 1000 руб", "price": 1050, "image": "👾", "category": "nintendo"}
 ]
 
 orders = []
