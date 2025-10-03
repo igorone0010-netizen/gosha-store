@@ -46,16 +46,17 @@ function navigateToPage(pageId, title = '', addToHistory = true) {
     if (addToHistory && currentPage !== pageId) {
         pageHistory.push({
             page: currentPage,
-            title: document.getElementById('header-title').textContent
+            title: document.getElementById('header-title') ? document.getElementById('header-title').textContent : 'GoshaStore'
         });
     }
     
     hideAllPages();
     document.getElementById(pageId + '-page').classList.add('active');
     
-    if (title) {
-        document.getElementById('header-title').textContent = title;
-    }
+    // УБИРАЕМ ИЗМЕНЕНИЕ ЗАГОЛОВКА - ТЕКСТА БОЛЬШЕ НЕТ
+    // if (title) {
+    //     document.getElementById('header-title').textContent = title;
+    // }
     
     if (pageId === 'main') {
         showBackButton(false);
