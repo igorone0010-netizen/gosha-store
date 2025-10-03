@@ -25,7 +25,7 @@ function displayProducts(products) {
             
             <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
                     onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                ${favorites.some(fav => fav.id === product.id) ? '★' : '☆'}
+                ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
             </button>
             
             <div class="product-image">
