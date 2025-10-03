@@ -10,16 +10,16 @@
 <body>
     
 
-    <!-- Фиксированная верхняя панель -->
+        <!-- Фиксированная верхняя панель -->
     <div class="top-header">
         <div class="header-left">
             <div class="app-logo">
-    <div class="logo-icon">GS</div>
-    <!-- УДАЛИЛИ СТРОКУ С ТЕКСТОМ -->
-</div>
+                <div class="logo-icon">GS</div>
+                <!-- ДОБАВЛЯЕМ СКРЫТЫЙ ЗАГОЛОВОК ДЛЯ НАВИГАЦИИ -->
+                <div class="logo-text" id="header-title" style="display: none;">GoshaStore</div>
+            </div>
         </div>
         <div class="header-right">
-            <!-- Секретная кнопка админки теперь здесь -->
             <button class="secret-button-header" onclick="toggleAdminPanel()">⚙️</button>
             <div class="profile-button" onclick="showProfile()" id="profile-button">
                 Профиль
