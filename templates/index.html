@@ -246,35 +246,42 @@
         </div>
     </div>
 
-        <!-- Навигационная панель -->
-    <div id="nav-panel" class="nav-panel">
-        <div class="nav-top">
-            <div class="menu-toggle" onclick="showMain()">☰</div>
-            <div class="search-container">
-                <input type="text" class="search-input" id="search-input" placeholder="" oninput="searchProducts()">
-                <div class="search-icon">🔍</div>
-            </div>
+        <!-- Обновленная навигационная панель -->
+<nav class="nav-glass">
+    <div class="nav-item active" data-page="main">
+        <div class="nav-icon">
+            <img src="https://www.pngkey.com/png/detail/432-4323239_portafolio-house-icon-round.png" alt="Главная">
         </div>
-        
-        <div class="nav-tabs">
-            <div class="nav-tab active" onclick="showSectionHome()">
-                <div class="tab-icon">⬤</div>
-                <div class="tab-text">Главная</div>
-            </div>
-            <div class="nav-tab" onclick="showCategories()">
-                <div class="tab-icon">◉</div>
-                <div class="tab-text">Категории</div>
-            </div>
-            <div class="nav-tab" onclick="showCart()">
-                <div class="tab-icon">🛒</div>
-                <div class="tab-text">Корзина</div>
-            </div>
-            <div class="nav-tab" onclick="showFavorites()">
-                <div class="tab-icon">❤️</div>
-                <div class="tab-text">Избранное</div>
-            </div>
-        </div>
+        <span class="nav-label">Главная</span>
     </div>
+    
+    <div class="nav-item" data-page="categories">
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/>
+            </svg>
+        </div>
+        <span class="nav-label">Категории</span>
+    </div>
+    
+    <div class="nav-item" data-page="favorites">
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
+            </svg>
+        </div>
+        <span class="nav-label">Избранное</span>
+    </div>
+    
+    <div class="nav-item" data-page="cart">
+        <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+        </div>
+        <span class="nav-label">Корзина</span>
+    </div>
+</nav>
 
     <!-- Подключаем JS файлы -->
     <script src="/static/js/main.js"></script>
