@@ -1,73 +1,48 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, send_file, jsonify, request
 import os
-from datetime import datetime
+import json
 
 app = Flask(__name__)
 
-# Данные магазина с разделами
-categories = [
-    {
-        "id": 1,
-        "name": "🎮 PlayStation Личный",
-        "type": "playstation_personal"
-    },
-    {
-        "id": 2, 
-        "name": "🎮 PlayStation Общий (Скидки до 80%)",
-        "type": "playstation_shared"
-    },
-    {
-        "id": 3,
-        "name": "💳 Пополнение кошелька",
-        "type": "wallet_topup"
-    }
-]
-
-products = [
-    # PlayStation Личный
-    {"id": 1, "name": "The Last of Us II", "price": 5000, "image": "🎮", "category": "playstation_personal"},
-    {"id": 2, "name": "God of War", "price": 4500, "image": "⚔️", "category": "playstation_personal"},
-    {"id": 3, "name": "Spider-Man 2", "price": 4800, "image": "🕷️", "category": "playstation_personal"},
-]
-
-orders = []
-
 @app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/api/categories')
-def get_categories():
-    return jsonify(categories)
+def home():
+    return send_file('templates/index.html')
 
 @app.route('/api/products')
 def get_products():
-    category = request.args.get('category')
-    if category:
-        filtered_products = [p for p in products if p['category'] == category]
-        return jsonify(filtered_products)
-    return jsonify(products)
+    try:
+        # Пытаемся загрузить данные из файла
+        with open('products_data.json', 'r', encoding='utf-8') as f:
+            products_data = json.load(f)
+        return jsonify(products_data)
+    except FileNotFoundError:
+        # Если файла нет, создаем пустую структуру
+        default_data = {"playstation_personal": []}
+        with open('products_data.json', 'w', encoding='utf-8') as f:
+            json.dump(default_data, f, ensure_ascii=False, indent=2)
+        return jsonify(default_data)
+    except Exception as e:
+        print(f"Ошибка загрузки товаров: {e}")
+        return jsonify({"playstation_personal": []})
 
-@app.route('/api/order', methods=['POST'])
-def create_order():
-    order_data = request.json
-    
-    new_order = {
-        "id": len(orders) + 1,
-        "products": order_data['products'],
-        "total": order_data['total'],
-        "customer_name": order_data.get('customer_name', 'Покупатель'),
-        "phone": order_data.get('phone', 'Не указан'),
-        "created_at": datetime.now().strftime("%d.%m.%Y %H:%M")
-    }
-    
-    orders.append(new_order)
-    
-    return jsonify({
-        "success": True, 
-        "order_id": new_order['id'],
-        "message": f"Заказ #{new_order['id']} оформлен!"
-    })
+@app.route('/api/admin/save-products', methods=['POST'])
+def save_products():
+    try:
+        products_data = request.json
+        
+        # Сохраняем в файл
+        with open('products_data.json', 'w', encoding='utf-8') as f:
+            json.dump(products_data, f, ensure_ascii=False, indent=2)
+        
+        return jsonify({"status": "success", "message": "Товары сохранены на сервер"})
+    except Exception as e:
+        print(f"Ошибка сохранения товаров: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+# Маршрут для проверки работы сервера
+@app.route('/api/health')
+def health_check():
+    return jsonify({"status": "ok", "message": "Server is running"})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
