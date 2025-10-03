@@ -51,18 +51,6 @@
             flex: 1;
         }
         
-        .back-button {
-            font-size: 20px;
-            color: var(--tg-theme-button-color, #8774e1);
-            cursor: pointer;
-            padding: 4px;
-            display: none;
-        }
-        
-        .back-button.visible {
-            display: block;
-        }
-        
         .app-logo {
             font-size: 18px;
             font-weight: 600;
@@ -688,35 +676,9 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
-        
-        /* НОВЫЕ СТИЛИ ДЛЯ СТРЕЛКИ В РАМКЕ TELEGRAM - ВЫШЕ */
-        .tg-back-button {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1001;
-            color: var(--tg-theme-button-color, #8774e1);
-            font-size: 24px;
-            cursor: pointer;
-            display: none;
-            background: transparent;
-            border: none;
-        }
-        
-        .tg-back-button.visible {
-            display: flex;
-        }
     </style>
 </head>
 <body>
-    <!-- Кнопка назад в рамке Telegram - ВЫШЕ -->
-    <div class="tg-back-button" id="tg-back-button" onclick="goBack()">‹</div>
-
     <!-- Фиксированная верхняя панель -->
     <div class="top-header">
         <div class="header-left">
@@ -940,10 +902,75 @@
         let favorites = [];
         let currentSection = '';
         let activeInput = null;
+        let currentPage = 'main';
+        const pageHistory = [];
+
+        // Настройка кнопки "Назад" Telegram
+        function setupBackButton() {
+            tg.BackButton.hide();
+            
+            tg.onEvent('backButtonClicked', function() {
+                goBack();
+            });
+        }
+
+        function showBackButton(show) {
+            if (show) {
+                tg.BackButton.show();
+            } else {
+                tg.BackButton.hide();
+            }
+        }
+
+        function navigateToPage(pageId, title = '', addToHistory = true) {
+            // Сохраняем текущую страницу в историю
+            if (addToHistory && currentPage !== pageId) {
+                pageHistory.push({
+                    page: currentPage,
+                    title: document.getElementById('header-title').textContent
+                });
+            }
+            
+            hideAllPages();
+            document.getElementById(pageId + '-page').classList.add('active');
+            
+            if (title) {
+                document.getElementById('header-title').textContent = title;
+            }
+            
+            // Управляем кнопкой "Назад"
+            if (pageId === 'main') {
+                showBackButton(false);
+                hideNavPanel();
+                document.getElementById('profile-button').classList.remove('active');
+            } else {
+                showBackButton(true);
+                
+                if (pageId === 'profile') {
+                    document.getElementById('profile-button').classList.add('active');
+                    hideNavPanel();
+                } else if (pageId === 'products' || pageId === 'categories' || 
+                          pageId === 'cart' || pageId === 'favorites') {
+                    showNavPanel();
+                } else {
+                    hideNavPanel();
+                }
+            }
+            
+            currentPage = pageId;
+        }
+
+        function goBack() {
+            if (pageHistory.length > 0) {
+                const previousPage = pageHistory.pop();
+                navigateToPage(previousPage.page, previousPage.title, false);
+            } else {
+                tg.close();
+            }
+        }
 
         // Функции для работы с полями ввода
         function activateInput(type) {
-            // Деактивируем предыдущее активное поле
             if (activeInput) {
                 deactivateInput(activeInput);
             }
@@ -955,7 +982,6 @@
             input.focus();
             activeInput = type;
             
-            // Если поле уже имеет значение, скрываем label сразу
             if (input.value.trim()) {
                 card.classList.add('has-value');
             }
@@ -965,7 +991,6 @@
             const card = document.getElementById(`${type}-card`);
             const input = document.getElementById(`user-${type}`);
             
-            // Если поле пустое, возвращаем исходное состояние
             if (!input.value.trim()) {
                 card.classList.remove('active');
                 card.classList.remove('has-value');
@@ -977,7 +1002,6 @@
             const card = document.getElementById(`${type}-card`);
             const input = document.getElementById(`user-${type}`);
             
-            // Если в поле есть текст, добавляем класс has-value
             if (input.value.trim()) {
                 card.classList.add('has-value');
             } else {
@@ -985,41 +1009,6 @@
             }
             
             autoSaveData();
-        }
-
-        // Функция для управления кнопкой назад
-        function showBackButton(show, title = '') {
-            const backButton = document.getElementById('tg-back-button');
-            const headerTitle = document.getElementById('header-title');
-            
-            if (show) {
-                backButton.classList.add('visible');
-                if (title) {
-                    headerTitle.textContent = title;
-                }
-            } else {
-                backButton.classList.remove('visible');
-                headerTitle.textContent = 'GoshaStore | PS Store';
-            }
-        }
-
-        // Функция возврата назад
-        function goBack() {
-            const activePage = document.querySelector('.page.active');
-            
-            if (activePage.id === 'products-page') {
-                showMain();
-            } else if (activePage.id === 'profile-page') {
-                showMain();
-            } else if (activePage.id === 'history-page') {
-                showProfile();
-            } else if (activePage.id === 'categories-page' || 
-                       activePage.id === 'cart-page' || 
-                       activePage.id === 'favorites-page') {
-                showSectionHome();
-            } else {
-                showMain();
-            }
         }
 
         function initUser() {
@@ -1045,7 +1034,6 @@
             if (savedData) {
                 userData = JSON.parse(savedData);
                 
-                // Устанавливаем значения и активируем поля, если есть данные
                 if (userData.email) {
                     document.getElementById('user-email').value = userData.email;
                     document.getElementById('email-card').classList.add('has-value');
@@ -1079,26 +1067,15 @@
         }
 
         function showMain() {
-            hideAllPages();
-            document.getElementById('main-page').classList.add('active');
-            document.getElementById('profile-button').classList.remove('active');
-            hideNavPanel();
-            showBackButton(false);
+            navigateToPage('main', 'GoshaStore | PS Store');
         }
 
         function showProfile() {
-            hideAllPages();
-            document.getElementById('profile-page').classList.add('active');
-            document.getElementById('profile-button').classList.add('active');
-            hideNavPanel();
-            showBackButton(true, 'Профиль');
+            navigateToPage('profile', 'Профиль');
         }
 
         function showHistory() {
-            hideAllPages();
-            document.getElementById('history-page').classList.add('active');
-            hideNavPanel();
-            showBackButton(true, 'История заказов');
+            navigateToPage('history', 'История заказов');
         }
 
         function showProducts(category) {
@@ -1108,11 +1085,8 @@
             const products = productsData[category] || [];
             displayProducts(products);
             
-            hideAllPages();
-            document.getElementById('products-page').classList.add('active');
-            showNavPanel();
+            navigateToPage('products', getCategoryName(category));
             setActiveTab('home');
-            showBackButton(true, getCategoryName(category));
         }
 
         function getCategoryName(category) {
@@ -1147,35 +1121,27 @@
 
         function showSectionHome() {
             if (currentSection === 'products') {
-                hideAllPages();
-                document.getElementById('products-page').classList.add('active');
+                navigateToPage('products', getCategoryName(currentCategory));
                 setActiveTab('home');
-                showBackButton(true, getCategoryName(currentCategory));
             }
         }
 
         function showCategories() {
-            hideAllPages();
-            document.getElementById('categories-page').classList.add('active');
+            navigateToPage('categories', 'Категории игр');
             setActiveTab('categories');
             loadCategories();
-            showBackButton(true, 'Категории игр');
         }
 
         function showCart() {
-            hideAllPages();
-            document.getElementById('cart-page').classList.add('active');
+            navigateToPage('cart', 'Корзина');
             setActiveTab('cart');
             updateCartDisplay();
-            showBackButton(true, 'Корзина');
         }
 
         function showFavorites() {
-            hideAllPages();
-            document.getElementById('favorites-page').classList.add('active');
+            navigateToPage('favorites', 'Избранное');
             setActiveTab('favorites');
             updateFavoritesDisplay();
-            showBackButton(true, 'Избранное');
         }
 
         function loadCart() {
@@ -1433,6 +1399,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            setupBackButton();
             initUser();
             showMain();
         });
