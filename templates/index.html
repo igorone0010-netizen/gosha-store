@@ -166,47 +166,59 @@
             left: 100%;
         }
         
-        .menu-button.playstation {
-            background: linear-gradient(135deg, #0070cc 0%, #0055a4 100%);
-            border: 1px solid rgba(0, 112, 204, 0.5);
-            box-shadow: 0 8px 25px rgba(0, 112, 204, 0.3);
-        }
-        
-        .menu-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-        }
-        
-        .menu-button:active {
-            transform: scale(0.98);
-        }
-        
-        .menu-button.playstation:active {
-            background: linear-gradient(135deg, #005ca9 0%, #004480 100%);
-        }
-        
-        .button-name {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: #ffffff;
-            line-height: 1.2;
-        }
-        
-        .menu-button.playstation .button-name {
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .button-description {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.3;
-        }
-        
-        .menu-button.playstation .button-description {
-            color: rgba(255, 255, 255, 0.9);
-        }
+        /* КНОПКА PLAYSTATION - СОВРЕМЕННЫЙ ДИЗАЙН СО СВЕРКАНИЕМ */
+.menu-button.playstation {
+    background: linear-gradient(135deg, #0070cc 0%, #0055a4 100%);
+    border: 1px solid rgba(0, 112, 204, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 112, 204, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-button.playstation::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+.menu-button.playstation::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    transition: left 0.7s;
+}
+
+.menu-button.playstation:hover::after {
+    left: 100%;
+}
+
+.menu-button.playstation:active {
+    background: linear-gradient(135deg, #005ca9 0%, #004480 100%);
+    transform: scale(0.98);
+}
+
+.menu-button.playstation .button-name {
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.menu-button.playstation .button-description {
+    color: rgba(255, 255, 255, 0.9);
+    position: relative;
+    z-index: 2;
+}
         
         /* СЕКЦИЯ ПОДДЕРЖКИ - СОВРЕМЕННЫЙ ДИЗАЙН */
         .support-section {
