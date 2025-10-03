@@ -6,6 +6,9 @@ function showProducts(category) {
     const products = productsData[category] || [];
     displayProducts(products);
     
+    // ПОКАЗЫВАЕМ НАВИГАЦИЮ В РАЗДЕЛЕ ТОВАРОВ
+    document.getElementById('nav-panel').classList.add('active');
+    
     navigateToPage('products', 'PlayStation Личный');
     setActiveTab('home');
 }
