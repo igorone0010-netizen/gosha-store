@@ -51,10 +51,53 @@
             flex: 1;
         }
         
+        /* СОВРЕМЕННЫЙ ЛОГОТИП GS */
         .app-logo {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--tg-theme-text-color, #ffffff);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #8774e1 0%, #64b5f6 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(135, 116, 225, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .logo-text {
+            font-size: 16px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8774e1 0%, #64b5f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .profile-button {
@@ -167,6 +210,34 @@
             color: var(--tg-theme-button-color, #8774e1);
             font-weight: 500;
             font-size: 14px;
+        }
+        
+        /* ОБНОВЛЕННАЯ ПОДДЕРЖКА - УБРАН БОТ */
+        .support-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--tg-theme-button-color, #8774e1);
+            border-radius: 10px;
+            margin: 0 auto 12px auto;
+            font-size: 20px;
+        }
+        
+        .support-title {
+            color: var(--tg-theme-text-color, #ffffff);
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .support-description {
+            color: var(--tg-theme-hint-color, #888);
+            font-size: 13px;
+            line-height: 1.4;
+            text-align: center;
         }
         
         /* Остальные стили */
@@ -682,7 +753,11 @@
     <!-- Фиксированная верхняя панель -->
     <div class="top-header">
         <div class="header-left">
-            <div class="app-logo" id="header-title">GoshaStore | PS Store</div>
+            <!-- ОБНОВЛЕННЫЙ ЛОГОТИП GS -->
+            <div class="app-logo">
+                <div class="logo-icon">GS</div>
+                <div class="logo-text" id="header-title">GoshaStore</div>
+            </div>
         </div>
         <div class="profile-button" onclick="showProfile()" id="profile-button">
             Профиль
@@ -702,12 +777,15 @@
                 </div>
             </div>
 
+            <!-- ОБНОВЛЕННАЯ СЕКЦИЯ ПОДДЕРЖКИ -->
             <div class="support-section" onclick="openSupport()">
-                <div class="support-text">
-                    Не нашли нужный товар? Остались вопросы?<br>
-                    Проблема с заказом? Пиши сюда!
+                <div class="support-icon">💬</div>
+                <div class="support-title">Поддержка</div>
+                <div class="support-description">
+                    Не нашли нужный товар?<br>
+                    Остались вопросы?<br>
+                    Проблема с заказом?
                 </div>
-                <div class="support-bot">@GoshaStoreBot</div>
             </div>
         </div>
     </div>
@@ -934,6 +1012,7 @@
             hideAllPages();
             document.getElementById(pageId + '-page').classList.add('active');
             
+            // Обновляем заголовок
             if (title) {
                 document.getElementById('header-title').textContent = title;
             }
@@ -1067,7 +1146,7 @@
         }
 
         function showMain() {
-            navigateToPage('main', 'GoshaStore | PS Store');
+            navigateToPage('main', 'GoshaStore');
         }
 
         function showProfile() {
