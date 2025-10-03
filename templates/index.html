@@ -69,9 +69,30 @@
             color: var(--tg-theme-text-color, #ffffff);
         }
         
+        .profile-button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #888);
+            transition: all 0.3s ease;
+            border: none;
+            white-space: nowrap;
+        }
+        
+        .profile-button.active {
+            background: var(--tg-theme-button-color, #8774e1);
+            color: var(--tg-theme-button-text-color, #ffffff);
+        }
+        
         /* Главная страница */
         .main-content {
-            text-align: center;
+            text-align: left;
         }
         
         .main-title {
@@ -79,14 +100,12 @@
             font-weight: 600;
             margin-bottom: 8px;
             color: var(--tg-theme-text-color, #ffffff);
-            text-align: left;
         }
         
         .main-subtitle {
             font-size: 14px;
             color: var(--tg-theme-hint-color, #888);
             margin-bottom: 30px;
-            text-align: left;
         }
         
         .menu-grid {
@@ -238,12 +257,14 @@
             font-weight: 700;
             margin-bottom: 5px;
             color: var(--tg-theme-text-color, #ffffff);
+            text-align: left;
         }
         
         .profile-subtitle {
             font-size: 14px;
             color: var(--tg-theme-hint-color, #888);
             margin-bottom: 25px;
+            text-align: left;
         }
         
         .profile-section {
@@ -262,6 +283,7 @@
             height: 50px;
             display: flex;
             align-items: center;
+            text-align: left;
         }
         
         .input-card.active {
@@ -279,6 +301,8 @@
             position: absolute;
             transition: all 0.2s;
             pointer-events: none;
+            text-align: left;
+            width: 100%;
         }
         
         .input-card.active .input-label {
@@ -302,6 +326,7 @@
             opacity: 0;
             height: 0;
             transition: all 0.2s;
+            text-align: left;
         }
         
         .input-card.active .input-field {
@@ -316,6 +341,7 @@
         
         .input-field::placeholder {
             color: var(--tg-theme-hint-color, #666);
+            text-align: left;
         }
         
         /* ОБНОВЛЕННЫЕ ЦЕНТРАЛЬНЫЕ БЛОКИ */
@@ -331,7 +357,7 @@
             border: 1px solid var(--tg-theme-hint-color, #333);
             border-radius: 12px;
             padding: 15px;
-            text-align: center;
+            text-align: left;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -349,6 +375,7 @@
         .block-icon {
             font-size: 20px;
             margin-bottom: 6px;
+            text-align: left;
         }
         
         .block-title {
@@ -356,11 +383,13 @@
             font-weight: 600;
             color: var(--tg-theme-text-color, #ffffff);
             margin-bottom: 2px;
+            text-align: left;
         }
         
         .block-description {
             font-size: 11px;
             color: var(--tg-theme-hint-color, #888);
+            text-align: left;
         }
         
         /* ОБНОВЛЕННАЯ ПОДДЕРЖКА */
@@ -660,11 +689,11 @@
             100% { background-position: -200% 0; }
         }
         
-        /* НОВЫЕ СТИЛИ ДЛЯ СТРЕЛКИ В РАМКЕ TELEGRAM */
+        /* НОВЫЕ СТИЛИ ДЛЯ СТРЕЛКИ В РАМКЕ TELEGRAM - ВЫШЕ */
         .tg-back-button {
             position: fixed;
-            top: 10px;
-            left: 10px;
+            top: 0;
+            left: 0;
             width: 40px;
             height: 40px;
             display: flex;
@@ -675,6 +704,8 @@
             font-size: 24px;
             cursor: pointer;
             display: none;
+            background: transparent;
+            border: none;
         }
         
         .tg-back-button.visible {
@@ -683,13 +714,16 @@
     </style>
 </head>
 <body>
-    <!-- Кнопка назад в рамке Telegram -->
+    <!-- Кнопка назад в рамке Telegram - ВЫШЕ -->
     <div class="tg-back-button" id="tg-back-button" onclick="goBack()">‹</div>
 
     <!-- Фиксированная верхняя панель -->
     <div class="top-header">
         <div class="header-left">
             <div class="app-logo" id="header-title">GoshaStore | PS Store</div>
+        </div>
+        <div class="profile-button" onclick="showProfile()" id="profile-button">
+            Профиль
         </div>
     </div>
 
@@ -994,9 +1028,11 @@
             if (user) {
                 const firstName = user.first_name || 'Пользователь';
                 document.getElementById('profile-welcome').textContent = `Привет, ${firstName}!`;
+                document.getElementById('profile-button').textContent = firstName;
                 loadUserData();
             } else {
                 document.getElementById('profile-welcome').textContent = 'Привет!';
+                document.getElementById('profile-button').textContent = 'Профиль';
             }
             
             loadCart();
@@ -1045,6 +1081,7 @@
         function showMain() {
             hideAllPages();
             document.getElementById('main-page').classList.add('active');
+            document.getElementById('profile-button').classList.remove('active');
             hideNavPanel();
             showBackButton(false);
         }
@@ -1052,6 +1089,7 @@
         function showProfile() {
             hideAllPages();
             document.getElementById('profile-page').classList.add('active');
+            document.getElementById('profile-button').classList.add('active');
             hideNavPanel();
             showBackButton(true, 'Профиль');
         }
