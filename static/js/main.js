@@ -449,7 +449,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Загружаем товары с сервера при запуске
     loadProductsFromServer();
 
-// Показываем главную страницу (скрываем навигацию)
 function showMain() {
     hideAllPages();
     document.getElementById('main-page').classList.add('active');
