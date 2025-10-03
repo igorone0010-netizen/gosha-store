@@ -1278,3 +1278,53 @@ body {
     from { transform: translateX(-50%) translateY(0); opacity: 1; }
     to { transform: translateX(-50%) translateY(-20px); opacity: 0; }
 }
+
+/* НОВЫЕ СТИЛИ ДЛЯ ВЕРХНЕЙ ПАНЕЛИ */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.secret-button-header {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: white;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: none; /* По умолчанию скрыта для не-админов */
+}
+
+.secret-button-header:active {
+    transform: scale(0.95);
+}
+
+.secret-button-header:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .header-right {
+        gap: 6px;
+    }
+    
+    .secret-button-header {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+    
+    .profile-button {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+}
