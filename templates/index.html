@@ -22,7 +22,7 @@
         .page {
             display: none;
             min-height: 100vh;
-            padding: 70px 16px 80px; /* Отступы: сверху под фиксированную панель, снизу под навигацию */
+            padding: 70px 16px 80px;
         }
         
         .active {
@@ -40,8 +40,27 @@
             padding: 12px 16px;
             z-index: 1000;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 12px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .back-button {
+            font-size: 20px;
+            color: var(--tg-theme-button-color, #8774e1);
+            cursor: pointer;
+            padding: 4px;
+            display: none;
+        }
+        
+        .back-button.visible {
+            display: block;
         }
         
         .app-logo {
@@ -102,8 +121,13 @@
             border-radius: 12px;
             padding: 20px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
+        }
+        
+        .menu-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
         .menu-button:active {
@@ -130,8 +154,13 @@
             padding: 20px;
             border: 1px solid var(--tg-theme-hint-color, #333);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
+        }
+        
+        .support-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
         .support-section:active {
@@ -152,21 +181,7 @@
             font-size: 14px;
         }
         
-        /* Остальные стили остаются без изменений */
-        .back-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px 0;
-        }
-        
-        .back-arrow {
-            margin-right: 12px;
-            font-size: 20px;
-            color: var(--tg-theme-button-color, #8774e1);
-            cursor: pointer;
-        }
-        
+        /* Остальные стили */
         .page-title {
             font-size: 18px;
             font-weight: 600;
@@ -185,6 +200,13 @@
             border-radius: 12px;
             padding: 15px;
             text-align: center;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
         .product-icon {
@@ -216,11 +238,16 @@
             cursor: pointer;
             width: 100%;
             margin-top: 8px;
+            transition: all 0.2s;
         }
         
-        /* Стили для профиля */
+        .buy-button:active {
+            transform: scale(0.95);
+        }
+        
+        /* ОБНОВЛЕННЫЕ СТИЛИ ДЛЯ ПРОФИЛЯ */
         .profile-header {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .profile-welcome {
@@ -233,17 +260,11 @@
         .profile-subtitle {
             font-size: 14px;
             color: var(--tg-theme-hint-color, #888);
-        }
-        
-        .profile-section {
             margin-bottom: 25px;
         }
         
-        .profile-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--tg-theme-text-color, #ffffff);
+        .profile-section {
+            margin-bottom: 20px;
         }
         
         .input-card {
@@ -253,19 +274,38 @@
             padding: 15px;
             margin-bottom: 10px;
             transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            height: 50px;
+            display: flex;
+            align-items: center;
         }
         
-        .input-card:focus-within {
+        .input-card.active {
             border-color: var(--tg-theme-button-color, #8774e1);
             background: var(--tg-theme-bg-color, #1a1a1a);
+            height: 60px;
+            align-items: flex-start;
+            padding-top: 18px;
         }
         
         .input-label {
-            display: block;
+            font-size: 15px;
+            color: var(--tg-theme-text-color, #ffffff);
+            font-weight: 500;
+            position: absolute;
+            transition: all 0.2s;
+            pointer-events: none;
+        }
+        
+        .input-card.active .input-label {
             font-size: 13px;
             color: var(--tg-theme-hint-color, #888);
-            margin-bottom: 8px;
-            font-weight: 500;
+            transform: translateY(-8px);
+        }
+        
+        .input-card.has-value .input-label {
+            display: none;
         }
         
         .input-field {
@@ -276,28 +316,46 @@
             font-size: 15px;
             outline: none;
             padding: 0;
+            opacity: 0;
+            height: 0;
+            transition: all 0.2s;
+        }
+        
+        .input-card.active .input-field {
+            opacity: 1;
+            height: auto;
+        }
+        
+        .input-card.has-value .input-field {
+            opacity: 1;
+            height: auto;
         }
         
         .input-field::placeholder {
             color: var(--tg-theme-hint-color, #666);
         }
         
-        /* Центральные блоки */
+        /* ОБНОВЛЕННЫЕ ЦЕНТРАЛЬНЫЕ БЛОКИ */
         .center-blocks {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 25px 0;
+            gap: 12px;
+            margin: 20px 0;
         }
         
         .center-block {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border: 1px solid var(--tg-theme-hint-color, #333);
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .center-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
         .center-block:active {
@@ -306,20 +364,32 @@
         }
         
         .block-icon {
-            font-size: 24px;
-            margin-bottom: 8px;
+            font-size: 20px;
+            margin-bottom: 6px;
         }
         
         .block-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--tg-theme-text-color, #ffffff);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
         
         .block-description {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--tg-theme-hint-color, #888);
+        }
+        
+        /* ОБНОВЛЕННАЯ ПОДДЕРЖКА */
+        .support-section-profile {
+            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid var(--tg-theme-hint-color, #333);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            margin-top: 10px;
         }
         
         .empty-state {
@@ -400,7 +470,12 @@
             padding: 8px 4px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-tab:hover {
+            background: var(--tg-theme-secondary-bg-color, #2d2d2d);
         }
         
         .nav-tab:active {
@@ -409,6 +484,7 @@
         
         .nav-tab.active {
             background: var(--tg-theme-button-color, #8774e1);
+            transform: translateY(-2px);
         }
         
         .tab-icon {
@@ -440,6 +516,12 @@
             padding: 20px;
             text-align: center;
             cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
         .category-icon {
@@ -506,13 +588,103 @@
             font-weight: 600;
             cursor: pointer;
             width: 100%;
+            transition: all 0.2s;
+        }
+        
+        .checkout-button:active {
+            transform: scale(0.98);
+        }
+        
+        /* Новые стили для улучшений */
+        .product-discount {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .product-new {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #8774e1;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Анимации */
+        @keyframes slideDown {
+            from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(0); opacity: 1; }
+            to { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2196F3;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease;
+        }
+        
+        .notification.success { background: #4CAF50; }
+        .notification.error { background: #f44336; }
+        .notification.warning { background: #ff9800; }
+        
+        .skeleton {
+            background: linear-gradient(90deg, #2d2d2d 25%, #3a3a3a 50%, #2d2d2d 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
     </style>
 </head>
 <body>
     <!-- Фиксированная верхняя панель -->
     <div class="top-header">
-        <div class="app-logo">GoshaStore | PS Store</div>
+        <div class="header-left">
+            <div class="back-button" id="back-button" onclick="goBack()">‹</div>
+            <div class="app-logo" id="header-title">GoshaStore | PS Store</div>
+        </div>
         <div class="profile-button" onclick="showProfile()" id="profile-button">
             Профиль
         </div>
@@ -543,45 +715,34 @@
 
     <!-- Страница товаров -->
     <div id="products-page" class="page">
-        <div class="back-header">
-            <div class="back-arrow" onclick="showMain()">‹</div>
-            <div class="page-title" id="current-category-name">PlayStation Личный</div>
-        </div>
-        
         <div id="products-container" class="products-grid">
             <!-- Товары загружаются здесь -->
         </div>
     </div>
 
-    <!-- Страница профиля -->
+    <!-- ОБНОВЛЕННАЯ СТРАНИЦА ПРОФИЛЯ -->
     <div id="profile-page" class="page">
         <!-- Приветствие -->
         <div class="profile-header">
-            <div class="profile-welcome" id="profile-welcome">Привет, Gosha!</div>
+            <div class="profile-welcome" id="profile-welcome">Привет!</div>
             <div class="profile-subtitle">Рады тебя видеть</div>
         </div>
         
         <!-- Данные от аккаунта -->
         <div class="profile-section">
-            <div class="profile-title">Данные от аккаунта</div>
-            
-            <div class="input-card">
-                <label class="input-label">Ваша почта</label>
-                <input type="email" class="input-field" id="user-email" placeholder="example@gmail.com" oninput="autoSaveData()">
+            <div class="input-card" onclick="activateInput('email')" id="email-card">
+                <div class="input-label" id="email-label">Ваша почта</div>
+                <input type="email" class="input-field" id="user-email" placeholder="example@gmail.com" oninput="handleInputChange('email')" onblur="deactivateInput('email')">
             </div>
             
-            <div class="input-card">
-                <label class="input-label">Пароль</label>
-                <input type="password" class="input-field" id="user-password" placeholder="Введите пароль" oninput="autoSaveData()">
+            <div class="input-card" onclick="activateInput('password')" id="password-card">
+                <div class="input-label" id="password-label">Пароль</div>
+                <input type="password" class="input-field" id="user-password" placeholder="Введите пароль" oninput="handleInputChange('password')" onblur="deactivateInput('password')">
             </div>
-        </div>
-
-        <!-- 2FA Коды -->
-        <div class="profile-section">
-            <div class="profile-title">2FA Коды (если есть)</div>
             
-            <div class="input-card">
-                <input type="text" class="input-field" id="user-2fa" placeholder="Коды двухфакторной аутентификации" oninput="autoSaveData()">
+            <div class="input-card" onclick="activateInput('2fa')" id="2fa-card">
+                <div class="input-label" id="2fa-label">2FA Коды</div>
+                <input type="text" class="input-field" id="user-2fa" placeholder="Коды двухфакторной аутентификации" oninput="handleInputChange('2fa')" onblur="deactivateInput('2fa')">
             </div>
         </div>
 
@@ -601,19 +762,13 @@
         </div>
 
         <!-- Поддержка -->
-        <div class="support-section" onclick="openSupport()">
+        <div class="support-section-profile" onclick="openSupport()">
             <div class="support-bot">@GoshaStoreBot</div>
         </div>
     </div>
 
-    <!-- Остальные страницы остаются без изменений -->
     <!-- Страница истории -->
     <div id="history-page" class="page">
-        <div class="back-header">
-            <div class="back-arrow" onclick="showProfile()">‹</div>
-            <div class="page-title">История заказов</div>
-        </div>
-        
         <div class="empty-state">
             📋<br><br>
             Ваши последние заказы в сервисе<br>
@@ -621,25 +776,15 @@
         </div>
     </div>
 
-    <!-- Новая страница категорий -->
+    <!-- Страница категорий -->
     <div id="categories-page" class="page">
-        <div class="back-header">
-            <div class="back-arrow" onclick="showSectionHome()">‹</div>
-            <div class="page-title">Категории игр</div>
-        </div>
-        
         <div class="categories-grid" id="categories-container">
             <!-- Категории загружаются здесь -->
         </div>
     </div>
 
-    <!-- Новая страница корзины -->
+    <!-- Страница корзины -->
     <div id="cart-page" class="page">
-        <div class="back-header">
-            <div class="back-arrow" onclick="showSectionHome()">‹</div>
-            <div class="page-title">Корзина</div>
-        </div>
-        
         <div id="cart-container">
             <!-- Товары в корзине -->
         </div>
@@ -653,13 +798,8 @@
         </button>
     </div>
 
-    <!-- Новая страница избранного -->
+    <!-- Страница избранного -->
     <div id="favorites-page" class="page">
-        <div class="back-header">
-            <div class="back-arrow" onclick="showSectionHome()">‹</div>
-            <div class="page-title">Избранное</div>
-        </div>
-        
         <div id="favorites-container" class="products-grid">
             <!-- Избранные товары -->
         </div>
@@ -696,10 +836,65 @@
     </div>
 
     <script>
-        // JavaScript код остается без изменений
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.MainButton.hide();
+        
+        // Данные товаров
+        const productsData = {
+            'playstation_personal': [
+                { 
+                    id: 1, 
+                    name: 'God of War Ragnarok', 
+                    price: 3999, 
+                    originalPrice: 4999, 
+                    image: '⚔️', 
+                    category: 'Экшн',
+                    discount: 20,
+                    isNew: true
+                },
+                { 
+                    id: 2, 
+                    name: 'Spider-Man 2', 
+                    price: 4999, 
+                    image: '🕷️', 
+                    category: 'Экшн',
+                    isNew: true
+                },
+                { 
+                    id: 3, 
+                    name: 'The Last of Us Part II', 
+                    price: 3499, 
+                    originalPrice: 4499, 
+                    image: '🧟', 
+                    category: 'Приключения',
+                    discount: 22
+                },
+                { 
+                    id: 4, 
+                    name: 'Gran Turismo 7', 
+                    price: 4299, 
+                    image: '🏎️', 
+                    category: 'Гонки'
+                },
+                { 
+                    id: 5, 
+                    name: 'Horizon Forbidden West', 
+                    price: 4599, 
+                    image: '🤖', 
+                    category: 'RPG'
+                },
+                { 
+                    id: 6, 
+                    name: 'FIFA 24', 
+                    price: 3799, 
+                    originalPrice: 4799, 
+                    image: '⚽', 
+                    category: 'Спорт',
+                    discount: 21
+                }
+            ]
+        };
         
         let cart = [];
         let currentCategory = '';
@@ -707,6 +902,88 @@
         let autoSaveTimeout;
         let favorites = [];
         let currentSection = '';
+        let activeInput = null;
+
+        // Функции для работы с полями ввода
+        function activateInput(type) {
+            // Деактивируем предыдущее активное поле
+            if (activeInput) {
+                deactivateInput(activeInput);
+            }
+            
+            const card = document.getElementById(`${type}-card`);
+            const input = document.getElementById(`user-${type}`);
+            
+            card.classList.add('active');
+            input.focus();
+            activeInput = type;
+            
+            // Если поле уже имеет значение, скрываем label сразу
+            if (input.value.trim()) {
+                card.classList.add('has-value');
+            }
+        }
+
+        function deactivateInput(type) {
+            const card = document.getElementById(`${type}-card`);
+            const input = document.getElementById(`user-${type}`);
+            
+            // Если поле пустое, возвращаем исходное состояние
+            if (!input.value.trim()) {
+                card.classList.remove('active');
+                card.classList.remove('has-value');
+            }
+            activeInput = null;
+        }
+
+        function handleInputChange(type) {
+            const card = document.getElementById(`${type}-card`);
+            const input = document.getElementById(`user-${type}`);
+            
+            // Если в поле есть текст, добавляем класс has-value
+            if (input.value.trim()) {
+                card.classList.add('has-value');
+            } else {
+                card.classList.remove('has-value');
+            }
+            
+            autoSaveData();
+        }
+
+        // Функция для управления кнопкой назад
+        function showBackButton(show, title = '') {
+            const backButton = document.getElementById('back-button');
+            const headerTitle = document.getElementById('header-title');
+            
+            if (show) {
+                backButton.classList.add('visible');
+                if (title) {
+                    headerTitle.textContent = title;
+                }
+            } else {
+                backButton.classList.remove('visible');
+                headerTitle.textContent = 'GoshaStore | PS Store';
+            }
+        }
+
+        // Функция возврата назад
+        function goBack() {
+            const activePage = document.querySelector('.page.active');
+            
+            if (activePage.id === 'products-page') {
+                showMain();
+            } else if (activePage.id === 'profile-page') {
+                showMain();
+            } else if (activePage.id === 'history-page') {
+                showProfile();
+            } else if (activePage.id === 'categories-page' || 
+                       activePage.id === 'cart-page' || 
+                       activePage.id === 'favorites-page') {
+                showSectionHome();
+            } else {
+                showMain();
+            }
+        }
 
         function initUser() {
             const user = tg.initDataUnsafe?.user;
@@ -723,15 +1000,30 @@
             
             loadCart();
             loadFavorites();
+            updateCartBadge();
         }
 
         function loadUserData() {
             const savedData = localStorage.getItem('goshaStoreUserData');
             if (savedData) {
                 userData = JSON.parse(savedData);
-                document.getElementById('user-email').value = userData.email || '';
-                document.getElementById('user-password').value = userData.password || '';
-                document.getElementById('user-2fa').value = userData.twoFA || '';
+                
+                // Устанавливаем значения и активируем поля, если есть данные
+                if (userData.email) {
+                    document.getElementById('user-email').value = userData.email;
+                    document.getElementById('email-card').classList.add('has-value');
+                    document.getElementById('email-card').classList.add('active');
+                }
+                if (userData.password) {
+                    document.getElementById('user-password').value = userData.password;
+                    document.getElementById('password-card').classList.add('has-value');
+                    document.getElementById('password-card').classList.add('active');
+                }
+                if (userData.twoFA) {
+                    document.getElementById('user-2fa').value = userData.twoFA;
+                    document.getElementById('2fa-card').classList.add('has-value');
+                    document.getElementById('2fa-card').classList.add('active');
+                }
             }
         }
 
@@ -745,6 +1037,7 @@
                     savedAt: new Date().toISOString()
                 };
                 localStorage.setItem('goshaStoreUserData', JSON.stringify(userData));
+                showNotification('Данные сохранены', 'success');
             }, 1000);
         }
 
@@ -753,6 +1046,7 @@
             document.getElementById('main-page').classList.add('active');
             document.getElementById('profile-button').classList.remove('active');
             hideNavPanel();
+            showBackButton(false);
         }
 
         function showProfile() {
@@ -760,30 +1054,35 @@
             document.getElementById('profile-page').classList.add('active');
             document.getElementById('profile-button').classList.add('active');
             hideNavPanel();
+            showBackButton(true, 'Профиль');
         }
 
         function showHistory() {
             hideAllPages();
             document.getElementById('history-page').classList.add('active');
             hideNavPanel();
+            showBackButton(true, 'История заказов');
         }
 
-        async function showProducts(category) {
+        function showProducts(category) {
             currentCategory = category;
             currentSection = 'products';
             
-            try {
-                const response = await fetch(`/api/products?category=${category}`);
-                const products = await response.json();
-                displayProducts(products);
-            } catch (error) {
-                console.error('Ошибка загрузки товаров:', error);
-            }
+            const products = productsData[category] || [];
+            displayProducts(products);
             
             hideAllPages();
             document.getElementById('products-page').classList.add('active');
             showNavPanel();
             setActiveTab('home');
+            showBackButton(true, getCategoryName(category));
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'playstation_personal': 'PlayStation Личный'
+            };
+            return names[category] || category;
         }
 
         function showNavPanel() {
@@ -814,6 +1113,7 @@
                 hideAllPages();
                 document.getElementById('products-page').classList.add('active');
                 setActiveTab('home');
+                showBackButton(true, getCategoryName(currentCategory));
             }
         }
 
@@ -822,6 +1122,7 @@
             document.getElementById('categories-page').classList.add('active');
             setActiveTab('categories');
             loadCategories();
+            showBackButton(true, 'Категории игр');
         }
 
         function showCart() {
@@ -829,6 +1130,7 @@
             document.getElementById('cart-page').classList.add('active');
             setActiveTab('cart');
             updateCartDisplay();
+            showBackButton(true, 'Корзина');
         }
 
         function showFavorites() {
@@ -836,6 +1138,7 @@
             document.getElementById('favorites-page').classList.add('active');
             setActiveTab('favorites');
             updateFavoritesDisplay();
+            showBackButton(true, 'Избранное');
         }
 
         function loadCart() {
@@ -847,6 +1150,7 @@
 
         function saveCart() {
             localStorage.setItem('goshaStoreCart', JSON.stringify(cart));
+            updateCartBadge();
         }
 
         function loadFavorites() {
@@ -870,13 +1174,27 @@
             
             container.innerHTML = products.map(product => `
                 <div class="product-card">
+                    ${product.discount ? `<div class="product-discount">-${product.discount}%</div>` : ''}
+                    ${product.isNew ? `<div class="product-new">NEW</div>` : ''}
+                    
                     <div class="product-icon">${product.image}</div>
                     <div class="product-name">${product.name}</div>
-                    <div class="product-price">${product.price} руб.</div>
-                    <button class="buy-button" onclick="addToCart(${product.id}, '${product.name}', ${product.price}, '${product.image}')">
+                    
+                    ${product.originalPrice ? `
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin: 5px 0;">
+                            <div class="product-price" style="color: #8774e1;">${product.price} руб.</div>
+                            <div style="text-decoration: line-through; color: #888; font-size: 12px;">${product.originalPrice} руб.</div>
+                        </div>
+                    ` : `
+                        <div class="product-price">${product.price} руб.</div>
+                    `}
+                    
+                    <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.image}')">
                         Купить
                     </button>
-                    <div style="margin-top: 8px; font-size: 20px; cursor: pointer;" onclick="toggleFavorite(${product.id}, '${product.name}', ${product.price}, '${product.image}')">
+                    
+                    <div style="margin-top: 8px; font-size: 20px; cursor: pointer; color: ${favorites.some(fav => fav.id === product.id) ? '#ffd700' : '#666'}" 
+                         onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.image}')">
                         ${favorites.some(fav => fav.id === product.id) ? '★' : '☆'}
                     </div>
                 </div>
@@ -884,26 +1202,31 @@
         }
 
         function addToCart(id, name, price, image) {
-            cart.push({ id, name, price, image });
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id, name, price, image, quantity: 1 });
+            }
+            
             saveCart();
-            tg.showPopup({
-                title: '✅ Товар добавлен',
-                message: 'Товар добавлен в корзину'
-            });
+            showNotification(`"${name}" добавлен в корзину`, 'success');
         }
 
         function toggleFavorite(id, name, price, image) {
             const index = favorites.findIndex(fav => fav.id === id);
             if (index > -1) {
                 favorites.splice(index, 1);
+                showNotification(`"${name}" удален из избранного`, 'warning');
             } else {
                 favorites.push({ id, name, price, image });
+                showNotification(`"${name}" добавлен в избранное`, 'success');
             }
             saveFavorites();
             
             if (currentSection === 'products') {
-                const event = new Event('productsUpdated');
-                document.dispatchEvent(event);
+                displayProducts(productsData[currentCategory] || []);
             }
         }
 
@@ -912,19 +1235,19 @@
             const totalElement = document.getElementById('cart-total');
             
             if (cart.length === 0) {
-                container.innerHTML = '<div class="empty-state">Корзина пуста</div>';
+                container.innerHTML = '<div class="empty-state">🛒<br><br>Корзина пуста</div>';
                 totalElement.textContent = 'Итого: 0 руб.';
                 return;
             }
             
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             totalElement.textContent = `Итого: ${total} руб.`;
             
             container.innerHTML = cart.map((item, index) => `
                 <div class="cart-item">
                     <div class="cart-item-info">
                         <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">${item.price} руб.</div>
+                        <div class="cart-item-price">${item.price} руб. × ${item.quantity}</div>
                     </div>
                     <div class="remove-item" onclick="removeFromCart(${index})">🗑️</div>
                 </div>
@@ -932,16 +1255,34 @@
         }
 
         function removeFromCart(index) {
+            const itemName = cart[index].name;
             cart.splice(index, 1);
             saveCart();
             updateCartDisplay();
+            showNotification(`"${itemName}" удален из корзины`, 'warning');
+        }
+
+        function updateCartBadge() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartTab = document.querySelector('.nav-tab:nth-child(3)');
+            
+            const oldBadge = cartTab.querySelector('.cart-badge');
+            if (oldBadge) oldBadge.remove();
+            
+            if (totalItems > 0) {
+                const badge = document.createElement('div');
+                badge.className = 'cart-badge';
+                badge.textContent = totalItems > 9 ? '9+' : totalItems;
+                cartTab.style.position = 'relative';
+                cartTab.appendChild(badge);
+            }
         }
 
         function updateFavoritesDisplay() {
             const container = document.getElementById('favorites-container');
             
             if (favorites.length === 0) {
-                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 40px;">Нет избранных товаров</div>';
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 40px;">⭐<br><br>Нет избранных товаров</div>';
                 return;
             }
             
@@ -950,7 +1291,7 @@
                     <div class="product-icon">${product.image}</div>
                     <div class="product-name">${product.name}</div>
                     <div class="product-price">${product.price} руб.</div>
-                    <button class="buy-button" onclick="addToCart(${product.id}, '${product.name}', ${product.price}, '${product.image}')">
+                    <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.image}')">
                         Купить
                     </button>
                 </div>
@@ -978,7 +1319,31 @@
 
         function searchProducts() {
             const query = document.getElementById('search-input').value.toLowerCase();
-            console.log('Поиск:', query);
+            const allProducts = getAllProducts();
+            
+            if (!query.trim()) {
+                if (currentCategory && productsData[currentCategory]) {
+                    displayProducts(productsData[currentCategory]);
+                }
+                return;
+            }
+            
+            const filteredProducts = allProducts.filter(product => 
+                product.name.toLowerCase().includes(query) ||
+                product.category.toLowerCase().includes(query)
+            );
+            
+            if (currentSection === 'products') {
+                displayProducts(filteredProducts);
+            }
+        }
+
+        function getAllProducts() {
+            let allProducts = [];
+            for (const category in productsData) {
+                allProducts = allProducts.concat(productsData[category]);
+            }
+            return allProducts;
         }
 
         function searchByCategory(category) {
@@ -988,21 +1353,21 @@
 
         function checkout() {
             if (cart.length === 0) {
-                tg.showPopup({
-                    title: 'Корзина пуста',
-                    message: 'Добавьте товары в корзину'
-                });
+                showNotification('Корзина пуста', 'error');
                 return;
             }
             
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
             tg.showPopup({
-                title: 'Заказ оформлен',
-                message: 'Спасибо за покупку!'
+                title: 'Заказ оформлен!',
+                message: `Спасибо за покупку! Сумма: ${total} руб.`
             });
             
             cart = [];
             saveCart();
             updateCartDisplay();
+            showNotification('Заказ успешно оформлен!', 'success');
         }
 
         function openNewsChannel() {
@@ -1011,6 +1376,18 @@
 
         function openSupport() {
             tg.openTelegramLink('https://t.me/GoshaPlayStation');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideUp 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
 
         function hideAllPages() {
