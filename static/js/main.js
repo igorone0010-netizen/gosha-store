@@ -177,7 +177,7 @@ function autoSaveData() {
             savedAt: new Date().toISOString()
         };
         localStorage.setItem('goshaStoreUserData', JSON.stringify(userData));
-        showNotification('Данные сохранены', 'success');
+        // УБРАЛИ СТРОКУ С УВЕДОМЛЕНИЕМ
     }, 1000);
 }
 
@@ -344,11 +344,11 @@ async function loadProductsFromServer() {
         // Обновляем счетчик в админке
         updateProductsCount();
         
-        showNotification('Товары загружены с сервера', 'success');
+        // УБРАЛИ СТРОКУ С УВЕДОМЛЕНИЕМ
         
     } catch (error) {
         console.log('⚠️ Не удалось загрузить с сервера:', error.message);
-        showNotification('Используем локальные данные', 'warning');
+        // УБРАЛИ СТРОКУ С УВЕДОМЛЕНИЕМ
     }
 }
 
