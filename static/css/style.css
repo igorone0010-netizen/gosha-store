@@ -1602,7 +1602,12 @@ body {
     }
 }
 
-/* Скрываем старую навигацию */
+/* ВОССТАНАВЛИВАЕМ СТАРУЮ НАВИГАЦИЮ */
 .nav-panel {
+    display: block !important;
+}
+
+/* Скрываем новую навигацию */
+.nav-glass {
     display: none !important;
 }
