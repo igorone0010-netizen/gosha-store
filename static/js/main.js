@@ -5,7 +5,7 @@ tg.MainButton.hide();
 
 // ==================== КОНФИГУРАЦИЯ АДМИНА ====================
 // ЗАМЕНИТЕ НА ВАШ REAL TELEGRAM ID
-const ADMIN_USER_ID = 123456789;
+const ADMIN_USER_ID = 5546654452;
 
 // ==================== НАСТРОЙКИ СЕРВЕРА ====================
 const PRODUCTS_DATA_URL = '/api/products';
