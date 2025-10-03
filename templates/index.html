@@ -124,22 +124,12 @@
         /* Главная страница */
         .main-content {
             text-align: left;
+            padding-top: 0;
         }
         
-        /* ИСПРАВЛЕННЫЙ ЗАГОЛОВОК - БОЛЕЕ КОМПАКТНЫЙ */
-        .main-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--tg-theme-text-color, #ffffff);
-            line-height: 1.2;
-        }
-        
-        .main-subtitle {
-            font-size: 13px;
-            color: var(--tg-theme-hint-color, #888);
-            margin-bottom: 25px;
-            line-height: 1.2;
+        /* УБРАН ЗАГОЛОВОК */
+        .main-title, .main-subtitle {
+            display: none;
         }
         
         .menu-grid {
@@ -789,9 +779,7 @@
     <!-- Главная страница -->
     <div id="main-page" class="page active">
         <div class="main-content">
-            <!-- ИСПРАВЛЕННЫЙ ЗАГОЛОВОК - БОЛЕЕ КОМПАКТНЫЙ -->
-            <div class="main-title">Выбери раздел</div>
-            <div class="main-subtitle">Покупка игр на ваш личный аккаунт PS4/PS5</div>
+            <!-- УБРАН ЗАГОЛОВОК "Выбери раздел" -->
             
             <div class="menu-grid">
                 <!-- ИСПРАВЛЕННАЯ КНОПКА PLAYSTATION - СВЕТЛО-ГОЛУБОЙ ФОН -->
