@@ -445,5 +445,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Загружаем товары с сервера при запуске
     loadProductsFromServer();
+
+// Показываем главную страницу (скрываем навигацию)
+function showMain() {
+    hideAllPages();
+    document.getElementById('main-page').classList.add('active');
+    
+    // СКРЫВАЕМ НАВИГАЦИЮ НА ГЛАВНОЙ
+    document.getElementById('nav-panel').classList.remove('active');
+    
+    // СКРЫВАЕМ АДМИН ПАНЕЛЬ
+    document.getElementById('admin-panel').style.display = 'none';
+    
+    // Скрываем кнопку назад
+    showBackButton(false);
+    
+    // Обновляем историю
+    currentPage = 'main';
+    pageHistory.length = 0; // Очищаем историю на главной
+}
+
+function showSectionHome() {
+    showMain();
+}
 });
 
