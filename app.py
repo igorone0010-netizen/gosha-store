@@ -1,4 +1,4 @@
-from flask import Flask, send_file, jsonify, request
+from flask import Flask, send_file, jsonify, request, send_from_directory
 import os
 import json
 
@@ -7,6 +7,11 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return send_file('templates/index.html')
+
+# Маршрут для статических файлов (CSS, JS)
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static', path)
 
 @app.route('/api/products')
 def get_products():
