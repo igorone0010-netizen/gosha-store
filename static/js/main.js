@@ -437,3 +437,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Загружаем товары с сервера при запуске
     loadProductsFromServer();
 });
+function showNavPanel() {
+    document.getElementById('nav-panel').classList.add('active');
+}
+
+function hideNavPanel() {
+    document.getElementById('nav-panel').classList.remove('active');
+}
