@@ -443,6 +443,9 @@ document.addEventListener('DOMContentLoaded', function() {
     showMain();
     updateProductsCount();
     
+    // Скрываем навигацию при загрузке (на главной) - ДОБАВЬТЕ ЭТУ СТРОКУ
+    document.getElementById('nav-panel').classList.remove('active');
+    
     // Загружаем товары с сервера при запуске
     loadProductsFromServer();
 
