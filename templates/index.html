@@ -19,8 +19,12 @@
                 <div class="logo-text" id="header-title">GoshaStore</div>
             </div>
         </div>
-        <div class="profile-button" onclick="showProfile()" id="profile-button">
-            Профиль
+        <div class="header-right">
+            <!-- Секретная кнопка админки теперь здесь -->
+            <button class="secret-button-header" onclick="toggleAdminPanel()">⚙️</button>
+            <div class="profile-button" onclick="showProfile()" id="profile-button">
+                Профиль
+            </div>
         </div>
     </div>
 
