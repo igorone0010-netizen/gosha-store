@@ -221,6 +221,15 @@ function showSectionHome() {
     }
 }
 
+// ==================== ФУНКЦИИ ДЛЯ НАВИГАЦИОННОЙ ПАНЕЛИ ====================
+function showNavPanel() {
+    document.getElementById('nav-panel').classList.add('active');
+}
+
+function hideNavPanel() {
+    document.getElementById('nav-panel').classList.remove('active');
+}
+
 function showCategories() {
     navigateToPage('categories', 'Категории игр');
     setActiveTab('categories');
@@ -437,10 +446,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Загружаем товары с сервера при запуске
     loadProductsFromServer();
 });
-function showNavPanel() {
-    document.getElementById('nav-panel').classList.add('active');
-}
 
-function hideNavPanel() {
-    document.getElementById('nav-panel').classList.remove('active');
-}
