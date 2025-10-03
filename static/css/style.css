@@ -1,1 +1,1280 @@
-/* CSS стили будут здесь */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #000000;
+    color: #ffffff;
+    line-height: 1.4;
+}
+
+.page {
+    display: none;
+    min-height: 100vh;
+    padding: 70px 16px 100px;
+}
+
+.active {
+    display: block;
+}
+
+/* Фиксированная верхняя панель */
+.top-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 16px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    backdrop-filter: blur(20px);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+/* ЛОГОТИП GS */
+.app-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 16px;
+    color: white;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.logo-icon::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.logo-text {
+    font-size: 18px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+}
+
+.profile-button {
+    padding: 10px 18px;
+    border-radius: 25px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.profile-button.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Секретная кнопка админки */
+.secret-button {
+    position: fixed;
+    top: 80px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: white;
+    z-index: 1001;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    display: none;
+}
+
+.secret-button:active {
+    transform: scale(0.95);
+}
+
+/* АДМИН ПАНЕЛЬ */
+.admin-panel {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border-radius: 16px;
+    padding: 20px;
+    margin: 0 0 20px 0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    display: none;
+}
+
+.admin-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.admin-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.admin-tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.admin-section {
+    display: none;
+}
+
+.admin-section.active {
+    display: block;
+}
+
+.admin-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    color: #ffffff;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.admin-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.admin-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-size: 14px;
+}
+
+.admin-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: all 0.2s;
+}
+
+.admin-button:active {
+    transform: scale(0.95);
+}
+
+.admin-button.save {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+}
+
+.admin-button.danger {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+}
+
+/* Drag & Drop стили */
+.drag-drop-area {
+    border: 2px dashed rgba(255,255,255,0.3);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    margin: 15px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255,255,255,0.05);
+}
+
+.drag-drop-area:hover, .drag-drop-area.dragover {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.drag-drop-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.file-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin: 15px 0;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin: 5px 0;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.file-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.file-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.batch-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.quick-template {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.template-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 8px 0;
+    align-items: center;
+}
+
+.template-header {
+    font-weight: bold;
+    color: #667eea;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.template-input {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 8px;
+    color: white;
+    font-size: 12px;
+}
+
+.batch-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 15px 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.preview-item {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.preview-image {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+.preview-name {
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* URL стили */
+.url-input-section {
+    margin: 20px 0;
+}
+
+.url-example {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.bulk-textarea {
+    width: 100%;
+    height: 200px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    color: #ffffff;
+    font-size: 14px;
+    font-family: monospace;
+    resize: vertical;
+}
+
+.bulk-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.url-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 5px;
+    border: 2px solid transparent;
+}
+
+.url-preview.valid {
+    border-color: #4CAF50;
+}
+
+.url-preview.invalid {
+    border-color: #ff6b6b;
+    opacity: 0.5;
+}
+
+.url-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 15px 0;
+}
+
+.url-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr 1fr 1fr auto;
+    gap: 8px;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.processing-status {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+}
+
+.products-count {
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+/* Главная страница */
+.main-content {
+    text-align: left;
+    padding-top: 0;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* КНОПКА PLAYSTATION СО СВЕРКАНИЕМ */
+.menu-button {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.menu-button:hover::before {
+    left: 100%;
+}
+
+.menu-button.playstation {
+    background: linear-gradient(135deg, #0070cc 0%, #0055a4 100%);
+    border: 1px solid rgba(0, 112, 204, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 112, 204, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-button.playstation::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+.menu-button.playstation::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    transition: left 0.7s;
+}
+
+.menu-button.playstation:hover::after {
+    left: 100%;
+}
+
+.menu-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.menu-button:active {
+    transform: scale(0.98);
+}
+
+.menu-button.playstation:active {
+    background: linear-gradient(135deg, #005ca9 0%, #004480 100%);
+}
+
+.button-name {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #ffffff;
+    line-height: 1.2;
+    position: relative;
+    z-index: 2;
+}
+
+.menu-button.playstation .button-name {
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.button-description {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.3;
+    position: relative;
+    z-index: 2;
+}
+
+.menu-button.playstation .button-description {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* СЕКЦИЯ ПОДДЕРЖКИ */
+.support-section {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+    margin-top: 12px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.support-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.support-section:hover::before {
+    left: 100%;
+}
+
+.support-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.support-section:active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transform: scale(0.98);
+}
+
+.support-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    margin: 0 12px 8px 0;
+    font-size: 20px;
+    vertical-align: middle;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.support-title {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+    text-align: left;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.support-description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: left;
+    margin-left: 0;
+}
+
+/* НАВИГАЦИОННАЯ ПАНЕЛЬ */
+.nav-panel {
+    position: fixed;
+    bottom: 15px;
+    left: 8px;
+    right: 8px;
+    background: rgba(10, 10, 10, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 12px 16px;
+    display: none;
+    z-index: 1000;
+    backdrop-filter: blur(40px);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+    max-width: 95%;
+    margin: 0 auto;
+    height: auto;
+    min-height: 75px;
+}
+
+.nav-panel.active {
+    display: block;
+}
+
+.nav-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+
+.menu-toggle {
+    font-size: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    backdrop-filter: blur(10px);
+}
+
+.menu-toggle:active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(0.95);
+}
+
+.search-container {
+    flex: 1;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 18px;
+    padding: 12px 45px 12px 16px;
+    color: #ffffff;
+    font-size: 14px;
+    outline: none;
+    backdrop-filter: blur(15px);
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+}
+
+.search-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+}
+
+.nav-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.nav-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: transparent;
+}
+
+.nav-tab:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-tab:active {
+    background: rgba(255, 255, 255, 0.12);
+    transform: scale(0.95);
+}
+
+.nav-tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.tab-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.nav-tab.active .tab-icon {
+    transform: scale(1.1);
+}
+
+.tab-text {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    font-weight: 600;
+}
+
+.nav-tab.active .tab-text {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* СТРАНИЦА ТОВАРОВ */
+.products-page {
+    padding: 70px 0 100px;
+}
+
+.hot-offers {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 16px 16px;
+    text-align: left;
+    letter-spacing: -0.5px;
+}
+
+.products-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 14px !important;
+    padding: 0 16px !important;
+}
+
+.product-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 12px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    backdrop-filter: blur(10px);
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.product-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.product-badge.discount {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    left: auto;
+    right: 8px;
+}
+
+.product-image {
+    width: 100%;
+    height: 85px;
+    background: linear-gradient(135deg, #2d3748, #4a5568);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    opacity: 0.4;
+}
+
+.product-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #ffffff;
+    text-align: left;
+    line-height: 1.3;
+    height: 32px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    flex-grow: 1;
+}
+
+.product-prices {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    justify-content: flex-start;
+}
+
+.product-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.product-old-price {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: line-through;
+}
+
+.buy-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    margin-top: auto;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.buy-button:active {
+    transform: scale(0.95);
+}
+
+.favorite-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    z-index: 3;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.favorite-button:active {
+    transform: scale(0.9);
+}
+
+.favorite-button.active {
+    color: #ffd700;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* СТРАНИЦА ПРОФИЛЯ */
+.profile-header {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.profile-welcome {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: #ffffff;
+    text-align: left;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.profile-subtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 25px;
+    text-align: left;
+    line-height: 1.3;
+}
+
+.profile-section {
+    margin-bottom: 20px;
+}
+
+.input-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    backdrop-filter: blur(10px);
+}
+
+.input-card.active {
+    border-color: #667eea;
+    background: rgba(0, 0, 0, 0.6);
+    height: 60px;
+    align-items: flex-start;
+    padding-top: 18px;
+}
+
+.input-label {
+    font-size: 15px;
+    color: #ffffff;
+    font-weight: 600;
+    position: absolute;
+    transition: all 0.2s;
+    pointer-events: none;
+    text-align: left;
+    width: 100%;
+    line-height: 1.2;
+}
+
+.input-card.active .input-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    transform: translateY(-6px);
+}
+
+.input-card.has-value .input-label {
+    display: none;
+}
+
+.input-field {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 15px;
+    outline: none;
+    padding: 0;
+    opacity: 0;
+    height: 0;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.input-card.active .input-field {
+    opacity: 1;
+    height: auto;
+}
+
+.input-card.has-value .input-field {
+    opacity: 1;
+    height: auto;
+}
+
+.input-field::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    text-align: left;
+    font-size: 14px;
+}
+
+.center-blocks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.center-block {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.center-block:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.center-block:active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transform: scale(0.98);
+}
+
+.block-icon {
+    font-size: 20px;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+.block-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 3px;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.block-description {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: left;
+    line-height: 1.3;
+}
+
+.support-section-profile {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    margin-top: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.empty-state {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 40px 20px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* СТРАНИЦА КАТЕГОРИЙ */
+.categories-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.category-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.category-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.category-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* СТРАНИЦА КОРЗИНЫ */
+.cart-item {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.cart-item-price {
+    font-size: 15px;
+    color: #667eea;
+    font-weight: 700;
+}
+
+.remove-item {
+    color: #ff6b6b;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 18px;
+}
+
+.cart-total {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 25px 0;
+    color: #ffffff;
+}
+
+.checkout-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 14px;
+    padding: 18px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.checkout-button:active {
+    transform: scale(0.98);
+}
+
+.cart-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* УВЕДОМЛЕНИЯ */
+.notification {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 12px;
+    z-index: 10000;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    animation: slideDown 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.notification.success { background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); }
+.notification.error { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); }
+.notification.warning { background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%); }
+
+@keyframes slideDown {
+    from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateX(-50%) translateY(0); opacity: 1; }
+    to { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+}
