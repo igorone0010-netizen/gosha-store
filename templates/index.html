@@ -51,7 +51,7 @@
             flex: 1;
         }
         
-        /* СОВРЕМЕННЫЙ ЛОГОТИП GS */
+        /* ЛОГОТИП GS */
         .app-logo {
             display: flex;
             align-items: center;
@@ -126,17 +126,20 @@
             text-align: left;
         }
         
+        /* ИСПРАВЛЕННЫЙ ЗАГОЛОВОК - БОЛЕЕ КОМПАКТНЫЙ */
         .main-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             color: var(--tg-theme-text-color, #ffffff);
+            line-height: 1.2;
         }
         
         .main-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--tg-theme-hint-color, #888);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            line-height: 1.2;
         }
         
         .menu-grid {
@@ -146,14 +149,20 @@
             margin-bottom: 20px;
         }
         
+        /* ИСПРАВЛЕННАЯ КНОПКА PLAYSTATION - СВЕТЛО-ГОЛУБОЙ ФОН */
         .menu-button {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border: 1px solid var(--tg-theme-hint-color, #333);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: left;
+        }
+        
+        .menu-button.playstation {
+            background: #0070cc;
+            border-color: #0070cc;
         }
         
         .menu-button:hover {
@@ -166,27 +175,43 @@
             transform: scale(0.98);
         }
         
+        .menu-button.playstation:active {
+            background: #005ca9;
+        }
+        
+        /* ИСПРАВЛЕННЫЙ ТЕКСТ ДЛЯ PLAYSTATION - БОЛЕЕ КОМПАКТНЫЙ */
         .button-name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--tg-theme-text-color, #ffffff);
+            line-height: 1.2;
+        }
+        
+        .menu-button.playstation .button-name {
+            color: #ffffff;
         }
         
         .button-description {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--tg-theme-hint-color, #888);
-            line-height: 1.3;
+            line-height: 1.2;
         }
         
+        .menu-button.playstation .button-description {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* ВОССТАНОВЛЕННАЯ СЕКЦИЯ ПОДДЕРЖКИ - С ФОНОМ, ТЕКСТ СЛЕВА */
         .support-section {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             border: 1px solid var(--tg-theme-hint-color, #333);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: left;
+            margin-top: 10px;
         }
         
         .support-section:hover {
@@ -199,45 +224,35 @@
             transform: scale(0.98);
         }
         
-        .support-text {
-            color: var(--tg-theme-hint-color, #888);
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 8px;
-        }
-        
-        .support-bot {
-            color: var(--tg-theme-button-color, #8774e1);
-            font-weight: 500;
-            font-size: 14px;
-        }
-        
-        /* ОБНОВЛЕННАЯ ПОДДЕРЖКА - УБРАН БОТ */
         .support-icon {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: var(--tg-theme-button-color, #8774e1);
-            border-radius: 10px;
-            margin: 0 auto 12px auto;
-            font-size: 20px;
+            width: 32px;
+            height: 32px;
+            background: transparent;
+            border-radius: 8px;
+            margin: 0 12px 8px 0;
+            font-size: 18px;
+            vertical-align: middle;
         }
         
         .support-title {
             color: var(--tg-theme-text-color, #ffffff);
             font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 6px;
-            text-align: center;
+            font-size: 15px;
+            margin-bottom: 4px;
+            text-align: left;
+            display: inline-block;
+            vertical-align: middle;
         }
         
         .support-description {
             color: var(--tg-theme-hint-color, #888);
             font-size: 13px;
-            line-height: 1.4;
-            text-align: center;
+            line-height: 1.3;
+            text-align: left;
+            margin-left: 0;
         }
         
         /* Остальные стили */
@@ -305,41 +320,43 @@
             transform: scale(0.95);
         }
         
-        /* ОБНОВЛЕННЫЕ СТИЛИ ДЛЯ ПРОФИЛЯ */
+        /* ИСПРАВЛЕННЫЙ ПРОФИЛЬ - БОЛЕЕ КОМПАКТНЫЙ */
         .profile-header {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: left;
         }
         
         .profile-welcome {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             color: var(--tg-theme-text-color, #ffffff);
             text-align: left;
+            line-height: 1.2;
         }
         
         .profile-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--tg-theme-hint-color, #888);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-align: left;
+            line-height: 1.2;
         }
         
         .profile-section {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         .input-card {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border: 1px solid var(--tg-theme-hint-color, #333);
             border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 10px;
+            padding: 14px;
+            margin-bottom: 8px;
             transition: all 0.2s;
             cursor: pointer;
             position: relative;
-            height: 50px;
+            height: 48px;
             display: flex;
             align-items: center;
             text-align: left;
@@ -348,13 +365,13 @@
         .input-card.active {
             border-color: var(--tg-theme-button-color, #8774e1);
             background: var(--tg-theme-bg-color, #1a1a1a);
-            height: 60px;
+            height: 56px;
             align-items: flex-start;
-            padding-top: 18px;
+            padding-top: 16px;
         }
         
         .input-label {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--tg-theme-text-color, #ffffff);
             font-weight: 500;
             position: absolute;
@@ -362,12 +379,13 @@
             pointer-events: none;
             text-align: left;
             width: 100%;
+            line-height: 1.2;
         }
         
         .input-card.active .input-label {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--tg-theme-hint-color, #888);
-            transform: translateY(-8px);
+            transform: translateY(-6px);
         }
         
         .input-card.has-value .input-label {
@@ -379,7 +397,7 @@
             background: transparent;
             border: none;
             color: var(--tg-theme-text-color, #ffffff);
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
             padding: 0;
             opacity: 0;
@@ -401,21 +419,22 @@
         .input-field::placeholder {
             color: var(--tg-theme-hint-color, #666);
             text-align: left;
+            font-size: 13px;
         }
         
-        /* ОБНОВЛЕННЫЕ ЦЕНТРАЛЬНЫЕ БЛОКИ */
+        /* ИСПРАВЛЕННЫЕ ЦЕНТРАЛЬНЫЕ БЛОКИ - БОЛЕЕ КОМПАКТНЫЕ */
         .center-blocks {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 20px 0;
+            gap: 10px;
+            margin: 15px 0;
         }
         
         .center-block {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border: 1px solid var(--tg-theme-hint-color, #333);
             border-radius: 12px;
-            padding: 15px;
+            padding: 14px;
             text-align: left;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -432,42 +451,45 @@
         }
         
         .block-icon {
-            font-size: 20px;
-            margin-bottom: 6px;
+            font-size: 18px;
+            margin-bottom: 5px;
             text-align: left;
         }
         
         .block-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--tg-theme-text-color, #ffffff);
             margin-bottom: 2px;
             text-align: left;
+            line-height: 1.2;
         }
         
         .block-description {
             font-size: 11px;
             color: var(--tg-theme-hint-color, #888);
             text-align: left;
+            line-height: 1.2;
         }
         
-        /* ОБНОВЛЕННАЯ ПОДДЕРЖКА */
+        /* Поддержка в профиле */
         .support-section-profile {
             background: var(--tg-theme-secondary-bg-color, #2d2d2d);
             border-radius: 12px;
-            padding: 15px;
+            padding: 14px;
             border: 1px solid var(--tg-theme-hint-color, #333);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         
         .empty-state {
             text-align: center;
             color: var(--tg-theme-hint-color, #888);
-            padding: 40px 20px;
-            font-size: 14px;
+            padding: 30px 20px;
+            font-size: 13px;
+            line-height: 1.3;
         }
         
         /* Навигационная панель */
@@ -753,7 +775,7 @@
     <!-- Фиксированная верхняя панель -->
     <div class="top-header">
         <div class="header-left">
-            <!-- ОБНОВЛЕННЫЙ ЛОГОТИП GS -->
+            <!-- ЛОГОТИП GS -->
             <div class="app-logo">
                 <div class="logo-icon">GS</div>
                 <div class="logo-text" id="header-title">GoshaStore</div>
@@ -767,24 +789,24 @@
     <!-- Главная страница -->
     <div id="main-page" class="page active">
         <div class="main-content">
+            <!-- ИСПРАВЛЕННЫЙ ЗАГОЛОВОК - БОЛЕЕ КОМПАКТНЫЙ -->
             <div class="main-title">Выбери раздел</div>
             <div class="main-subtitle">Покупка игр на ваш личный аккаунт PS4/PS5</div>
             
             <div class="menu-grid">
-                <div class="menu-button" onclick="showProducts('playstation_personal')">
+                <!-- ИСПРАВЛЕННАЯ КНОПКА PLAYSTATION - СВЕТЛО-ГОЛУБОЙ ФОН -->
+                <div class="menu-button playstation" onclick="showProducts('playstation_personal')">
                     <div class="button-name">PlayStation Личный</div>
                     <div class="button-description">Покупка игр на ваш личный аккаунт PS4/PS5</div>
                 </div>
             </div>
 
-            <!-- ОБНОВЛЕННАЯ СЕКЦИЯ ПОДДЕРЖКИ -->
+            <!-- ВОССТАНОВЛЕННАЯ СЕКЦИЯ ПОДДЕРЖКИ - С ФОНОМ, ТЕКСТ СЛЕВА -->
             <div class="support-section" onclick="openSupport()">
                 <div class="support-icon">💬</div>
                 <div class="support-title">Поддержка</div>
                 <div class="support-description">
-                    Не нашли нужный товар?<br>
-                    Остались вопросы?<br>
-                    Проблема с заказом?
+                    Не нашли нужный товар? Остались вопросы? Проблема с заказом?
                 </div>
             </div>
         </div>
@@ -797,7 +819,7 @@
         </div>
     </div>
 
-    <!-- ОБНОВЛЕННАЯ СТРАНИЦА ПРОФИЛЯ -->
+    <!-- ИСПРАВЛЕННАЯ СТРАНИЦА ПРОФИЛЯ - БОЛЕЕ КОМПАКТНАЯ -->
     <div id="profile-page" class="page">
         <!-- Приветствие -->
         <div class="profile-header">
@@ -913,6 +935,7 @@
     </div>
 
     <script>
+        // ... (JavaScript код остается без изменений)
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.MainButton.hide();
