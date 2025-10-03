@@ -386,7 +386,7 @@ function isAdmin() {
 }
 
 function initAdminPanel() {
-    const secretButton = document.querySelector('.secret-button');
+    const secretButton = document.querySelector('.secret-button-header');
     const adminPanel = document.getElementById('admin-panel');
     
     if (isAdmin()) {
