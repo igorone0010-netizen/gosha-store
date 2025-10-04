@@ -753,6 +753,31 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Загружаем товары с сервера при запуске
     loadProductsFromServer();
+    
+    setTimeout(function() {
+        const carousel = document.querySelector('.games-carousel');
+        if (carousel) {
+            carousel.style.width = '100%';
+            carousel.style.overflow = 'hidden';
+            console.log('✅ Исправлена ширина карусели');
+        }
+        
+        const container = document.querySelector('.carousel-container');
+        if (container) {
+            container.style.width = '100%';
+            container.style.margin = '0';
+            container.style.padding = '20px 0';
+            console.log('✅ Исправлен контейнер карусели');
+        }
+        
+        const slides = document.querySelectorAll('.carousel-slide');
+        slides.forEach(slide => {
+            slide.style.flex = '0 0 100%';
+            slide.style.margin = '0';
+        });
+    }, 1000);
+
+    
 });
 
 // Функции для управления автопрокруткой
