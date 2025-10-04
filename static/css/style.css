@@ -2263,3 +2263,31 @@ body {
 .carousel-dot.active {
     transform: scale(1.26) !important; /* было 1.4 */
 }
+
+/* Стили для управления подкатегориями */
+.category-item {
+    transition: all 0.3s ease;
+}
+
+.category-item:hover {
+    background: rgba(255,255,255,0.12) !important;
+}
+
+.categories-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.categories-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.categories-list::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+}
+
+.categories-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+}
