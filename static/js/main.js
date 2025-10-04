@@ -502,31 +502,84 @@ function setupCarouselDrag() {
     let isDragging = false;
     let startX;
     let scrollLeft;
+    let velocity = 0;
+    let animationFrame;
+    let lastX;
+    let lastTime;
+
+    function smoothScroll() {
+        if (Math.abs(velocity) > 0.1) {
+            container.scrollLeft += velocity;
+            velocity *= 0.95; // Замедление
+            animationFrame = requestAnimationFrame(smoothScroll);
+        } else {
+            velocity = 0;
+            updateActiveSlide();
+        }
+    }
 
     // Mouse events
     container.addEventListener('mousedown', (e) => {
         isDragging = true;
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
+        velocity = 0;
+        lastX = e.pageX;
+        lastTime = Date.now();
+        container.style.cursor = 'grabbing';
         container.style.scrollBehavior = 'auto';
+        
+        if (animationFrame) {
+            cancelAnimationFrame(animationFrame);
+        }
     });
 
     container.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
+        
         e.preventDefault();
         const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 2;
+        const walk = (x - startX) * 1.5; // Увеличиваем чувствительность
+        
         container.scrollLeft = scrollLeft - walk;
+        
+        // Рассчитываем скорость для инерции
+        const currentTime = Date.now();
+        const deltaTime = currentTime - lastTime;
+        if (deltaTime > 0) {
+            const deltaX = e.pageX - lastX;
+            velocity = -deltaX / deltaTime * 20;
+        }
+        
+        lastX = e.pageX;
+        lastTime = currentTime;
     });
 
     container.addEventListener('mouseup', () => {
+        if (!isDragging) return;
         isDragging = false;
+        container.style.cursor = 'grab';
         container.style.scrollBehavior = 'smooth';
-        updateActiveSlide();
+        
+        // Запускаем инерционное скроллирование
+        if (Math.abs(velocity) > 0.5) {
+            animationFrame = requestAnimationFrame(smoothScroll);
+        } else {
+            updateActiveSlide();
+        }
     });
 
     container.addEventListener('mouseleave', () => {
-        isDragging = false;
+        if (isDragging) {
+            isDragging = false;
+            container.style.cursor = 'grab';
+            
+            if (Math.abs(velocity) > 0.5) {
+                animationFrame = requestAnimationFrame(smoothScroll);
+            } else {
+                updateActiveSlide();
+            }
+        }
     });
 
     // Touch events для мобильных
@@ -534,19 +587,50 @@ function setupCarouselDrag() {
         isDragging = true;
         startX = e.touches[0].pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
+        velocity = 0;
+        lastX = e.touches[0].pageX;
+        lastTime = Date.now();
+        container.style.scrollBehavior = 'auto';
+        
+        if (animationFrame) {
+            cancelAnimationFrame(animationFrame);
+        }
     });
 
     container.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
+        
         const x = e.touches[0].pageX - container.offsetLeft;
-        const walk = (x - startX) * 2;
+        const walk = (x - startX) * 1.5;
+        
         container.scrollLeft = scrollLeft - walk;
+        
+        // Рассчитываем скорость для инерции
+        const currentTime = Date.now();
+        const deltaTime = currentTime - lastTime;
+        if (deltaTime > 0) {
+            const deltaX = e.touches[0].pageX - lastX;
+            velocity = -deltaX / deltaTime * 20;
+        }
+        
+        lastX = e.touches[0].pageX;
+        lastTime = currentTime;
     });
 
     container.addEventListener('touchend', () => {
+        if (!isDragging) return;
         isDragging = false;
-        updateActiveSlide();
+        
+        // Запускаем инерционное скроллирование
+        if (Math.abs(velocity) > 0.5) {
+            animationFrame = requestAnimationFrame(smoothScroll);
+        } else {
+            updateActiveSlide();
+        }
     });
+
+    // Инициализируем курсор
+    container.style.cursor = 'grab';
 }
 
 function openGameDetails(gameId) {
