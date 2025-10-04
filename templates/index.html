@@ -31,10 +31,10 @@
             <div id="admin-panel" class="admin-panel">
                 <div class="admin-title">🚀 Панель управления</div>
                 
-                <div class="admin-tabs">
+               <div class="admin-tabs">
     <div class="admin-tab active" onclick="switchAdminTab('files')">📁 Из файлов</div>
     <div class="admin-tab" onclick="switchAdminTab('urls')">🌐 Из URL</div>
-    <div class="admin-tab" onclick="testCategoriesTab()">📂 Подкатегории</div>
+    <div class="admin-tab" onclick="switchAdminTab('categories')">📂 Подкатегории</div>
     <div class="admin-tab" onclick="switchAdminTab('manage')">⚙️ Управление</div>
 </div>
                 
@@ -83,9 +83,36 @@
                 </div>
                 
                 <!-- Вкладка URL -->
-                <div id="admin-urls" class="admin-section">
+<div id="admin-urls" class="admin-section">
+    <div class="url-input-section">
+        <div class="admin-title">📝 Вставьте список URL</div>
+        
+        <div class="url-example">
+            <strong>Формат (каждая строка - товар):</strong><br>
+            Название | Цена | Старая цена | URL картинки | Категория<br><br>
+            
+            <strong>Пример:</strong><br>
+            God of War Ragnarok | 3999 | 4999 | https://example.com/god.jpg | Экшн<br>
+            Spider-Man 2 | 4999 | 0 | https://example.com/spider.jpg | Экшн
+        </div>
+        
+        <textarea class="bulk-textarea" id="url-products" placeholder="Вставьте ваш список товаров здесь..." 
+                  oninput="previewUrlProducts()"></textarea>
+        
+        <div class="processing-status" id="url-status">Готов к обработке</div>
+        
+        <div class="batch-preview" id="url-preview"></div>
+        
+        <div class="url-list" id="url-list"></div>
+        
+        <button class="admin-button save" onclick="addUrlProducts()">
+            🚀 Добавить все товары из URL
+        </button>
+    </div>
+</div>
 
-                    <div id="admin-categories" class="admin-section">
+<!-- Вкладка подкатегорий -->
+<div id="admin-categories" class="admin-section">
     <div class="admin-title">📂 Управление подкатегориями</div>
     
     <div class="admin-row">
@@ -102,34 +129,6 @@
         <!-- Список подкатегорий будет здесь -->
     </div>
 </div>
-
-                    
-                    <div class="url-input-section">
-                        <div class="admin-title">📝 Вставьте список URL</div>
-                        
-                        <div class="url-example">
-                            <strong>Формат (каждая строка - товар):</strong><br>
-                            Название | Цена | Старая цена | URL картинки | Категория<br><br>
-                            
-                            <strong>Пример:</strong><br>
-                            God of War Ragnarok | 3999 | 4999 | https://example.com/god.jpg | Экшн<br>
-                            Spider-Man 2 | 4999 | 0 | https://example.com/spider.jpg | Экшн
-                        </div>
-                        
-                        <textarea class="bulk-textarea" id="url-products" placeholder="Вставьте ваш список товаров здесь..." 
-                                  oninput="previewUrlProducts()"></textarea>
-                        
-                        <div class="processing-status" id="url-status">Готов к обработке</div>
-                        
-                        <div class="batch-preview" id="url-preview"></div>
-                        
-                        <div class="url-list" id="url-list"></div>
-                        
-                        <button class="admin-button save" onclick="addUrlProducts()">
-                            🚀 Добавить все товары из URL
-                        </button>
-                    </div>
-                </div>
                 
                 <!-- Вкладка управления -->
                 <div id="admin-manage" class="admin-section">
