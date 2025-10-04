@@ -590,33 +590,3 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCategories();
 });
 
-// ВРЕМЕННАЯ ФУНКЦИЯ ДЛЯ ТЕСТА
-function testCategoriesTab() {
-    console.log('=== ТЕСТ ВКЛАДКИ КАТЕГОРИЙ ===');
-    
-    // Скрываем все
-    document.querySelectorAll('.admin-section').forEach(section => {
-        section.classList.remove('active');
-    });
-    document.querySelectorAll('.admin-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    
-    // Показываем категории
-    const categoriesSection = document.getElementById('admin-categories');
-    if (categoriesSection) {
-        categoriesSection.classList.add('active');
-        console.log('✅ Секция категорий показана');
-    } else {
-        console.error('❌ Секция категорий не найдена!');
-    }
-    
-    // Активируем вкладку
-    const categoriesTab = document.querySelector('.admin-tab[onclick*="categories"]');
-    if (categoriesTab) {
-        categoriesTab.classList.add('active');
-        console.log('✅ Вкладка категорий активирована');
-    }
-    
-    loadCategoriesList();
-}
