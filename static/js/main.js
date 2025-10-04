@@ -709,13 +709,34 @@ function initAdminPanel() {
 }
 
 function showAdminPage() {
-    if (!isAdmin()) return;
+    if (!isAdmin()) {
+        showNotification('Доступ запрещен', 'error');
+        return;
+    }
     
-    navigateToPage('admin', 'Панель управления');
+    hideAllPages();
+    document.getElementById('admin-page').classList.add('active');
+    
+    // Показываем кнопку назад
+    showBackButton(true);
+    
+    // Скрываем навигационную панель
+    document.getElementById('nav-panel').classList.remove('active');
+    
+    // Обновляем счетчик товаров
     updateProductsCount();
     
-    // Скрываем навигационную панель в админке
-    document.getElementById('nav-panel').classList.remove('active');
+    // Добавляем в историю
+    if (currentPage !== 'admin') {
+        pageHistory.push({
+            page: currentPage,
+            title: 'GoshaStore'
+        });
+    }
+    
+    currentPage = 'admin';
+    
+    console.log('🚀 Админ-панель открыта');
 }
 
 function switchAdminTab(tabName) {
