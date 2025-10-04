@@ -114,28 +114,42 @@
                 </div>
                 
                 <!-- Вкладка управления -->
-                <div id="admin-manage" class="admin-section">
-                    <div class="products-count">
-                        Всего товаров: <span id="total-products">0</span>
-                    </div>
-                    
-                    <button class="admin-button save" onclick="saveProductsToServer()">
-                        💾 Сохранить на сервер
-                    </button>
-                    
-                    <button class="admin-button" onclick="loadProductsFromServer()">
-                        🔄 Загрузить с сервера
-                    </button>
-                    
-                    <div class="file-input-wrapper">
-                        <input type="file" class="file-input" id="import-file" accept=".json" onchange="importProducts(this)">
-                        <div class="file-input-label">📥 Импорт базы товаров</div>
-                    </div>
-                    
-                    <button class="admin-button danger" onclick="clearAllProducts()">
-                        🗑️ Удалить все товары
-                    </button>
-                </div>
+                <!-- Вкладка управления -->
+<div id="admin-manage" class="admin-section">
+    <div class="products-count">
+        Всего товаров: <span id="total-products">0</span>
+    </div>
+    
+    <!-- Новая секция управления товарами -->
+    <div id="products-management">
+        <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">
+            Нажмите "Показать все товары" для управления
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
+        <button class="admin-button" onclick="showProductsManagement()">
+            📦 Показать товары
+        </button>
+        
+        <button class="admin-button save" onclick="saveProductsToServer()">
+            💾 Сохранить
+        </button>
+    </div>
+    
+    <button class="admin-button" onclick="loadProductsFromServer()">
+        🔄 Загрузить с сервера
+    </button>
+    
+    <div class="file-input-wrapper" style="margin: 15px 0;">
+        <input type="file" class="file-input" id="import-file" accept=".json" onchange="importProducts(this)">
+        <div class="file-input-label">📥 Импорт базы товаров</div>
+    </div>
+    
+    <button class="admin-button danger" onclick="clearAllProducts()">
+        🗑️ Удалить все товары
+    </button>
+</div>
             </div>
 
             <div class="menu-grid">
