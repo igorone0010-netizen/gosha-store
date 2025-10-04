@@ -4,7 +4,6 @@ tg.expand();
 tg.MainButton.hide();
 
 // ==================== КОНФИГУРАЦИЯ АДМИНА ====================
-// ЗАМЕНИТЕ НА ВАШ REAL TELEGRAM ID
 const ADMIN_USER_ID = 5546654452;
 
 // ==================== НАСТРОЙКИ СЕРВЕРА ====================
@@ -43,6 +42,8 @@ function showBackButton(show) {
 }
 
 function navigateToPage(pageId, title = '', addToHistory = true) {
+    console.log('🔄 Переход на страницу:', pageId);
+    
     if (addToHistory && currentPage !== pageId) {
         pageHistory.push({
             page: currentPage,
@@ -51,28 +52,48 @@ function navigateToPage(pageId, title = '', addToHistory = true) {
     }
     
     hideAllPages();
-    document.getElementById(pageId + '-page').classList.add('active');
+    const targetPage = document.getElementById(pageId + '-page');
     
+    if (targetPage) {
+        targetPage.classList.add('active');
+        console.log('✅ Страница активирована:', pageId);
+    } else {
+        console.error('❌ Страница не найдена:', pageId);
+        return;
+    }
+    
+    // Управление навигационной панелью
     if (pageId === 'main') {
         showBackButton(false);
-        // СКРЫВАЕМ НАВИГАЦИЮ НА ГЛАВНОЙ
-        document.getElementById('nav-panel').classList.remove('active');
-        document.getElementById('profile-button').classList.remove('active');
+        hideNavPanel();
+        document.getElementById('profile-button')?.classList.remove('active');
     } else {
         showBackButton(true);
         
         if (pageId === 'profile') {
-            document.getElementById('profile-button').classList.add('active');
+            document.getElementById('profile-button')?.classList.add('active');
             hideNavPanel();
         } else if (pageId === 'products' || pageId === 'categories' || 
                   pageId === 'cart' || pageId === 'favorites') {
             showNavPanel();
+            setActiveTabForPage(pageId);
         } else {
             hideNavPanel();
         }
     }
     
     currentPage = pageId;
+}
+
+function setActiveTabForPage(pageId) {
+    const tabMap = {
+        'products': 'home',
+        'categories': 'categories', 
+        'favorites': 'favorites',
+        'cart': 'cart'
+    };
+    
+    setActiveTab(tabMap[pageId] || 'home');
 }
 
 function goBack() {
@@ -92,12 +113,14 @@ function activateInput(type) {
     const card = document.getElementById(`${type}-card`);
     const input = document.getElementById(`user-${type}`);
     
-    card.classList.add('active');
-    input.focus();
-    activeInput = type;
-    
-    if (input.value.trim()) {
-        card.classList.add('has-value');
+    if (card && input) {
+        card.classList.add('active');
+        input.focus();
+        activeInput = type;
+        
+        if (input.value.trim()) {
+            card.classList.add('has-value');
+        }
     }
 }
 
@@ -105,24 +128,28 @@ function deactivateInput(type) {
     const card = document.getElementById(`${type}-card`);
     const input = document.getElementById(`user-${type}`);
     
-    if (!input.value.trim()) {
-        card.classList.remove('active');
-        card.classList.remove('has-value');
+    if (card && input) {
+        if (!input.value.trim()) {
+            card.classList.remove('active');
+            card.classList.remove('has-value');
+        }
+        activeInput = null;
     }
-    activeInput = null;
 }
 
 function handleInputChange(type) {
     const card = document.getElementById(`${type}-card`);
     const input = document.getElementById(`user-${type}`);
     
-    if (input.value.trim()) {
-        card.classList.add('has-value');
-    } else {
-        card.classList.remove('has-value');
+    if (card && input) {
+        if (input.value.trim()) {
+            card.classList.add('has-value');
+        } else {
+            card.classList.remove('has-value');
+        }
+        
+        autoSaveData();
     }
-    
-    autoSaveData();
 }
 
 function initUser() {
@@ -130,12 +157,19 @@ function initUser() {
     
     if (user) {
         const firstName = user.first_name || 'Пользователь';
-        document.getElementById('profile-welcome').textContent = `Привет, ${firstName}!`;
-        document.getElementById('profile-button').textContent = firstName;
+        const welcomeElement = document.getElementById('profile-welcome');
+        const profileButton = document.getElementById('profile-button');
+        
+        if (welcomeElement) welcomeElement.textContent = `Привет, ${firstName}!`;
+        if (profileButton) profileButton.textContent = firstName;
+        
         loadUserData();
     } else {
-        document.getElementById('profile-welcome').textContent = 'Привет!';
-        document.getElementById('profile-button').textContent = 'Профиль';
+        const welcomeElement = document.getElementById('profile-welcome');
+        const profileButton = document.getElementById('profile-button');
+        
+        if (welcomeElement) welcomeElement.textContent = 'Привет!';
+        if (profileButton) profileButton.textContent = 'Профиль';
     }
     
     loadCart();
@@ -174,15 +208,16 @@ function autoSaveData() {
             savedAt: new Date().toISOString()
         };
         localStorage.setItem('goshaStoreUserData', JSON.stringify(userData));
-        // УБРАЛИ СТРОКУ С УВЕДОМЛЕНИЕМ
     }, 1000);
 }
 
+// ==================== ФУНКЦИИ НАВИГАЦИИ ====================
 function showMain() {
     navigateToPage('main', 'GoshaStore');
 }
 
 function showProfile() {
+    console.log('👤 Открываем профиль');
     navigateToPage('profile', 'Профиль');
 }
 
@@ -191,60 +226,59 @@ function showHistory() {
 }
 
 function showNavPanel() {
-    document.getElementById('nav-panel').classList.add('active');
+    const navPanel = document.getElementById('nav-panel');
+    if (navPanel) {
+        navPanel.classList.add('active');
+    }
 }
 
 function hideNavPanel() {
-    document.getElementById('nav-panel').classList.remove('active');
+    const navPanel = document.getElementById('nav-panel');
+    if (navPanel) {
+        navPanel.classList.remove('active');
+    }
 }
 
 function setActiveTab(tabName) {
+    console.log('🎯 Активируем таб:', tabName);
     const tabs = document.querySelectorAll('.nav-tab');
     tabs.forEach(tab => tab.classList.remove('active'));
     
-    // ПРАВИЛЬНЫЕ ИНДЕКСЫ согласно вашему HTML:
-    if (tabName === 'home') {
-        tabs[0].classList.add('active');      // Главная (0)
-    } else if (tabName === 'categories') {
-        tabs[1].classList.add('active');      // Категории (1)
-    } else if (tabName === 'favorites') {
-        tabs[2].classList.add('active');      // Избранное (2)
-    } else if (tabName === 'cart') {
-        tabs[3].classList.add('active');      // Корзина (3)
+    const tabMap = {
+        'home': 0,
+        'categories': 1, 
+        'favorites': 2,
+        'cart': 3
+    };
+    
+    if (tabMap[tabName] !== undefined && tabs[tabMap[tabName]]) {
+        tabs[tabMap[tabName]].classList.add('active');
     }
 }
 
 function showSectionHome() {
     if (currentSection === 'products') {
-        navigateToPage('products', 'PlayStation Личный');
-        setActiveTab('home');
+        showProducts('playstation_personal');
+    } else {
+        showMain();
     }
 }
 
-// ==================== ФУНКЦИИ ДЛЯ НАВИГАЦИОННОЙ ПАНЕЛИ ====================
-function showNavPanel() {
-    document.getElementById('nav-panel').classList.add('active');
-}
-
-function hideNavPanel() {
-    document.getElementById('nav-panel').classList.remove('active');
-}
-
 function showCategories() {
+    console.log('📂 Открываем категории');
     navigateToPage('categories', 'Категории игр');
-    setActiveTab('categories');
     loadCategories();
 }
 
 function showFavorites() {
+    console.log('⭐ Открываем избранное');
     navigateToPage('favorites', 'Избранное');
-    setActiveTab('favorites');
     updateFavoritesDisplay();
 }
 
 function showCart() {
+    console.log('🛒 Открываем корзину');
     navigateToPage('cart', 'Корзина');
-    setActiveTab('cart');
     updateCartDisplay();
 }
 
@@ -259,12 +293,14 @@ function loadCategories() {
     ];
     
     const container = document.getElementById('categories-container');
-    container.innerHTML = categories.map(category => `
-        <div class="category-card" onclick="searchByCategory('${category.name}')">
-            <div class="category-icon">${category.icon}</div>
-            <div class="category-name">${category.name}</div>
-        </div>
-    `).join('');
+    if (container) {
+        container.innerHTML = categories.map(category => `
+            <div class="category-card" onclick="searchByCategory('${category.name}')">
+                <div class="category-icon">${category.icon}</div>
+                <div class="category-name">${category.name}</div>
+            </div>
+        `).join('');
+    }
 }
 
 function searchProducts() {
@@ -280,7 +316,7 @@ function searchProducts() {
     
     const filteredProducts = allProducts.filter(product => 
         product.name.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query)
+        (product.category && product.category.toLowerCase().includes(query))
     );
     
     if (currentSection === 'products') {
@@ -291,14 +327,19 @@ function searchProducts() {
 function getAllProducts() {
     let allProducts = [];
     for (const category in productsData) {
-        allProducts = allProducts.concat(productsData[category]);
+        if (productsData[category]) {
+            allProducts = allProducts.concat(productsData[category]);
+        }
     }
     return allProducts;
 }
 
 function searchByCategory(category) {
-    document.getElementById('search-input').value = category;
-    searchProducts();
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.value = category;
+        searchProducts();
+    }
 }
 
 function openNewsChannel() {
@@ -317,7 +358,11 @@ function showNotification(message, type = 'info') {
     
     setTimeout(() => {
         notification.style.animation = 'slideUp 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
     }, 3000);
 }
 
@@ -337,25 +382,18 @@ async function loadProductsFromServer() {
         }
         
         const serverData = await response.json();
-        
-        // ЗАМЕНЯЕМ локальные данные на данные с сервера
         productsData = serverData;
         
         console.log('✅ Товары загружены с сервера');
         
-        // Обновляем отображение
         if (currentSection === 'products') {
             displayProducts(productsData[currentCategory]);
         }
         
-        // Обновляем счетчик в админке
         updateProductsCount();
-        
-        // УБРАЛИ СТРОКУ С УВЕДОМЛЕНИЕМ
         
     } catch (error) {
         console.log('⚠️ Не удалось загрузить с сервера:', error.message);
-        // УБРАЛИ СТРОКУ С УВЕДОМЛЕНИЕМ
     }
 }
 
@@ -397,23 +435,25 @@ function initAdminPanel() {
     const adminPanel = document.getElementById('admin-panel');
     
     if (isAdmin()) {
-        secretButton.style.display = 'flex';
-        adminPanel.style.display = 'block';
+        if (secretButton) secretButton.style.display = 'flex';
+        if (adminPanel) adminPanel.style.display = 'block';
         console.log('👑 Админ-панель активирована');
     } else {
-        secretButton.style.display = 'none';
-        adminPanel.style.display = 'none';
+        if (secretButton) secretButton.style.display = 'none';
+        if (adminPanel) adminPanel.style.display = 'none';
         console.log('👤 Обычный пользователь');
     }
 }
 
 function toggleAdminPanel() {
     const adminPanel = document.getElementById('admin-panel');
-    if (adminPanel.style.display === 'none') {
-        adminPanel.style.display = 'block';
-        updateProductsCount();
-    } else {
-        adminPanel.style.display = 'none';
+    if (adminPanel) {
+        if (adminPanel.style.display === 'none' || adminPanel.style.display === '') {
+            adminPanel.style.display = 'block';
+            updateProductsCount();
+        } else {
+            adminPanel.style.display = 'none';
+        }
     }
 }
 
@@ -427,62 +467,42 @@ function switchAdminTab(tabName) {
         tab.classList.remove('active');
     });
     
-    document.getElementById('admin-' + tabName).classList.add('active');
-    document.querySelector(`.admin-tab[onclick="switchAdminTab('${tabName}')"]`).classList.add('active');
+    const targetSection = document.getElementById('admin-' + tabName);
+    const targetTab = document.querySelector(`.admin-tab[onclick="switchAdminTab('${tabName}')"]`);
+    
+    if (targetSection) targetSection.classList.add('active');
+    if (targetTab) targetTab.classList.add('active');
 }
 
 function updateProductsCount() {
-    const total = productsData['playstation_personal'].length;
-    document.getElementById('total-products').textContent = total;
+    const total = productsData['playstation_personal'] ? productsData['playstation_personal'].length : 0;
+    const totalElement = document.getElementById('total-products');
+    if (totalElement) {
+        totalElement.textContent = total;
+    }
 }
 
 // ==================== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ ====================
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Приложение запускается...');
     setupBackButton();
     initUser();
     showMain();
     updateProductsCount();
     
-    // ДОБАВЬТЕ ЭТУ СТРОКУ ↓
-    initCarousel();
+    // Инициализация карусели
+    if (typeof initCarousel === 'function') {
+        initCarousel();
+    }
     
     // Скрываем навигацию при загрузке (на главной)
-    document.getElementById('nav-panel').classList.remove('active');
+    hideNavPanel();
     
     // Загружаем товары с сервера при запуске
     loadProductsFromServer();
+    
+    console.log('✅ Приложение успешно запущено');
 });
-
-// ==================== ФУНКЦИИ ГЛАВНОЙ СТРАНИЦЫ ====================
-// Показываем главную страницу (скрываем навигацию)
-function showMain() {
-    hideAllPages();
-    document.getElementById('main-page').classList.add('active');
-    
-    // СКРЫВАЕМ НАВИГАЦИЮ НА ГЛАВНОЙ
-    document.getElementById('nav-panel').classList.remove('active');
-    
-    // СКРЫВАЕМ АДМИН ПАНЕЛЬ
-    document.getElementById('admin-panel').style.display = 'none';
-    
-    // Скрываем кнопку назад
-    showBackButton(false);
-    
-    // Обновляем историю
-    currentPage = 'main';
-    pageHistory.length = 0; // Очищаем историю на главной
-}
-
-function showSectionHome() {
-    // ИСПРАВЛЕНО: возвращаем в раздел товаров, а не на главную
-    if (currentSection === 'products') {
-        navigateToPage('products', 'PlayStation Личный');
-        setActiveTab('home');
-    } else {
-        // Если не в разделе товаров, показываем главную
-        showMain();
-    }
-}
 
 // ==================== КАРУСЕЛЬ ИГР ====================
 let featuredGames = [];
@@ -490,7 +510,6 @@ let currentSlide = 0;
 let autoScrollInterval;
 
 function initCarousel() {
-    // Пример данных для карусели (замените на реальные данные)
     featuredGames = [
         {
             id: 1,
@@ -507,36 +526,11 @@ function initCarousel() {
             oldPrice: 0,
             image: "https://example.com/spider-man.jpg",
             discount: 0
-        },
-        {
-            id: 3,
-            name: "The Last of Us Part II",
-            price: 3499,
-            oldPrice: 4499,
-            image: "https://example.com/last-of-us.jpg",
-            discount: 22
-        },
-        {
-            id: 4,
-            name: "Horizon Forbidden West",
-            price: 4299,
-            oldPrice: 5299,
-            image: "https://example.com/horizon.jpg",
-            discount: 19
-        },
-        {
-            id: 5,
-            name: "Ratchet & Clank: Rift Apart",
-            price: 4599,
-            oldPrice: 0,
-            image: "https://example.com/ratchet.jpg",
-            discount: 0
         }
     ];
     
     renderCarousel();
     startAutoScroll();
-    setupCarouselDrag();
 }
 
 function renderCarousel() {
@@ -545,18 +539,18 @@ function renderCarousel() {
     
     if (!container) return;
     
-    // Очищаем контейнер
     container.innerHTML = '';
-    dots.innerHTML = '';
+    if (dots) dots.innerHTML = '';
     
-    // Создаем слайды
     featuredGames.forEach((game, index) => {
         const slide = document.createElement('div');
         slide.className = 'carousel-slide';
         
         slide.innerHTML = `
             <div class="carousel-game" onclick="openGameDetails(${game.id})">
-                <img src="${game.image}" alt="${game.name}" class="carousel-game-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzQzIiBoZWlnaHQ9IjM0NSIgdmlld0JveD0iMCAwIDM0MyAzNDUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzNDMiIGhlaWdodD0iMzQ1IiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE3MS41IiB5PSIxNzIuNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD4KPC9zdmc+'">
+                <div style="width:100%;height:345px;background:linear-gradient(135deg,#2d3748,#4a5568);display:flex;align-items:center;justify-content:center;color:white;font-size:18px;">
+                    ${game.name}
+                </div>
                 <div class="carousel-game-overlay">
                     <div class="carousel-game-title">${game.name}</div>
                     <div class="carousel-game-prices">
@@ -570,11 +564,12 @@ function renderCarousel() {
         
         container.appendChild(slide);
         
-        // Создаем точки навигации
-        const dot = document.createElement('div');
-        dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
-        dot.onclick = () => goToSlide(index);
-        dots.appendChild(dot);
+        if (dots) {
+            const dot = document.createElement('div');
+            dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
+            dot.onclick = () => goToSlide(index);
+            dots.appendChild(dot);
+        }
     });
 }
 
@@ -590,12 +585,10 @@ function goToSlide(slideIndex) {
         });
     }
     
-    // Обновляем активную точку
     dots.forEach((dot, index) => {
         dot.classList.toggle('active', index === slideIndex);
     });
     
-    // Перезапускаем автоскролл
     restartAutoScroll();
 }
 
@@ -604,13 +597,8 @@ function nextSlide() {
     goToSlide(currentSlide);
 }
 
-function prevSlide() {
-    currentSlide = (currentSlide - 1 + featuredGames.length) % featuredGames.length;
-    goToSlide(currentSlide);
-}
-
 function startAutoScroll() {
-    autoScrollInterval = setInterval(nextSlide, 5000); // Смена каждые 5 секунд
+    autoScrollInterval = setInterval(nextSlide, 5000);
 }
 
 function restartAutoScroll() {
@@ -618,66 +606,9 @@ function restartAutoScroll() {
     startAutoScroll();
 }
 
-function setupCarouselDrag() {
-    const container = document.getElementById('carousel-container');
-    if (!container) return;
-    
-    let isDragging = false;
-    let startX;
-    let scrollLeft;
-    
-    container.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-        container.style.scrollBehavior = 'auto';
-    });
-    
-    container.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 2;
-        container.scrollLeft = scrollLeft - walk;
-    });
-    
-    container.addEventListener('mouseup', () => {
-        isDragging = false;
-        container.style.scrollBehavior = 'smooth';
-        
-        // Определяем текущий слайд после перетаскивания
-        const slideWidth = container.clientWidth;
-        const newSlide = Math.round(container.scrollLeft / slideWidth);
-        goToSlide(newSlide);
-    });
-    
-    // Touch события для мобильных
-    container.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        startX = e.touches[0].pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-    });
-    
-    container.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const x = e.touches[0].pageX - container.offsetLeft;
-        const walk = (x - startX) * 2;
-        container.scrollLeft = scrollLeft - walk;
-    });
-    
-    container.addEventListener('touchend', () => {
-        isDragging = false;
-        const slideWidth = container.clientWidth;
-        const newSlide = Math.round(container.scrollLeft / slideWidth);
-        goToSlide(newSlide);
-    });
-}
-
 function openGameDetails(gameId) {
-    // Функция для открытия деталей игры
     const game = featuredGames.find(g => g.id === gameId);
     if (game) {
         showNotification(`Открываем "${game.name}"`, 'info');
-        // Здесь можно добавить переход на страницу товара
     }
 }
