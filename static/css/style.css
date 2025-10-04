@@ -2259,3 +2259,53 @@ body {
 .products-page {
     overflow-x: hidden;
 }
+
+/* ==================== ФИКС ДЛЯ TELEGRAM MINI APP ==================== */
+/* Основной фикс - скрываем скроллбар в WebView */
+.carousel-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    
+    /* Полное скрытие скроллбара в WebView */
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+/* Вариант 1: Через псевдо-элементы WebKit (работает в TMA) */
+.carousel-container::-webkit-scrollbar {
+    display: none !important;
+    width: 0px !important;
+    height: 0px !important;
+    background: transparent !important;
+}
+
+.carousel-container::-webkit-scrollbar-thumb {
+    background: transparent !important;
+}
+
+.carousel-container::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+/* Вариант 2: Через overflow hidden если вариант 1 не работает */
+.tma-fix .carousel-container {
+    overflow: hidden !important;
+}
+
+/* Фикс для всего контейнера страницы */
+.products-page {
+    width: 100vw !important;
+    overflow-x: hidden !important;
+    position: relative;
+    left: 0;
+    right: 0;
+}
+
+/* Гарантируем правильные размеры */
+.games-carousel {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
