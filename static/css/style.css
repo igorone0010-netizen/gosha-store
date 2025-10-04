@@ -2309,3 +2309,35 @@ body {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+
+/* ==================== РАДИКАЛЬНЫЙ ФИКС ДЛЯ TMA ==================== */
+/* Полностью отключаем скролл для карусели */
+#carousel-container {
+    overflow: hidden !important;
+    display: flex;
+    scroll-snap-type: none !important;
+    gap: 8px;
+    padding: 20px 0;
+    width: 100%;
+}
+
+/* Делаем карусель переключаемой ТОЛЬКО через точки/кнопки */
+.carousel-slide {
+    flex: 0 0 96% !important;
+    scroll-snap-align: none !important;
+    pointer-events: none; /* Отключаем взаимодействие со слайдами */
+}
+
+/* Включаем взаимодействие только для контента внутри */
+.carousel-game {
+    pointer-events: auto !important;
+}
+
+/* Скрываем скроллбар на уровне страницы */
+body {
+    overflow-x: hidden !important;
+}
+
+.tg-app-body {
+    overflow-x: hidden !important;
+}
