@@ -398,7 +398,7 @@ function updateActiveSlide() {
     if (!container || slides.length === 0) return;
     
     const scrollLeft = container.scrollLeft;
-    const slideWidth = container.clientWidth - 120; // Учитываем отступы
+    const slideWidth = container.clientWidth * 0.85 + 15; // 85% ширины + отступ
     
     currentSlide = Math.round(scrollLeft / slideWidth);
     
