@@ -1619,26 +1619,40 @@ body {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch; /* Важно для iOS */
     border-radius: 20px;
     scrollbar-width: none;
     -ms-overflow-style: none;
     gap: 10px;
     margin: 0;
     padding: 0 10px;
-    cursor: grab; /* Показываем что можно dragging */
-    /* ДОБАВИТЬ ЭТИ СТРОКИ: */
-    touch-action: pan-x; /* Разрешаем только горизонтальное перемещение */
-    -webkit-overflow-scrolling: touch; /* Улучшаем скролл на iOS */
-    overscroll-behavior-x: contain; /* Убираем эффект тянущегося края */
-}
-
-.carousel-container:active {
-    cursor: grabbing; /* При dragging */
+    cursor: grab;
+    
+    /* УЛУЧШЕНИЯ ДЛЯ МОБИЛЬНЫХ: */
+    touch-action: pan-y pinch-zoom; /* Разрешаем зум и вертикальный скролл */
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+    scroll-snap-type: x mandatory; /* Прилипание к слайдам */
 }
 
 .carousel-container::-webkit-scrollbar {
     display: none;
+}
+
+.carousel-container:active {
+    cursor: grabbing;
+}
+
+/* Улучшаем отзывчивость на тач-устройствах */
+@media (hover: none) and (pointer: coarse) {
+    .carousel-container {
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+    }
+    
+    .carousel-slide {
+        scroll-snap-align: center;
+    }
 }
 
 .carousel-slide {
@@ -1649,6 +1663,14 @@ body {
     transition: all 0.3s ease;
     opacity: 0.7; /* По умолчанию все слайды полупрозрачные */
     transform: scale(0.95); /* По умолчанию все уменьшены */
+}
+/* Гарантируем плавность анимаций */
+.carousel-slide {
+    will-change: transform, opacity; /* Улучшает производительность */
+}
+
+.carousel-game {
+    will-change: transform;
 }
 
 /* АКТИВНЫЙ СЛАЙД - ПОЛНЫЙ РАЗМЕР И ЯРКИЙ */
