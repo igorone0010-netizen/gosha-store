@@ -202,15 +202,15 @@ function setActiveTab(tabName) {
     const tabs = document.querySelectorAll('.nav-tab');
     tabs.forEach(tab => tab.classList.remove('active'));
     
-    // ИСПРАВЛЕННЫЕ ИНДЕКСЫ:
+    // ПРАВИЛЬНЫЕ ИНДЕКСЫ согласно вашему HTML:
     if (tabName === 'home') {
-        tabs[0].classList.add('active'); // Главная
+        tabs[0].classList.add('active');      // Главная (0)
     } else if (tabName === 'categories') {
-        tabs[1].classList.add('active'); // Категории
+        tabs[1].classList.add('active');      // Категории (1)
     } else if (tabName === 'favorites') {
-        tabs[2].classList.add('active'); // Избранное
+        tabs[2].classList.add('active');      // Избранное (2)
     } else if (tabName === 'cart') {
-        tabs[3].classList.add('active'); // Корзина
+        tabs[3].classList.add('active');      // Корзина (3)
     }
 }
 
