@@ -623,7 +623,7 @@ function stopAutoScroll() {
 // ↑↑↑ ДОБАВЬТЕ ЭТУ ФУНКЦИЮ ПРЯМО ЗДЕСЬ ↑↑↑
 
 function restartAutoScroll() {
-    clearInterval(autoScrollInterval);
+    stopAutoScroll(); // Используем новую функцию
     startAutoScroll();
 }
 
