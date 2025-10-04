@@ -505,33 +505,32 @@ function setupCarouselDrag() {
     let startX;
     let scrollLeft;
 
-    // Мышь - НА ВСЁ ОКНО чтобы mouseup всегда срабатывал
+    // Мышь
     container.addEventListener('mousedown', (e) => {
         isDown = true;
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
         container.style.scrollBehavior = 'auto';
-        stopAutoScroll(); // ⬅️ ОСТАНАВЛИВАЕМ автопрокрутку
+        stopAutoScroll();
+        
+        // ⬇️ ОТКЛЮЧАЕМ SNAP во время перетаскивания
+        container.classList.add('no-snap');
+        document.querySelectorAll('.carousel-slide').forEach(slide => {
+            slide.classList.add('no-snap');
+        });
+        
         e.preventDefault();
     });
 
-    // ВАЖНО: mouseup на ВСЁМ документе, а не только на контейнере
     document.addEventListener('mouseup', () => {
         if (isDown) {
-            isDown = false;
-            container.style.scrollBehavior = 'smooth';
-            smoothSnapToSlide();
-            startAutoScroll(); // ⬅️ ЗАПУСКАЕМ автопрокрутку снова
+            finishDrag();
         }
     });
 
-    // Также на самом контейнере на всякий случай
     container.addEventListener('mouseup', () => {
         if (isDown) {
-            isDown = false;
-            container.style.scrollBehavior = 'smooth';
-            smoothSnapToSlide();
-            startAutoScroll(); // ⬅️ ЗАПУСКАЕМ автопрокрутку снова
+            finishDrag();
         }
     });
 
@@ -549,7 +548,13 @@ function setupCarouselDrag() {
         startX = e.touches[0].pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
         container.style.scrollBehavior = 'auto';
-        stopAutoScroll(); // ⬅️ ОСТАНАВЛИВАЕМ автопрокрутку
+        stopAutoScroll();
+        
+        // ⬇️ ОТКЛЮЧАЕМ SNAP во время перетаскивания
+        container.classList.add('no-snap');
+        document.querySelectorAll('.carousel-slide').forEach(slide => {
+            slide.classList.add('no-snap');
+        });
     });
 
     container.addEventListener('touchmove', (e) => {
@@ -561,16 +566,32 @@ function setupCarouselDrag() {
 
     container.addEventListener('touchend', () => {
         if (isDown) {
-            isDown = false;
-            smoothSnapToSlide();
-            startAutoScroll(); // ⬅️ ЗАПУСКАЕМ автопрокрутку снова
+            finishDrag();
         }
     });
 
-    // Функция плавного прилипания к слайду
-    function smoothSnapToSlide() {
-        container.style.scrollBehavior = 'smooth';
+    container.addEventListener('mouseleave', () => {
+        if (isDown) {
+            finishDrag();
+        }
+    });
+
+    function finishDrag() {
+        if (!isDown) return;
+        isDown = false;
         
+        // ⬇️ ВКЛЮЧАЕМ SNAP обратно
+        container.classList.remove('no-snap');
+        document.querySelectorAll('.carousel-slide').forEach(slide => {
+            slide.classList.remove('no-snap');
+        });
+        
+        container.style.scrollBehavior = 'smooth';
+        smoothSnapToSlide();
+        startAutoScroll();
+    }
+
+    function smoothSnapToSlide() {
         const slideWidth = container.clientWidth * 0.96 + 8;
         const currentScroll = container.scrollLeft;
         const targetSlide = Math.round(currentScroll / slideWidth);
@@ -583,16 +604,6 @@ function setupCarouselDrag() {
         
         setTimeout(updateActiveSlide, 300);
     }
-
-    // Также добавляем mouseleave для безопасности
-    container.addEventListener('mouseleave', () => {
-        if (isDown) {
-            isDown = false;
-            container.style.scrollBehavior = 'smooth';
-            smoothSnapToSlide();
-            startAutoScroll(); // ⬅️ ЗАПУСКАЕМ автопрокрутку снова
-        }
-    });
 }
 
 function setupKeyboardNavigation() {
