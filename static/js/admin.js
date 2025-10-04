@@ -458,9 +458,16 @@ function clearAllProducts() {
         updateProductsCount();
         showNotification('Все товары удалены', 'warning');
         
+        // Очищаем список управления
+        document.getElementById('products-management').innerHTML = 
+            '<div style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">Нет товаров</div>';
+        
         if (currentSection === 'products') {
             displayProducts(productsData[currentCategory]);
         }
+        
+        // Сохраняем на сервер
+        saveProductsToServer();
     }
 }
 
