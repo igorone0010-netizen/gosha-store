@@ -622,16 +622,35 @@ function createNewCategory() {
         return;
     }
     
+    // Проверяем и инициализируем структуру если нужно
+    if (!productCategories['playstation_personal']) {
+        productCategories['playstation_personal'] = {
+            name: 'PlayStation Личный',
+            subcategories: {}
+        };
+    }
+    
+    if (!productCategories['playstation_personal'].subcategories) {
+        productCategories['playstation_personal'].subcategories = {};
+    }
+    
+    // Создаем уникальный ID
     const categoryId = 'cat_' + Date.now();
     
+    // Создаем новую подкатегорию
     productCategories['playstation_personal'].subcategories[categoryId] = {
         name: name,
         type: type,
         products: []
     };
     
+    console.log('✅ Создана категория:', productCategories['playstation_personal'].subcategories[categoryId]);
+    
+    // Сохраняем и обновляем список
     saveCategories();
     loadCategoriesList();
+    
+    // Очищаем поле
     document.getElementById('new-category-name').value = '';
     
     showNotification(`Подкатегория "${name}" создана!`, 'success');
@@ -779,3 +798,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Проверяем через секунду
     setTimeout(debugCategories, 1000);
 });
+
+function loadCategories() {
+    const saved = localStorage.getItem('productCategories');
+    if (saved) {
+        productCategories = JSON.parse(saved);
+    }
+    loadCategoriesList();
+}
