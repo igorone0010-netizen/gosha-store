@@ -1797,7 +1797,7 @@ body {
 /* Темное мутное стекло - минимальная прозрачность */
 .nav-panel {
     position: fixed !important;
-    bottom: 20px !important;
+    bottom: 30px !important;
     left: 12px !important;
     right: 12px !important;
     transform: none !important;
@@ -2075,7 +2075,7 @@ body {
 /* Адаптивность для мобильных */
 @media (max-width: 480px) {
     .nav-panel {
-        bottom: 15px !important;
+        bottom: 25px !important;
         left: 10px !important;
         right: 10px !important;
         padding: 12px 14px !important;
