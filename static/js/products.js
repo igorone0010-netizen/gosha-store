@@ -4,9 +4,17 @@ function showProducts(category) {
     currentCategory = category;
     currentSection = 'products';
     
-    displaySubcategories();
+    const products = productsData[category] || [];
+    displayProducts(products);
     
+    // ПОКАЗЫВАЕМ НАВИГАЦИЮ В РАЗДЕЛЕ ТОВАРОВ
     document.getElementById('nav-panel').classList.add('active');
+    
+    // ПЕРЕИНИЦИАЛИЗИРУЕМ КАРУСЕЛЬ ПРИ ПЕРЕХОДЕ В РАЗДЕЛ
+    setTimeout(() => {
+        initCarousel();
+    }, 100);
+    
     navigateToPage('products', 'PlayStation Личный');
     setActiveTab('home');
 }
