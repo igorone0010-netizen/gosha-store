@@ -1627,6 +1627,10 @@ body {
     margin: 0;
     padding: 0 10px;
     cursor: grab; /* Показываем что можно dragging */
+    /* ДОБАВИТЬ ЭТИ СТРОКИ: */
+    touch-action: pan-x; /* Разрешаем только горизонтальное перемещение */
+    -webkit-overflow-scrolling: touch; /* Улучшаем скролл на iOS */
+    overscroll-behavior-x: contain; /* Убираем эффект тянущегося края */
 }
 
 .carousel-container:active {
