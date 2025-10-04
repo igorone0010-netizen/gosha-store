@@ -1856,3 +1856,37 @@ body {
         padding: 0 16px !important;
     }
 }
+
+/* Убираем скроллбар справа */
+body {
+    overflow-y: hidden !important;
+}
+
+html {
+    overflow-y: hidden !important;
+}
+
+/* Но оставляем возможность скролла для контента */
+.page {
+    overflow-y: auto !important;
+    height: calc(100vh - 70px) !important; /* Высота минус верхняя панель */
+    -ms-overflow-style: none !important; /* IE и Edge */
+    scrollbar-width: none !important; /* Firefox */
+}
+
+/* Убираем скроллбар для Webkit браузеров (Chrome, Safari) */
+.page::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* Для продуктовой страницы отдельно */
+.products-page {
+    overflow-y: auto !important;
+    height: calc(100vh - 70px) !important;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
+.products-page::-webkit-scrollbar {
+    display: none !important;
+}
