@@ -613,6 +613,15 @@ function startAutoScroll() {
     autoScrollInterval = setInterval(nextSlide, 5000); // Смена каждые 5 секунд
 }
 
+// ↓↓↓ ДОБАВЬТЕ ЭТУ ФУНКЦИЮ ПРЯМО ЗДЕСЬ ↓↓↓
+function stopAutoScroll() {
+    if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+    }
+}
+// ↑↑↑ ДОБАВЬТЕ ЭТУ ФУНКЦИЮ ПРЯМО ЗДЕСЬ ↑↑↑
+
 function restartAutoScroll() {
     clearInterval(autoScrollInterval);
     startAutoScroll();
