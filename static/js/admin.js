@@ -1,17 +1,27 @@
 // ==================== УПРАВЛЕНИЕ ПОДКАТЕГОРИЯМИ ====================
-let productCategories = {
-    'playstation_personal': {
-        name: 'PlayStation Личный',
-        type: 'carousel',
-        subcategories: {
-            'carousel': {
-                name: 'Горячие предложения',
-                type: 'carousel',
-                products: []
+// ==================== УПРАВЛЕНИЕ ПОДКАТЕГОРИЯМИ ====================
+function initCategories() {
+    // Загружаем категории из localStorage или создаем по умолчанию
+    const savedCategories = localStorage.getItem('productCategories');
+    if (savedCategories) {
+        productCategories = JSON.parse(savedCategories);
+    } else {
+        // Создаем структуру по умолчанию
+        productCategories = {
+            'playstation_personal': {
+                name: 'PlayStation Личный',
+                subcategories: {
+                    'carousel': {
+                        name: 'Горячие предложения',
+                        type: 'carousel',
+                        products: []
+                    }
+                }
             }
-        }
+        };
+        saveCategories();
     }
-};
+}
 
 function createNewCategory() {
     if (!isAdmin()) return;
@@ -24,8 +34,9 @@ function createNewCategory() {
         return;
     }
     
-    const categoryId = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const categoryId = 'cat_' + Date.now(); // Уникальный ID
     
+    // Создаем новую подкатегорию
     productCategories['playstation_personal'].subcategories[categoryId] = {
         name: name,
         type: type,
@@ -41,6 +52,8 @@ function createNewCategory() {
 
 function loadCategoriesList() {
     const container = document.getElementById('categories-list');
+    if (!container) return;
+    
     const subcategories = productCategories['playstation_personal'].subcategories;
     
     container.innerHTML = '';
@@ -66,6 +79,9 @@ function loadCategoriesList() {
                 <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 5px;">
                     Тип: ${category.type === 'carousel' ? 'Карусель' : 'Сетка'} | 
                     Товаров: ${category.products.length}
+                </div>
+                <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 3px;">
+                    ID: ${categoryId}
                 </div>
             </div>
             <div>
