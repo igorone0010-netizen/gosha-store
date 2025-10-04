@@ -498,139 +498,86 @@ function restartAutoScroll() {
 function setupCarouselDrag() {
     const container = document.getElementById('carousel-container');
     if (!container) return;
-    
-    let isDragging = false;
+
     let startX;
     let scrollLeft;
-    let velocity = 0;
-    let animationFrame;
-    let lastX;
-    let lastTime;
-
-    function smoothScroll() {
-        if (Math.abs(velocity) > 0.1) {
-            container.scrollLeft += velocity;
-            velocity *= 0.95; // Замедление
-            animationFrame = requestAnimationFrame(smoothScroll);
-        } else {
-            velocity = 0;
-            updateActiveSlide();
-        }
-    }
-
-    // Mouse events
+    let isDown = false;
+    
+    // Простая и надежная версия для мыши
     container.addEventListener('mousedown', (e) => {
-        isDragging = true;
+        isDown = true;
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
-        velocity = 0;
-        lastX = e.pageX;
-        lastTime = Date.now();
         container.style.cursor = 'grabbing';
         container.style.scrollBehavior = 'auto';
-        
-        if (animationFrame) {
-            cancelAnimationFrame(animationFrame);
+    });
+
+    container.addEventListener('mouseleave', () => {
+        if (isDown) {
+            isDown = false;
+            container.style.cursor = 'grab';
+            updateActiveSlide();
+        }
+    });
+
+    container.addEventListener('mouseup', () => {
+        if (isDown) {
+            isDown = false;
+            container.style.cursor = 'grab';
+            container.style.scrollBehavior = 'smooth';
+            updateActiveSlide();
         }
     });
 
     container.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        
+        if (!isDown) return;
         e.preventDefault();
         const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 1.5; // Увеличиваем чувствительность
-        
+        const walk = (x - startX) * 2; // Чувствительность
         container.scrollLeft = scrollLeft - walk;
-        
-        // Рассчитываем скорость для инерции
-        const currentTime = Date.now();
-        const deltaTime = currentTime - lastTime;
-        if (deltaTime > 0) {
-            const deltaX = e.pageX - lastX;
-            velocity = -deltaX / deltaTime * 20;
-        }
-        
-        lastX = e.pageX;
-        lastTime = currentTime;
     });
 
-    container.addEventListener('mouseup', () => {
-        if (!isDragging) return;
-        isDragging = false;
-        container.style.cursor = 'grab';
-        container.style.scrollBehavior = 'smooth';
-        
-        // Запускаем инерционное скроллирование
-        if (Math.abs(velocity) > 0.5) {
-            animationFrame = requestAnimationFrame(smoothScroll);
-        } else {
-            updateActiveSlide();
-        }
-    });
-
-    container.addEventListener('mouseleave', () => {
-        if (isDragging) {
-            isDragging = false;
-            container.style.cursor = 'grab';
-            
-            if (Math.abs(velocity) > 0.5) {
-                animationFrame = requestAnimationFrame(smoothScroll);
-            } else {
-                updateActiveSlide();
-            }
-        }
-    });
-
-    // Touch events для мобильных
+    // Простая версия для тач-устройств
     container.addEventListener('touchstart', (e) => {
-        isDragging = true;
         startX = e.touches[0].pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
-        velocity = 0;
-        lastX = e.touches[0].pageX;
-        lastTime = Date.now();
         container.style.scrollBehavior = 'auto';
-        
-        if (animationFrame) {
-            cancelAnimationFrame(animationFrame);
-        }
     });
 
     container.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        
+        if (!e.touches[0]) return;
         const x = e.touches[0].pageX - container.offsetLeft;
-        const walk = (x - startX) * 1.5;
-        
+        const walk = (x - startX);
         container.scrollLeft = scrollLeft - walk;
-        
-        // Рассчитываем скорость для инерции
-        const currentTime = Date.now();
-        const deltaTime = currentTime - lastTime;
-        if (deltaTime > 0) {
-            const deltaX = e.touches[0].pageX - lastX;
-            velocity = -deltaX / deltaTime * 20;
-        }
-        
-        lastX = e.touches[0].pageX;
-        lastTime = currentTime;
     });
 
     container.addEventListener('touchend', () => {
-        if (!isDragging) return;
-        isDragging = false;
-        
-        // Запускаем инерционное скроллирование
-        if (Math.abs(velocity) > 0.5) {
-            animationFrame = requestAnimationFrame(smoothScroll);
-        } else {
-            updateActiveSlide();
-        }
+        container.style.scrollBehavior = 'smooth';
+        setTimeout(updateActiveSlide, 100);
     });
 
-    // Инициализируем курсор
+    // Инициализация курсора
     container.style.cursor = 'grab';
+    
+    // Добавляем обработчики для стрелок (если нужно)
+    setupKeyboardNavigation();
+}
+
+function setupKeyboardNavigation() {
+    document.addEventListener('keydown', (e) => {
+        const container = document.getElementById('carousel-container');
+        if (!container) return;
+        
+        const slideWidth = container.clientWidth * 0.92 + 10;
+        
+        if (e.key === 'ArrowLeft') {
+            container.scrollBy({ left: -slideWidth, behavior: 'smooth' });
+            setTimeout(updateActiveSlide, 300);
+        } else if (e.key === 'ArrowRight') {
+            container.scrollBy({ left: slideWidth, behavior: 'smooth' });
+            setTimeout(updateActiveSlide, 300);
+        }
+    });
 }
 
 function openGameDetails(gameId) {
