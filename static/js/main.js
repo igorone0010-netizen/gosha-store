@@ -508,6 +508,20 @@ function setupCarouselDrag() {
     const container = document.getElementById('carousel-container');
     if (!container) return;
 
+    // ✅ ДОБАВИТЬ - гарантируем скрытие полосы прокрутки
+    container.style.overflowX = 'auto';
+    container.style.scrollbarWidth = 'none';
+    container.style.msOverflowStyle = 'none';
+    
+    // ← Webkit браузеры
+    const style = document.createElement('style');
+    style.textContent = `
+        .carousel-container::-webkit-scrollbar {
+            display: none !important;
+        }
+    `;
+    document.head.appendChild(style);
+
     let isDown = false;
     let startX;
     let scrollLeft;
