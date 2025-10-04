@@ -665,22 +665,13 @@ body {
     animation: glassFloat 6s ease-in-out infinite;
 }
 
-/* ДОБАВЛЯЕМ ВНУТРЕННИЙ КОНТЕЙНЕР ДЛЯ ЦЕНТРИРОВАНИЯ */
+/* ОСНОВНЫЕ СТИЛИ ДЛЯ ЦЕНТРИРОВАНИЯ НАВИГАЦИОННОЙ ПАНЕЛИ */
 .nav-panel-inner {
-    max-width: 500px; /* ОГРАНИЧИВАЕМ МАКСИМАЛЬНУЮ ШИРИНУ */
-    margin: 0 auto; /* ЦЕНТРИРУЕМ ПО ГОРИЗОНТАЛИ */
-    padding: 0 20px; /* ДОБАВЛЯЕМ БОКОВЫЕ ОТСТУПЫ */
-    width: 100%; /* ЗАНИМАЕМ ВСЮ ДОСТУПНУЮ ШИРИНУ */
-    box-sizing: border-box; /* УЧИТЫВАЕМ PADDING В ШИРИНЕ */
-}
-
-/* ЦЕНТРИРОВАНИЕ НАВИГАЦИОННОЙ ПАНЕЛИ */
-.nav-panel-inner {
-    max-width: 500px; /* Ограничиваем максимальную ширину */
-    margin: 0 auto; /* Автоматические отступы по бокам - ЦЕНТРИРУЕТ */
-    padding: 0 20px; /* Отступы внутри */
-    width: 100%; /* Занимает всю доступную ширину */
-    box-sizing: border-box; /* Учитываем padding в ширине */
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Для мобильных */
@@ -869,37 +860,7 @@ body {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Адаптивность для мобильных */
-@media (max-width: 480px) {
-    .nav-panel {
-        bottom: 0;
-        left: 0;
-        right: 0;
-        border-radius: 25px 25px 0 0;
-        padding: 18px 0 16px;
-        min-height: 70px;
-        border-bottom: none;
-    }
-    
-    .nav-panel-inner {
-        max-width: 100%; /* НА МОБИЛЬНЫХ ЗАНИМАЕМ ВСЮ ШИРИНУ */
-        padding: 0 16px; /* МЕНЬШЕ ОТСТУПЫ НА МОБИЛЬНЫХ */
-    }
-    
-    .menu-toggle {
-        width: 42px;
-        height: 42px;
-        font-size: 19px;
-    }
-    
-    .search-input {
-        padding: 13px 48px 13px 16px;
-    }
-    
-    .tab-icon {
-        font-size: 21px;
-    }
-}
+
 
 /* ЭФФЕКТ ПРИ ПОЯВЛЕНИИ */
 .nav-panel.active {
