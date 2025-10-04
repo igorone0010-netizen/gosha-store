@@ -1625,7 +1625,12 @@ body {
     -ms-overflow-style: none;
     gap: 10px;
     margin: 0;
-    padding: 0 10px; /* Меньше отступов чтобы слайды ближе к краям */
+    padding: 0 10px;
+    cursor: grab; /* Показываем что можно dragging */
+}
+
+.carousel-container:active {
+    cursor: grabbing; /* При dragging */
 }
 
 .carousel-container::-webkit-scrollbar {
@@ -1769,6 +1774,21 @@ body {
     right: 0;
     background: linear-gradient(to left, rgba(0,0,0,0.4), transparent);
 }
+
+/* Делаем слайды кликабельными */
+.carousel-game {
+    pointer-events: auto; /* Разрешаем взаимодействие */
+    user-select: none; /* Запрещаем выделение текста */
+}
+
+/* Запрещаем выделение при перетаскивании */
+.carousel-container {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 /* Автопрокрутка анимация */
 @keyframes slide {
     0%, 100% { transform: translateX(0); }
