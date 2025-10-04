@@ -435,6 +435,9 @@ function updateProductsCount() {
     document.getElementById('total-products').textContent = total;
 }
 
+
+});
+
 // ==================== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ ====================
 document.addEventListener('DOMContentLoaded', function() {
     setupBackButton();
@@ -469,5 +472,4 @@ function showMain() {
 function showSectionHome() {
     showMain();
 }
-});
 
