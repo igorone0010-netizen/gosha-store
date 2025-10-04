@@ -505,25 +505,30 @@ function setupCarouselDrag() {
     let startX;
     let scrollLeft;
 
-    // Мышь
+    // Мышь - НА ВСЁ ОКНО чтобы mouseup всегда срабатывал
     container.addEventListener('mousedown', (e) => {
         isDown = true;
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
-        container.style.scrollBehavior = 'auto'; // Отключаем плавность при dragging
+        container.style.scrollBehavior = 'auto';
+        e.preventDefault(); // Предотвращаем выделение текста
     });
 
-    container.addEventListener('mouseleave', () => {
+    // ВАЖНО: mouseup на ВСЁМ документе, а не только на контейнере
+    document.addEventListener('mouseup', () => {
         if (isDown) {
             isDown = false;
-            smoothSnapToSlide(); // Плавно к ближайшему слайду
+            container.style.scrollBehavior = 'smooth';
+            smoothSnapToSlide();
         }
     });
 
+    // Также на самом контейнере на всякий случай
     container.addEventListener('mouseup', () => {
         if (isDown) {
             isDown = false;
-            smoothSnapToSlide(); // Плавно к ближайшему слайду
+            container.style.scrollBehavior = 'smooth';
+            smoothSnapToSlide();
         }
     });
 
@@ -535,7 +540,7 @@ function setupCarouselDrag() {
         container.scrollLeft = scrollLeft - walk;
     });
 
-    // Касание (телефон)
+    // Касание (телефон) - оставляем как было
     container.addEventListener('touchstart', (e) => {
         isDown = true;
         startX = e.touches[0].pageX - container.offsetLeft;
@@ -553,29 +558,37 @@ function setupCarouselDrag() {
     container.addEventListener('touchend', () => {
         if (isDown) {
             isDown = false;
-            smoothSnapToSlide(); // Плавно к ближайшему слайду
+            smoothSnapToSlide();
         }
     });
 
     // Функция плавного прилипания к слайду
     function smoothSnapToSlide() {
-        container.style.scrollBehavior = 'smooth'; // Включаем плавность
+        container.style.scrollBehavior = 'smooth';
         
         const slideWidth = container.clientWidth * 0.92 + 10;
         const currentScroll = container.scrollLeft;
         const targetSlide = Math.round(currentScroll / slideWidth);
         const targetScroll = targetSlide * slideWidth;
         
-        // Плавно скроллим к целевому слайду
         container.scrollTo({
             left: targetScroll,
             behavior: 'smooth'
         });
         
-        // Обновляем активный слайд после анимации
         setTimeout(updateActiveSlide, 300);
     }
+
+    // Также добавляем mouseleave для безопасности
+    container.addEventListener('mouseleave', () => {
+        if (isDown) {
+            isDown = false;
+            container.style.scrollBehavior = 'smooth';
+            smoothSnapToSlide();
+        }
+    });
 }
+
 function setupKeyboardNavigation() {
     document.addEventListener('keydown', (e) => {
         const container = document.getElementById('carousel-container');
