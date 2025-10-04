@@ -164,7 +164,7 @@ function removeFromCart(index) {
 
 function updateCartBadge() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const cartTab = document.querySelector('.nav-tab:nth-child(3)');
+    const cartTab = document.querySelector('.nav-tab:nth-child(4)'); // Корзина - 4-я кнопка
     
     const oldBadge = cartTab.querySelector('.cart-badge');
     if (oldBadge) oldBadge.remove();
