@@ -2233,3 +2233,29 @@ body {
 .file-input-label:hover {
     background: rgba(255,255,255,0.12);
 }
+
+/* ==================== ЭКСТРЕННОЕ ИСПРАВЛЕНИЕ ПОЛОСЫ ПРОКРУТКИ ==================== */
+/* Скрываем все полосы прокрутки в карусели */
+#carousel-container {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+#carousel-container::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Гарантируем что страница не имеет горизонтального скролла */
+body {
+    overflow-x: hidden;
+}
+
+.page {
+    overflow-x: hidden;
+}
+
+.products-page {
+    overflow-x: hidden;
+}
