@@ -1871,3 +1871,21 @@ body {
 .carousel-container.auto-scroll {
     animation: slide 15s infinite;
 }
+
+/* ПРИНУДИТЕЛЬНОЕ ЦЕНТРИРОВАНИЕ НАВИГАЦИОННОЙ ПАНЕЛИ */
+.nav-panel-inner {
+    max-width: 500px !important;
+    margin: 0 auto !important;
+    padding: 0 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    display: block !important;
+}
+
+/* Для мобильных */
+@media (max-width: 480px) {
+    .nav-panel-inner {
+        max-width: 100% !important;
+        padding: 0 16px !important;
+    }
+}
