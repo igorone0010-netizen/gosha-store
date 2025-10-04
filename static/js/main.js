@@ -480,3 +480,201 @@ function showSectionHome() {
         showMain();
     }
 }
+
+// ==================== КАРУСЕЛЬ ИГР ====================
+let featuredGames = [];
+let currentSlide = 0;
+let autoScrollInterval;
+
+function initCarousel() {
+    // Пример данных для карусели (замените на реальные данные)
+    featuredGames = [
+        {
+            id: 1,
+            name: "God of War Ragnarok",
+            price: 3999,
+            oldPrice: 4999,
+            image: "https://example.com/god-of-war.jpg",
+            discount: 20
+        },
+        {
+            id: 2,
+            name: "Spider-Man 2",
+            price: 4999,
+            oldPrice: 0,
+            image: "https://example.com/spider-man.jpg",
+            discount: 0
+        },
+        {
+            id: 3,
+            name: "The Last of Us Part II",
+            price: 3499,
+            oldPrice: 4499,
+            image: "https://example.com/last-of-us.jpg",
+            discount: 22
+        },
+        {
+            id: 4,
+            name: "Horizon Forbidden West",
+            price: 4299,
+            oldPrice: 5299,
+            image: "https://example.com/horizon.jpg",
+            discount: 19
+        },
+        {
+            id: 5,
+            name: "Ratchet & Clank: Rift Apart",
+            price: 4599,
+            oldPrice: 0,
+            image: "https://example.com/ratchet.jpg",
+            discount: 0
+        }
+    ];
+    
+    renderCarousel();
+    startAutoScroll();
+    setupCarouselDrag();
+}
+
+function renderCarousel() {
+    const container = document.getElementById('carousel-container');
+    const dots = document.getElementById('carousel-dots');
+    
+    if (!container) return;
+    
+    // Очищаем контейнер
+    container.innerHTML = '';
+    dots.innerHTML = '';
+    
+    // Создаем слайды
+    featuredGames.forEach((game, index) => {
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide';
+        
+        slide.innerHTML = `
+            <div class="carousel-game" onclick="openGameDetails(${game.id})">
+                <img src="${game.image}" alt="${game.name}" class="carousel-game-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzQzIiBoZWlnaHQ9IjM0NSIgdmlld0JveD0iMCAwIDM0MyAzNDUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzNDMiIGhlaWdodD0iMzQ1IiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE3MS41IiB5PSIxNzIuNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD4KPC9zdmc+'">
+                <div class="carousel-game-overlay">
+                    <div class="carousel-game-title">${game.name}</div>
+                    <div class="carousel-game-prices">
+                        <div class="carousel-game-price">${game.price} руб.</div>
+                        ${game.oldPrice ? `<div class="carousel-game-old-price">${game.oldPrice} руб.</div>` : ''}
+                        ${game.discount ? `<div class="carousel-game-discount">-${game.discount}%</div>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(slide);
+        
+        // Создаем точки навигации
+        const dot = document.createElement('div');
+        dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
+        dot.onclick = () => goToSlide(index);
+        dots.appendChild(dot);
+    });
+}
+
+function goToSlide(slideIndex) {
+    currentSlide = slideIndex;
+    const container = document.getElementById('carousel-container');
+    const dots = document.querySelectorAll('.carousel-dot');
+    
+    if (container) {
+        container.scrollTo({
+            left: slideIndex * container.clientWidth,
+            behavior: 'smooth'
+        });
+    }
+    
+    // Обновляем активную точку
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === slideIndex);
+    });
+    
+    // Перезапускаем автоскролл
+    restartAutoScroll();
+}
+
+function nextSlide() {
+    currentSlide = (currentSlide + 1) % featuredGames.length;
+    goToSlide(currentSlide);
+}
+
+function prevSlide() {
+    currentSlide = (currentSlide - 1 + featuredGames.length) % featuredGames.length;
+    goToSlide(currentSlide);
+}
+
+function startAutoScroll() {
+    autoScrollInterval = setInterval(nextSlide, 5000); // Смена каждые 5 секунд
+}
+
+function restartAutoScroll() {
+    clearInterval(autoScrollInterval);
+    startAutoScroll();
+}
+
+function setupCarouselDrag() {
+    const container = document.getElementById('carousel-container');
+    if (!container) return;
+    
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+    
+    container.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        container.style.scrollBehavior = 'auto';
+    });
+    
+    container.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 2;
+        container.scrollLeft = scrollLeft - walk;
+    });
+    
+    container.addEventListener('mouseup', () => {
+        isDragging = false;
+        container.style.scrollBehavior = 'smooth';
+        
+        // Определяем текущий слайд после перетаскивания
+        const slideWidth = container.clientWidth;
+        const newSlide = Math.round(container.scrollLeft / slideWidth);
+        goToSlide(newSlide);
+    });
+    
+    // Touch события для мобильных
+    container.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        startX = e.touches[0].pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+    });
+    
+    container.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const x = e.touches[0].pageX - container.offsetLeft;
+        const walk = (x - startX) * 2;
+        container.scrollLeft = scrollLeft - walk;
+    });
+    
+    container.addEventListener('touchend', () => {
+        isDragging = false;
+        const slideWidth = container.clientWidth;
+        const newSlide = Math.round(container.scrollLeft / slideWidth);
+        goToSlide(newSlide);
+    });
+}
+
+function openGameDetails(gameId) {
+    // Функция для открытия деталей игры
+    const game = featuredGames.find(g => g.id === gameId);
+    if (game) {
+        showNotification(`Открываем "${game.name}"`, 'info');
+        // Здесь можно добавить переход на страницу товара
+    }
+}
