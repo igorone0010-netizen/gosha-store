@@ -723,15 +723,26 @@ function toggleAdminPanel() {
 function switchAdminTab(tabName) {
     if (!isAdmin()) return;
     
+    // Скрываем все секции
     document.querySelectorAll('.admin-section').forEach(section => {
         section.classList.remove('active');
     });
+    
+    // Убираем активный класс со всех вкладок
     document.querySelectorAll('.admin-tab').forEach(tab => {
         tab.classList.remove('active');
     });
     
+    // Показываем выбранную секцию
     document.getElementById('admin-' + tabName).classList.add('active');
+    
+    // Активируем выбранную вкладку
     document.querySelector(`.admin-tab[onclick="switchAdminTab('${tabName}')"]`).classList.add('active');
+    
+    // Если это вкладка подкатегорий - обновляем список
+    if (tabName === 'categories') {
+        loadCategoriesList();
+    }
 }
 
 function updateProductsCount() {
