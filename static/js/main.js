@@ -502,14 +502,15 @@ function setupCarouselDrag() {
     let isDragging = false;
     let startX;
     let scrollLeft;
-    
+
+    // Mouse events
     container.addEventListener('mousedown', (e) => {
         isDragging = true;
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
         container.style.scrollBehavior = 'auto';
     });
-    
+
     container.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
         e.preventDefault();
@@ -517,36 +518,34 @@ function setupCarouselDrag() {
         const walk = (x - startX) * 2;
         container.scrollLeft = scrollLeft - walk;
     });
-    
+
     container.addEventListener('mouseup', () => {
         isDragging = false;
         container.style.scrollBehavior = 'smooth';
-        
-        // Определяем текущий слайд после перетаскивания
-        const slideWidth = container.clientWidth;
-        const newSlide = Math.round(container.scrollLeft / slideWidth);
-        goToSlide(newSlide);
+        updateActiveSlide();
     });
-    
-    // Touch события для мобильных
+
+    container.addEventListener('mouseleave', () => {
+        isDragging = false;
+    });
+
+    // Touch events для мобильных
     container.addEventListener('touchstart', (e) => {
         isDragging = true;
         startX = e.touches[0].pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
     });
-    
+
     container.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
         const x = e.touches[0].pageX - container.offsetLeft;
         const walk = (x - startX) * 2;
         container.scrollLeft = scrollLeft - walk;
     });
-    
+
     container.addEventListener('touchend', () => {
         isDragging = false;
-        const slideWidth = container.clientWidth;
-        const newSlide = Math.round(container.scrollLeft / slideWidth);
-        goToSlide(newSlide);
+        updateActiveSlide();
     });
 }
 
