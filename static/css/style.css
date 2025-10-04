@@ -642,16 +642,16 @@ body {
 /* УЛЬТРА-СОВРЕМЕННАЯ НАВИГАЦИОННАЯ ПАНЕЛЬ - ЖИДКОЕ СТЕКЛО */
 .nav-panel {
     position: fixed;
-    bottom: 0; /* ПРИЖИМАЕМ К САМОМУ НИЗУ */
-    left: 0; /* РАСТЯГИВАЕМ ПО ЛЕВОМУ КРАЮ */
-    right: 0; /* РАСТЯГИВАЕМ ПО ПРАВОМУ КРАЮ */
+    bottom: 0;
+    left: 0;
+    right: 0;
     background: linear-gradient(135deg, 
         rgba(255, 255, 255, 0.12) 0%, 
         rgba(255, 255, 255, 0.08) 50%,
         rgba(255, 255, 255, 0.12) 100%);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 25px 25px 0 0; /* ОВАЛЬНАЯ СВЕРХУ */
-    padding: 18px 0 16px; /* БОКОВЫЕ ОТСТУПЫ 0, ВЕРТИКАЛЬНЫЕ ОСТАВЛЯЕМ */
+    border-radius: 25px 25px 0 0;
+    padding: 18px 0 16px;
     display: none;
     z-index: 1000;
     backdrop-filter: blur(60px) saturate(220%);
@@ -667,9 +667,11 @@ body {
 
 /* ДОБАВЛЯЕМ ВНУТРЕННИЙ КОНТЕЙНЕР ДЛЯ ЦЕНТРИРОВАНИЯ */
 .nav-panel-inner {
-    max-width: 100%; /* ОГРАНИЧИВАЕМ ШИРИНУ */
-    margin: 0 auto; /* ЦЕНТРИРУЕМ */
-    padding: 0 16px; /* ДОБАВЛЯЕМ БОКОВЫЕ ОТСТУПЫ ВНУТРИ */
+    max-width: 500px; /* ОГРАНИЧИВАЕМ МАКСИМАЛЬНУЮ ШИРИНУ */
+    margin: 0 auto; /* ЦЕНТРИРУЕМ ПО ГОРИЗОНТАЛИ */
+    padding: 0 20px; /* ДОБАВЛЯЕМ БОКОВЫЕ ОТСТУПЫ */
+    width: 100%; /* ЗАНИМАЕМ ВСЮ ДОСТУПНУЮ ШИРИНУ */
+    box-sizing: border-box; /* УЧИТЫВАЕМ PADDING В ШИРИНЕ */
 }
 
 .nav-panel.active {
@@ -853,13 +855,18 @@ body {
 /* Адаптивность для мобильных */
 @media (max-width: 480px) {
     .nav-panel {
-        bottom: 0; /* ПРИЖИМАЕМ К САМОМУ НИЗУ */
-        left: 0; /* РАСТЯГИВАЕМ ПО ЛЕВОМУ КРАЮ */
-        right: 0; /* РАСТЯГИВАЕМ ПО ПРАВОМУ КРАЮ */
-        border-radius: 25px 25px 0 0; /* ОВАЛЬНАЯ СВЕРХУ */
-        padding: 18px 16px 16px; /* БОЛЬШЕ ОТСТУП СВЕРХУ */
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 25px 25px 0 0;
+        padding: 18px 0 16px;
         min-height: 70px;
-        border-bottom: none; /* БЕЗ НИЖНЕЙ ГРАНИЦЫ */
+        border-bottom: none;
+    }
+    
+    .nav-panel-inner {
+        max-width: 100%; /* НА МОБИЛЬНЫХ ЗАНИМАЕМ ВСЮ ШИРИНУ */
+        padding: 0 16px; /* МЕНЬШЕ ОТСТУПЫ НА МОБИЛЬНЫХ */
     }
     
     .menu-toggle {
@@ -875,6 +882,7 @@ body {
     .tab-icon {
         font-size: 21px;
     }
+}
 
 /* ЭФФЕКТ ПРИ ПОЯВЛЕНИИ */
 .nav-panel.active {
