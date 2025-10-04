@@ -1690,6 +1690,21 @@ body {
     transform: scale(1.2);
 }
 
+/* Предотвращаем выделение текста при перетаскивании */
+.carousel-container {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.carousel-game {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 /* Автопрокрутка анимация */
 @keyframes slide {
     0%, 100% { transform: translateX(0); }
