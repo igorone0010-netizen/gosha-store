@@ -1449,40 +1449,7 @@ body {
     opacity: 0.9;
 }
 
-/* Адаптивность для мобильных */
-@media (max-width: 480px) {
-    .nav-panel {
-        max-width: 82%; /* ЕЩЁ УЖЕ НА МОБИЛЬНЫХ */
-        border-radius: 18px;
-        padding: 8px 12px;
-        min-height: 55px;
-        bottom: 12px;
-    }
-    
-    .menu-toggle {
-        width: 32px;
-        height: 32px;
-        font-size: 16px;
-    }
-    
-    .search-input {
-        padding: 8px 35px 8px 12px;
-        font-size: 13px;
-    }
-    
-    .search-icon {
-        font-size: 14px;
-        right: 12px;
-    }
-    
-    .tab-icon {
-        font-size: 16px;
-    }
-    
-    .tab-text {
-        font-size: 8px;
-    }
-}
+
 
 /* ЭФФЕКТ ПРИ НАВЕДЕНИИ ДЛЯ СОВРЕМЕННОГО ВИДА */
 .nav-panel:hover {
