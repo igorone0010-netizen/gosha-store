@@ -726,6 +726,49 @@ function toggleAdminPanel() {
     }
 }
 
+// ⬇️⬇️⬇️ ДОБАВЬТЕ ЭТУ ФУНКЦИЮ ЗДЕСЬ ⬇️⬇️⬇️
+function switchAdminTab(tabName) {
+    if (!isAdmin()) return;
+    
+    console.log('Переключаем на вкладку:', tabName);
+    
+    // Скрываем все секции
+    document.querySelectorAll('.admin-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Убираем активный класс со всех вкладок
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Показываем выбранную секцию
+    const targetSection = document.getElementById('admin-' + tabName);
+    if (targetSection) {
+        targetSection.classList.add('active');
+        console.log('✅ Секция активирована:', targetSection.id);
+    } else {
+        console.error('❌ Секция не найдена: admin-' + tabName);
+    }
+    
+    // Активируем выбранную вкладку
+    const targetTab = document.querySelector(`.admin-tab[onclick="switchAdminTab('${tabName}')"]`);
+    if (targetTab) {
+        targetTab.classList.add('active');
+        console.log('✅ Вкладка активирована');
+    } else {
+        console.error('❌ Вкладка не найдена');
+    }
+    
+    // Если это вкладка подкатегорий - обновляем список
+    if (tabName === 'categories') {
+        console.log('🔄 Обновляем список категорий');
+        if (typeof loadCategoriesList === 'function') {
+            loadCategoriesList();
+        }
+    }
+}
+
 function switchAdminTab(tabName) {
     if (!isAdmin()) return;
     
