@@ -1609,7 +1609,7 @@ body {
 
 /* КАРУСЕЛЬ ИГР - БАННЕР */
 .games-carousel {
-    margin: 0 0 20px 0;
+    margin: 0 16px 20px 16px; /* Отступы слева/справа по 16px */
     position: relative;
 }
 
@@ -1623,6 +1623,7 @@ body {
     scrollbar-width: none;
     -ms-overflow-style: none;
     gap: 0;
+    margin: 0; /* Убираем внешние отступы */
 }
 
 .carousel-container::-webkit-scrollbar {
@@ -1633,6 +1634,7 @@ body {
     flex: 0 0 100%;
     scroll-snap-align: start;
     position: relative;
+    padding: 0; /* Убираем внутренние отступы */
 }
 
 .carousel-game {
@@ -1644,6 +1646,7 @@ body {
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(10px);
+    margin: 0; /* Убираем отступы */
 }
 
 .carousel-game-image {
@@ -1704,6 +1707,7 @@ body {
     justify-content: center;
     gap: 8px;
     margin-top: 12px;
+    padding: 0 16px; /* Добавляем отступы для точек */
 }
 
 .carousel-dot {
