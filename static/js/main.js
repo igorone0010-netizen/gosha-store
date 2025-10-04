@@ -346,33 +346,6 @@ function initCarousel() {
         console.log('Карусель не найдена на этой странице');
         return;
     }
-
-    // ✅ СПЕЦИАЛЬНЫЙ ФИКС ДЛЯ TELEGRAM MINI APP
-    container.style.overflowX = 'auto';
-    container.style.scrollbarWidth = 'none';
-    
-    // Принудительное скрытие скроллбара в TMA
-    const hideScrollbar = `
-        <style id="tma-scrollbar-fix">
-            #carousel-container::-webkit-scrollbar {
-                display: none !important;
-                width: 0 !important;
-                height: 0 !important;
-            }
-            #carousel-container {
-                -ms-overflow-style: none !important;
-                scrollbar-width: none !important;
-            }
-        </style>
-    `;
-
-    // Удаляем старый фикс если есть
-    const oldFix = document.getElementById('tma-scrollbar-fix');
-    if (oldFix) oldFix.remove();
-    
-    // Добавляем новый фикс
-    document.head.insertAdjacentHTML('beforeend', hideScrollbar);
-    
     
     // Очищаем предыдущую карусель
     container.innerHTML = '';
@@ -425,21 +398,18 @@ function updateActiveSlide() {
     if (!container || slides.length === 0) return;
     
     const scrollLeft = container.scrollLeft;
-    const slideWidth = container.clientWidth; // ✅ Используем полную ширину
+    const slideWidth = container.clientWidth; /* Теперь полная ширина */
     
-    // Более точное определение с учетом gap
-    const slideWithGap = slideWidth; // CSS уже учитывает gap
-    const rawSlide = scrollLeft / slideWithGap;
+    // Более точное определение текущего слайда
+    const rawSlide = scrollLeft / slideWidth;
     currentSlide = Math.min(Math.max(0, Math.round(rawSlide)), slides.length - 1);
     
     // Плавное обновление классов
     slides.forEach((slide, index) => {
-        const isActive = index === currentSlide;
-        slide.classList.toggle('active', isActive);
-        
-        // ✅ Добавляем плавные переходы
-        if (isActive) {
-            slide.style.transition = 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        if (index === currentSlide) {
+            slide.classList.add('active');
+        } else {
+            slide.classList.remove('active');
         }
     });
     
@@ -458,15 +428,14 @@ function renderCarousel() {
     container.innerHTML = '';
     dots.innerHTML = '';
     
-    // Создаем слайды - ДОВЕРЯЕМ CSS!
+    // Создаем слайды
     featuredGames.forEach((game, index) => {
         const slide = document.createElement('div');
-        slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`; // ✅ Добавляем active для первого
+        slide.className = 'carousel-slide';
         
         slide.innerHTML = `
             <div class="carousel-game" onclick="openGameDetails(${game.id})">
-                <img src="${game.image}" alt="${game.name}" class="carousel-game-image" 
-                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzQzIiBoZWlnaHQ9IjM0NSIgdmlld0JveD0iMCAwIDM0MyAzNDUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzNDMiIGhlaWdodD0iMzQ1IiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE3MS41IiB5PSIxNzIuNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD4KPC9zdmc+'">
+                <img src="${game.image}" alt="${game.name}" class="carousel-game-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzQzIiBoZWlnaHQ9IjM0NSIgdmlld0JveD0iMCAwIDM0MyAzNDUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzNDMiIGhlaWdodD0iMzQ1IiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE3MS41IiB5PSIxNzIuNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD4KPC9zdmc+'">
                 <div class="carousel-game-overlay">
                     <div class="carousel-game-title">${game.name}</div>
                     <div class="carousel-game-prices">
@@ -486,9 +455,6 @@ function renderCarousel() {
         dot.onclick = () => goToSlide(index);
         dots.appendChild(dot);
     });
-    
-    // ✅ Сразу обновляем активный слайд
-    setTimeout(updateActiveSlide, 50);
 }
 
 function goToSlide(slideIndex) {
@@ -534,20 +500,6 @@ function restartAutoScroll() {
 function setupCarouselDrag() {
     const container = document.getElementById('carousel-container');
     if (!container) return;
-
-    // ✅ ДОБАВИТЬ - гарантируем скрытие полосы прокрутки
-    container.style.overflowX = 'auto';
-    container.style.scrollbarWidth = 'none';
-    container.style.msOverflowStyle = 'none';
-    
-    // ← Webkit браузеры
-    const style = document.createElement('style');
-    style.textContent = `
-        .carousel-container::-webkit-scrollbar {
-            display: none !important;
-        }
-    `;
-    document.head.appendChild(style);
 
     let isDown = false;
     let startX;
@@ -802,7 +754,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Загружаем товары с сервера при запуске
     loadProductsFromServer();
     
-    
+    setTimeout(function() {
+        const carousel = document.querySelector('.games-carousel');
+        if (carousel) {
+            carousel.style.width = '100%';
+            carousel.style.overflow = 'hidden';
+            console.log('✅ Исправлена ширина карусели');
+        }
+        
+        const container = document.querySelector('.carousel-container');
+        if (container) {
+            container.style.width = '100%';
+            container.style.margin = '0';
+            container.style.padding = '20px 0';
+            console.log('✅ Исправлен контейнер карусели');
+        }
+        
+        const slides = document.querySelectorAll('.carousel-slide');
+        slides.forEach(slide => {
+            slide.style.flex = '0 0 100%';
+            slide.style.margin = '0';
+        });
+    }, 1000);
 
     
 });
