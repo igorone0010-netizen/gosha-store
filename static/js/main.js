@@ -729,6 +729,8 @@ function toggleAdminPanel() {
 function switchAdminTab(tabName) {
     if (!isAdmin()) return;
     
+    console.log('Переключаем на вкладку:', tabName); // Для отладки
+    
     // Скрываем все секции
     document.querySelectorAll('.admin-section').forEach(section => {
         section.classList.remove('active');
@@ -740,10 +742,16 @@ function switchAdminTab(tabName) {
     });
     
     // Показываем выбранную секцию
-    document.getElementById('admin-' + tabName).classList.add('active');
+    const targetSection = document.getElementById('admin-' + tabName);
+    if (targetSection) {
+        targetSection.classList.add('active');
+    }
     
     // Активируем выбранную вкладку
-    document.querySelector(`.admin-tab[onclick="switchAdminTab('${tabName}')"]`).classList.add('active');
+    const targetTab = document.querySelector(`.admin-tab[onclick="switchAdminTab('${tabName}')"]`);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
     
     // Если это вкладка подкатегорий - обновляем список
     if (tabName === 'categories') {
@@ -811,3 +819,9 @@ function startAutoScroll() {
     // Запускаем новую автопрокрутку
     autoScrollInterval = setInterval(nextSlide, 5000);
 }
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    initCategories(); // Инициализируем категории
+    loadCategories(); // Загружаем список
+});
