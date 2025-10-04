@@ -346,6 +346,33 @@ function initCarousel() {
         console.log('Карусель не найдена на этой странице');
         return;
     }
+
+    // ✅ СПЕЦИАЛЬНЫЙ ФИКС ДЛЯ TELEGRAM MINI APP
+    container.style.overflowX = 'auto';
+    container.style.scrollbarWidth = 'none';
+    
+    // Принудительное скрытие скроллбара в TMA
+    const hideScrollbar = `
+        <style id="tma-scrollbar-fix">
+            #carousel-container::-webkit-scrollbar {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+            }
+            #carousel-container {
+                -ms-overflow-style: none !important;
+                scrollbar-width: none !important;
+            }
+        </style>
+    `;
+
+    // Удаляем старый фикс если есть
+    const oldFix = document.getElementById('tma-scrollbar-fix');
+    if (oldFix) oldFix.remove();
+    
+    // Добавляем новый фикс
+    document.head.insertAdjacentHTML('beforeend', hideScrollbar);
+    
     
     // Очищаем предыдущую карусель
     container.innerHTML = '';
