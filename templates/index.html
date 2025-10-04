@@ -30,15 +30,8 @@
     <!-- Главная страница -->
 <div id="main-page" class="page active">
     <div class="main-content">
-        <!-- Карусель игр (баннер) -->
-        <div class="games-carousel">
-            <div class="carousel-container" id="carousel-container">
-                <!-- Игры будут загружаться через JavaScript -->
-            </div>
-            <div class="carousel-dots" id="carousel-dots">
-                <!-- Точки навигации -->
-            </div>
-        </div>
+        <!-- Админ панель (скрыта по умолчанию) -->
+        <div id="admin-panel" class="admin-panel">
 
         <!-- Админ панель (скрыта по умолчанию) -->
         <div id="admin-panel" class="admin-panel">
@@ -166,14 +159,23 @@
 </div>
 
     <!-- Страница товаров -->
-    <div id="products-page" class="page products-page">
-        <div class="hot-offers">
-            <!-- УДАЛИЛИ ЗАГОЛОВОК -->
-            <div id="products-container" class="products-grid">
-                <!-- Товары загружаются здесь -->
-            </div>
+<div id="products-page" class="page products-page">
+    <!-- ДОБАВЛЯЕМ КАРУСЕЛЬ СЮДА -->
+    <div class="games-carousel">
+        <div class="carousel-container" id="carousel-container">
+            <!-- Игры будут загружаться через JavaScript -->
+        </div>
+        <div class="carousel-dots" id="carousel-dots">
+            <!-- Точки навигации -->
         </div>
     </div>
+
+    <div class="hot-offers">
+        <div id="products-container" class="products-grid">
+            <!-- Товары загружаются здесь -->
+        </div>
+    </div>
+</div>
 
     <!-- Страница профиля -->
     <div id="profile-page" class="page">
