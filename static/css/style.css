@@ -674,6 +674,23 @@ body {
     box-sizing: border-box; /* УЧИТЫВАЕМ PADDING В ШИРИНЕ */
 }
 
+/* ЦЕНТРИРОВАНИЕ НАВИГАЦИОННОЙ ПАНЕЛИ */
+.nav-panel-inner {
+    max-width: 500px; /* Ограничиваем максимальную ширину */
+    margin: 0 auto; /* Автоматические отступы по бокам - ЦЕНТРИРУЕТ */
+    padding: 0 20px; /* Отступы внутри */
+    width: 100%; /* Занимает всю доступную ширину */
+    box-sizing: border-box; /* Учитываем padding в ширине */
+}
+
+/* Для мобильных */
+@media (max-width: 480px) {
+    .nav-panel-inner {
+        max-width: 100%; /* На мобильных занимает всю ширину */
+        padding: 0 16px; /* Меньше отступы на мобильных */
+    }
+}
+
 .nav-panel.active {
     display: block;
 }
