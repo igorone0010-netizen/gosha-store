@@ -1623,9 +1623,9 @@ body {
     border-radius: 20px;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    gap: 15px; /* Увеличиваем промежутки */
+    gap: 10px;
     margin: 0;
-    padding: 0 20px; /* Меньше отступов */
+    padding: 0 10px; /* Меньше отступов чтобы слайды ближе к краям */
 }
 
 .carousel-container::-webkit-scrollbar {
@@ -1633,23 +1633,24 @@ body {
 }
 
 .carousel-slide {
-    flex: 0 0 75%; /* Неактивные слайды - 75% ширины */
-    scroll-snap-align: center; /* Центрируем активный слайд */
+    flex: 0 0 92%; /* Активный слайд почти на всю ширину */
+    scroll-snap-align: center;
     position: relative;
     padding: 0;
     transition: all 0.3s ease;
+    opacity: 0.7; /* По умолчанию все слайды полупрозрачные */
+    transform: scale(0.95); /* По умолчанию все уменьшены */
 }
 
-/* АКТИВНЫЙ СЛАЙД - БОЛЬШЕ */
+/* АКТИВНЫЙ СЛАЙД - ПОЛНЫЙ РАЗМЕР И ЯРКИЙ */
 .carousel-slide.active {
-    flex: 0 0 90%; /* Активный слайд - 90% ширины */
+    flex: 0 0 92%; /* Такой же ширины, но с другими эффектами */
+    opacity: 1;
+    transform: scale(1);
+    z-index: 2;
 }
 
-/* НЕАКТИВНЫЕ СЛАЙДЫ - МЕНЬШЕ И ПРОЗРАЧНЕЕ */
-.carousel-slide:not(.active) {
-    opacity: 0.6;
-    transform: scale(0.9); /* Еще меньше уменьшаем */
-}
+
 
 /* АКТИВНЫЙ СЛАЙД - БОЛЬШЕ И ЯРЧЕ */
 .carousel-slide.active {
@@ -1747,26 +1748,26 @@ body {
     transform: scale(1.2);
 }
 
-/* Градиентные маски для краев */
+/* Градиентные маски для краев - СЛАБЕЕ */
 .games-carousel::before,
 .games-carousel::after {
     content: '';
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 30px;
+    width: 20px; /* Уже маски */
     z-index: 2;
     pointer-events: none;
 }
 
 .games-carousel::before {
     left: 0;
-    background: linear-gradient(to right, rgba(0,0,0,0.8), transparent);
+    background: linear-gradient(to right, rgba(0,0,0,0.4), transparent);
 }
 
 .games-carousel::after {
     right: 0;
-    background: linear-gradient(to left, rgba(0,0,0,0.8), transparent);
+    background: linear-gradient(to left, rgba(0,0,0,0.4), transparent);
 }
 /* Автопрокрутка анимация */
 @keyframes slide {
