@@ -501,64 +501,53 @@ function setupCarouselDrag() {
     const container = document.getElementById('carousel-container');
     if (!container) return;
 
-    let isDragging = false;
+    let isDown = false;
     let startX;
     let scrollLeft;
 
-    // Mouse events
+    // Мышь
     container.addEventListener('mousedown', (e) => {
-        isDragging = true;
+        isDown = true;
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
-        container.style.cursor = 'grabbing';
-        container.style.scrollBehavior = 'auto';
     });
 
     container.addEventListener('mouseleave', () => {
-        isDragging = false;
-        container.style.cursor = 'grab';
-        updateActiveSlide();
+        isDown = false;
     });
 
     container.addEventListener('mouseup', () => {
-        isDragging = false;
-        container.style.cursor = 'grab';
-        container.style.scrollBehavior = 'smooth';
+        isDown = false;
         updateActiveSlide();
     });
 
     container.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
+        if (!isDown) return;
         e.preventDefault();
         const x = e.pageX - container.offsetLeft;
         const walk = (x - startX) * 2;
         container.scrollLeft = scrollLeft - walk;
     });
 
-    // Touch events
+    // Касание (телефон)
     container.addEventListener('touchstart', (e) => {
-        isDragging = true;
+        isDown = true;
         startX = e.touches[0].pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
-        container.style.scrollBehavior = 'auto';
     });
 
     container.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
+        if (!isDown) return;
         const x = e.touches[0].pageX - container.offsetLeft;
         const walk = (x - startX);
         container.scrollLeft = scrollLeft - walk;
     });
 
     container.addEventListener('touchend', () => {
-        isDragging = false;
-        container.style.scrollBehavior = 'smooth';
-        setTimeout(updateActiveSlide, 100);
+        isDown = false;
+        updateActiveSlide();
     });
-
-    container.style.cursor = 'grab';
 }
-
 function setupKeyboardNavigation() {
     document.addEventListener('keydown', (e) => {
         const container = document.getElementById('carousel-container');
