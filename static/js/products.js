@@ -1,15 +1,22 @@
 // ==================== ФУНКЦИИ ТОВАРОВ И КОРЗИНЫ ====================
 function showProducts(category) {
-    currentCategory = category;
+    currentCategory = category; 
     currentSection = 'products';
     
-    const products = productsData[category] || [];
+    // ПОКАЗАТЬ и ЗАПУСТИТЬ карусель только для PlayStation
+    const carouselElement = document.querySelector('.games-carousel');
+    if (category === 'playstation_personal') {
+        carouselElement.style.display = 'block';
+        initCarousel(); // ЗАПУСТИТЬ карусель
+    } else {
+        carouselElement.style.display = 'none';
+        stopAutoScroll(); // ОСТАНОВИТЬ автоскролл
+    }
+    
+    const products = productsData[category] || []; 
     displayProducts(products);
-    
-    // ПОКАЗЫВАЕМ НАВИГАЦИЮ В РАЗДЕЛЕ ТОВАРОВ
     document.getElementById('nav-panel').classList.add('active');
-    
-    navigateToPage('products', 'PlayStation Личный');
+    navigateToPage('products', 'PlayStation Личный'); 
     setActiveTab('home');
 }
 
