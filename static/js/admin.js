@@ -458,74 +458,8 @@ function clearAllProducts() {
         updateProductsCount();
         showNotification('Все товары удалены', 'warning');
         
-        // Очищаем список управления
-        document.getElementById('products-management').innerHTML = 
-            '<div style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">Нет товаров</div>';
-        
         if (currentSection === 'products') {
             displayProducts(productsData[currentCategory]);
         }
-        
-        // Сохраняем на сервер
-        saveProductsToServer();
     }
-}
-
-// ==================== УДАЛЕНИЕ ОТДЕЛЬНЫХ ТОВАРОВ ====================
-function deleteProduct(productId) {
-    if (!isAdmin()) return;
-    
-    if (confirm('Удалить этот товар?')) {
-        productsData['playstation_personal'] = productsData['playstation_personal'].filter(
-            product => product.id !== productId
-        );
-        
-        updateProductsCount();
-        showNotification('Товар удален', 'warning');
-        
-        // Обновляем отображение если находимся в разделе товаров
-        if (currentSection === 'products') {
-            displayProducts(productsData[currentCategory]);
-        }
-        
-        // Обновляем список управления
-        showProductsManagement();
-        
-        // Сохраняем на сервер автоматически
-        saveProductsToServer();
-    }
-}
-
-// ==================== ПРОСМОТР И УПРАВЛЕНИЕ ТОВАРАМИ ====================
-function showProductsManagement() {
-    if (!isAdmin()) return;
-    
-    const container = document.getElementById('products-management');
-    const products = productsData['playstation_personal'];
-    
-    if (products.length === 0) {
-        container.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">Нет товаров</div>';
-        return;
-    }
-    
-    container.innerHTML = `
-        <div class="admin-title">📦 Управление товарами (${products.length})</div>
-        <div class="products-management-list">
-            ${products.map(product => `
-                <div class="admin-product-item">
-                    <img src="${product.imageUrl || product.image}" 
-                         class="admin-product-image" 
-                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+Tm8gSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='">
-                    <div class="admin-product-info">
-                        <div class="admin-product-name">${product.name}</div>
-                        <div class="admin-product-price">${product.price} руб.</div>
-                        <div class="admin-product-category">${product.category || 'Без категории'}</div>
-                    </div>
-                    <button class="admin-button danger" onclick="deleteProduct(${product.id})" style="padding: 8px 12px; font-size: 12px;">
-                        🗑️ Удалить
-                    </button>
-                </div>
-            `).join('')}
-        </div>
-    `;
 }
