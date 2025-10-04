@@ -1,23 +1,109 @@
 // ==================== ФУНКЦИИ ТОВАРОВ И КОРЗИНЫ ====================
+// ЗАМЕНИТЕ СТАРУЮ ФУНКЦИЮ showProducts НА ЭТУ:
 function showProducts(category) {
     currentCategory = category;
     currentSection = 'products';
     
-    const products = productsData[category] || [];
-    displayProducts(products);
+    displaySubcategories();
     
-    // ПОКАЗЫВАЕМ НАВИГАЦИЮ В РАЗДЕЛЕ ТОВАРОВ
     document.getElementById('nav-panel').classList.add('active');
-    
-    // ПЕРЕИНИЦИАЛИЗИРУЕМ КАРУСЕЛЬ ПРИ ПЕРЕХОДЕ В РАЗДЕЛ
-    setTimeout(() => {
-        initCarousel();
-    }, 100);
-    
     navigateToPage('products', 'PlayStation Личный');
     setActiveTab('home');
 }
 
+function displaySubcategories() {
+    const container = document.getElementById('products-container');
+    const subcategories = productCategories['playstation_personal'].subcategories;
+    
+    container.innerHTML = '';
+    
+    Object.keys(subcategories).forEach(categoryId => {
+        const category = subcategories[categoryId];
+        const categoryElement = document.createElement('div');
+        categoryElement.className = 'category-card';
+        categoryElement.onclick = () => showSubcategoryProducts(categoryId);
+        
+        categoryElement.innerHTML = `
+            <div class="category-icon">${category.type === 'carousel' ? '🔄' : '📱'}</div>
+            <div class="category-name">${category.name}</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 5px;">
+                ${category.products.length} товаров
+            </div>
+        `;
+        
+        container.appendChild(categoryElement);
+    });
+}
+
+function showSubcategoryProducts(subcategoryId) {
+    const subcategory = productCategories['playstation_personal'].subcategories[subcategoryId];
+    
+    if (subcategory.type === 'carousel') {
+        displayCarouselProducts(subcategory.products, subcategory.name);
+    } else {
+        displayGridProducts(subcategory.products, subcategory.name);
+    }
+}
+
+function displayCarouselProducts(products, title) {
+    const container = document.getElementById('products-container');
+    
+    if (products.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: rgba(255,255,255,0.6); padding: 40px;">Товары скоро появятся в "${title}"</div>`;
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="games-carousel">
+            <div class="carousel-container" id="carousel-container">
+                ${products.map(product => `
+                    <div class="carousel-slide">
+                        <div class="carousel-game">
+                            <img src="${product.imageUrl}" alt="${product.name}" class="carousel-game-image">
+                            <div class="carousel-game-overlay">
+                                <div class="carousel-game-title">${product.name}</div>
+                                <div class="carousel-game-prices">
+                                    <div class="carousel-game-price">${product.price} руб.</div>
+                                    ${product.oldPrice ? `<div class="carousel-game-old-price">${product.oldPrice} руб.</div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="carousel-dots" id="carousel-dots"></div>
+        </div>
+    `;
+    
+    initCarousel();
+}
+
+function displayGridProducts(products, title) {
+    const container = document.getElementById('products-container');
+    
+    if (products.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: rgba(255,255,255,0.6); padding: 40px;">Товары скоро появятся в "${title}"</div>`;
+        return;
+    }
+    
+    container.innerHTML = `
+        <div style="color: white; font-size: 18px; font-weight: bold; margin: 0 16px 16px;">${title}</div>
+        <div class="products-grid">
+            ${products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="${product.imageUrl}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">${product.price} руб.</div>
+                    <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
+                        Купить
+                    </button>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
 function displayProducts(products) {
     const container = document.getElementById('products-container');
     
