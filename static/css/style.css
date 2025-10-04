@@ -836,6 +836,7 @@ body {
 /* СТРАНИЦА ТОВАРОВ */
 .products-page {
     padding: 70px 0 80px;
+    overflow-x: hidden; /* ← предотвратить горизонтальный скролл */
 }
 
 .hot-offers {
@@ -856,6 +857,8 @@ body {
     grid-template-columns: 1fr 1fr !important;
     gap: 14px !important;
     padding: 0 16px !important;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .product-card {
@@ -1523,35 +1526,35 @@ body {
 
 /* КАРУСЕЛЬ - СОВРЕМЕННЫЙ ОБЪЕМНЫЙ ДИЗАЙН */
 .games-carousel {
-    margin: 0 0 25px 0; /* УБИРАЕМ боковые отступы */
+    margin: 0 0 25px 0;
     perspective: 1000px;
+    width: 100%;
+    overflow: hidden; /* ← важно! */
 }
 
+/* ==================== КАРУСЕЛЬ - ИСПРАВЛЕНИЕ ПОЛОСЫ ПРОКРУТКИ ==================== */
 .carousel-container {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    border-radius: 0; /* УБИРАЕМ скругления по бокам */
-    scrollbar-width: none;
+    border-radius: 0;
+    scrollbar-width: none; /* ← Firefox - скрыть полосу */
+    -ms-overflow-style: none; /* ← IE и Edge - скрыть полосу */
     gap: 8px;
     margin: 0;
-    padding: 20px 0; /* УБИРАЕМ боковые отступы */
-    transition: scroll-behavior 0.3s ease;
+    padding: 20px 0;
+    width: 100%;
 }
 
+/* ← Webkit браузеры (Chrome, Safari) - скрыть полосу */
 .carousel-container::-webkit-scrollbar {
     display: none;
 }
 
-/* Все слайды центрируются */
-.carousel-slide {
-    scroll-snap-align: center;
-}
-
 .carousel-slide {
     flex: 0 0 96%;
-    scroll-snap-align: center; /* ← ЭТА СТРОКА ДОЛЖНА БЫТЬ */
+    scroll-snap-align: center;
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     opacity: 0.6;
     transform: scale(0.9) translateZ(-20px);
