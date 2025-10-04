@@ -642,7 +642,7 @@ body {
 /* УЛЬТРА-СОВРЕМЕННАЯ НАВИГАЦИОННАЯ ПАНЕЛЬ - ЖИДКОЕ СТЕКЛО */
 .nav-panel {
     position: fixed;
-    bottom: 20px;
+    bottom: 0; /* ПРИЖИМАЕМ К САМОМУ НИЗУ */
     left: 0; /* РАСТЯГИВАЕМ ПО ЛЕВОМУ КРАЮ */
     right: 0; /* РАСТЯГИВАЕМ ПО ПРАВОМУ КРАЮ */
     background: linear-gradient(135deg, 
@@ -650,8 +650,8 @@ body {
         rgba(255, 255, 255, 0.08) 50%,
         rgba(255, 255, 255, 0.12) 100%);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 30px 30px 0 0; /* БОЛЕЕ ОВАЛЬНАЯ СВЕРХУ */
-    padding: 20px 16px 16px; /* УВЕЛИЧИВАЕМ верхний отступ */
+    border-radius: 25px 25px 0 0; /* ОВАЛЬНАЯ СВЕРХУ */
+    padding: 18px 0 16px; /* БОКОВЫЕ ОТСТУПЫ 0, ВЕРТИКАЛЬНЫЕ ОСТАВЛЯЕМ */
     display: none;
     z-index: 1000;
     backdrop-filter: blur(60px) saturate(220%);
@@ -659,16 +659,17 @@ body {
         0 8px 32px rgba(0, 0, 0, 0.2),
         0 2px 8px rgba(255, 255, 255, 0.1) inset,
         0 -2px 8px rgba(255, 255, 255, 0.05) inset;
-    margin: 0 0; /* УБИРАЕМ ВНЕШНИЕ ОТСТУПЫ */
-    height: auto;
-    min-height: 75px; /* НЕМНОГО ВЫШЕ */
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    margin: 0;
+    min-height: 70px;
+    border-bottom: none;
     animation: glassFloat 6s ease-in-out infinite;
-    
-    /* ДОБАВЛЯЕМ ОВАЛЬНУЮ ФОРМУ */
-    border-bottom: none; /* УБИРАЕМ НИЖНЮЮ ГРАНИЦУ */
-    border-bottom-left-radius: 0; /* СКРУГЛЕНИЕ СНИЗУ СЛЕВА */
-    border-bottom-right-radius: 0; /* СКРУГЛЕНИЕ СНИЗУ СПРАВА */
+}
+
+/* ДОБАВЛЯЕМ ВНУТРЕННИЙ КОНТЕЙНЕР ДЛЯ ЦЕНТРИРОВАНИЯ */
+.nav-panel-inner {
+    max-width: 100%; /* ОГРАНИЧИВАЕМ ШИРИНУ */
+    margin: 0 auto; /* ЦЕНТРИРУЕМ */
+    padding: 0 16px; /* ДОБАВЛЯЕМ БОКОВЫЕ ОТСТУПЫ ВНУТРИ */
 }
 
 .nav-panel.active {
