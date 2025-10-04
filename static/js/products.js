@@ -9,8 +9,10 @@ function showProducts(category) {
     // ПОКАЗЫВАЕМ НАВИГАЦИЮ В РАЗДЕЛЕ ТОВАРОВ
     document.getElementById('nav-panel').classList.add('active');
     
-    // ИНИЦИАЛИЗИРУЕМ КАРУСЕЛЬ ПРИ ПЕРЕХОДЕ В РАЗДЕЛ
-    initCarousel();
+    // ПЕРЕИНИЦИАЛИЗИРУЕМ КАРУСЕЛЬ ПРИ ПЕРЕХОДЕ В РАЗДЕЛ
+    setTimeout(() => {
+        initCarousel();
+    }, 100);
     
     navigateToPage('products', 'PlayStation Личный');
     setActiveTab('home');
