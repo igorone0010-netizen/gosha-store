@@ -1623,11 +1623,9 @@ body {
     border-radius: 20px;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    gap: 10px; /* Добавляем промежутки между слайдами */
+    gap: 15px; /* Увеличиваем промежутки */
     margin: 0;
-    padding: 0 60px; /* Отступы для показа соседних слайдов */
-    /* Сдвигаем контейнер чтобы центрировать активный слайд */
-    transform: translateX(-60px);
+    padding: 0 20px; /* Меньше отступов */
 }
 
 .carousel-container::-webkit-scrollbar {
@@ -1635,7 +1633,7 @@ body {
 }
 
 .carousel-slide {
-    flex: 0 0 calc(100% - 120px); /* Ширина с учетом отступов */
+    flex: 0 0 85%; /* Фиксированная ширина 85% экрана */
     scroll-snap-align: center; /* Центрируем активный слайд */
     position: relative;
     padding: 0;
