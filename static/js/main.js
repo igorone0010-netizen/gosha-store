@@ -443,8 +443,6 @@ document.addEventListener('DOMContentLoaded', function() {
     showMain();
     updateProductsCount();
     
-    // ДОБАВЬТЕ ЭТУ СТРОКУ ↓
-    initCarousel();
     
     // Скрываем навигацию при загрузке (на главной)
     document.getElementById('nav-panel').classList.remove('active');
