@@ -202,14 +202,15 @@ function setActiveTab(tabName) {
     const tabs = document.querySelectorAll('.nav-tab');
     tabs.forEach(tab => tab.classList.remove('active'));
     
+    // ИСПРАВЛЕННЫЕ ИНДЕКСЫ:
     if (tabName === 'home') {
-        tabs[0].classList.add('active');
+        tabs[0].classList.add('active'); // Главная
     } else if (tabName === 'categories') {
-        tabs[1].classList.add('active');
-    } else if (tabName === 'cart') {
-        tabs[2].classList.add('active');
+        tabs[1].classList.add('active'); // Категории
     } else if (tabName === 'favorites') {
-        tabs[3].classList.add('active');
+        tabs[2].classList.add('active'); // Избранное
+    } else if (tabName === 'cart') {
+        tabs[3].classList.add('active'); // Корзина
     }
 }
 
@@ -235,16 +236,16 @@ function showCategories() {
     loadCategories();
 }
 
-function showCart() {
-    navigateToPage('cart', 'Корзина');
-    setActiveTab('cart');
-    updateCartDisplay();
-}
-
 function showFavorites() {
     navigateToPage('favorites', 'Избранное');
     setActiveTab('favorites');
     updateFavoritesDisplay();
+}
+
+function showCart() {
+    navigateToPage('cart', 'Корзина');
+    setActiveTab('cart');
+    updateCartDisplay();
 }
 
 function loadCategories() {
@@ -470,5 +471,12 @@ function showMain() {
 }
 
 function showSectionHome() {
-    showMain();
+    // ИСПРАВЛЕНО: возвращаем в раздел товаров, а не на главную
+    if (currentSection === 'products') {
+        navigateToPage('products', 'PlayStation Личный');
+        setActiveTab('home');
+    } else {
+        // Если не в разделе товаров, показываем главную
+        showMain();
+    }
 }
