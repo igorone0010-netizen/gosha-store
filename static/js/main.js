@@ -398,13 +398,17 @@ function updateActiveSlide() {
     if (!container || slides.length === 0) return;
     
     const scrollLeft = container.scrollLeft;
-    const slideWidth = container.clientWidth * 0.85 + 15; // 85% ширины + отступ
+    const slideWidth = container.clientWidth * 0.92 + 10; // 92% ширины + отступ
     
     currentSlide = Math.round(scrollLeft / slideWidth);
     
-    // Обновляем активное состояние
+    // ОБНОВЛЯЕМ ВСЕ СЛАЙДЫ - ВКЛЮЧАЯ ПОСЛЕДНИЙ
     slides.forEach((slide, index) => {
-        slide.classList.toggle('active', index === currentSlide);
+        if (index === currentSlide) {
+            slide.classList.add('active');
+        } else {
+            slide.classList.remove('active');
+        }
     });
     
     dots.forEach((dot, index) => {
