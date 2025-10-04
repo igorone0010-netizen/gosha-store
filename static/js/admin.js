@@ -1,4 +1,15 @@
-// ==================== УПРАВЛЕНИЕ ПОДКАТЕГОРИЯМИ ====================
+// ==================== ПРОВЕРКА АДМИНА ====================
+function isAdmin() {
+    // Если функция уже есть в main.js, просто вызываем её
+    if (typeof window.isAdmin === 'function') {
+        return window.isAdmin();
+    }
+    
+    // Или базовая проверка
+    const user = window.tg?.initDataUnsafe?.user;
+    return user && user.id === 5546654452; // Ваш ID
+}
+
 // ==================== УПРАВЛЕНИЕ ПОДКАТЕГОРИЯМИ ====================
 let productCategories = {
     'playstation_personal': {
@@ -37,17 +48,32 @@ function initCategories() {
 }
 
 function createNewCategory() {
-    if (!isAdmin()) return;
+    console.log('Создание новой категории...');
     
     const name = document.getElementById('new-category-name').value;
     const type = document.getElementById('category-type').value;
     
+    console.log('Название:', name, 'Тип:', type);
+    
     if (!name.trim()) {
-        showNotification('Введите название подкатегории', 'error');
+        alert('Введите название подкатегории');
         return;
     }
     
-    const categoryId = 'cat_' + Date.now(); // Уникальный ID
+    // Создаем уникальный ID
+    const categoryId = 'cat_' + Date.now();
+    
+    // Инициализируем productCategories если не существует
+    if (!productCategories['playstation_personal']) {
+        productCategories['playstation_personal'] = {
+            name: 'PlayStation Личный',
+            subcategories: {}
+        };
+    }
+    
+    if (!productCategories['playstation_personal'].subcategories) {
+        productCategories['playstation_personal'].subcategories = {};
+    }
     
     // Создаем новую подкатегорию
     productCategories['playstation_personal'].subcategories[categoryId] = {
@@ -56,11 +82,18 @@ function createNewCategory() {
         products: []
     };
     
+    console.log('Создана категория:', productCategories['playstation_personal'].subcategories[categoryId]);
+    
+    // Сохраняем и обновляем список
     saveCategories();
     loadCategoriesList();
+    
+    // Очищаем поле
     document.getElementById('new-category-name').value = '';
     
+    // Показываем уведомление
     showNotification(`Подкатегория "${name}" создана!`, 'success');
+    console.log('Категория успешно создана!');
 }
 
 function loadCategoriesList() {
@@ -717,4 +750,26 @@ function clearAllProducts() {
 document.addEventListener('DOMContentLoaded', function() {
     initCategories();
     loadCategories();
+});
+
+// Отладочная функция для проверки
+function debugCategories() {
+    console.log('=== ДЕБАГ КАТЕГОРИЙ ===');
+    console.log('productCategories:', productCategories);
+    console.log('isAdmin function exists:', typeof isAdmin);
+    console.log('createNewCategory function exists:', typeof createNewCategory);
+    console.log('new-category-name element:', document.getElementById('new-category-name'));
+    console.log('category-type element:', document.getElementById('category-type'));
+    console.log('categories-list element:', document.getElementById('categories-list'));
+    console.log('=== КОНЕЦ ДЕБАГА ===');
+}
+
+// Вызовите при загрузке для проверки
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Админка загружена!');
+    initCategories();
+    loadCategories();
+    
+    // Проверяем через секунду
+    setTimeout(debugCategories, 1000);
 });
