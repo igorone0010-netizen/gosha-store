@@ -643,15 +643,15 @@ body {
 .nav-panel {
     position: fixed;
     bottom: 20px;
-    left: 12px;
-    right: 12px;
+    left: 0; /* РАСТЯГИВАЕМ ПО ЛЕВОМУ КРАЮ */
+    right: 0; /* РАСТЯГИВАЕМ ПО ПРАВОМУ КРАЮ */
     background: linear-gradient(135deg, 
         rgba(255, 255, 255, 0.12) 0%, 
         rgba(255, 255, 255, 0.08) 50%,
         rgba(255, 255, 255, 0.12) 100%);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 24px;
-    padding: 16px 20px;
+    border-radius: 30px 30px 0 0; /* БОЛЕЕ ОВАЛЬНАЯ СВЕРХУ */
+    padding: 20px 16px 16px; /* УВЕЛИЧИВАЕМ верхний отступ */
     display: none;
     z-index: 1000;
     backdrop-filter: blur(60px) saturate(220%);
@@ -659,11 +659,16 @@ body {
         0 8px 32px rgba(0, 0, 0, 0.2),
         0 2px 8px rgba(255, 255, 255, 0.1) inset,
         0 -2px 8px rgba(255, 255, 255, 0.05) inset;
-    margin: 0 auto;
+    margin: 0 0; /* УБИРАЕМ ВНЕШНИЕ ОТСТУПЫ */
     height: auto;
-    min-height: 70px;
+    min-height: 75px; /* НЕМНОГО ВЫШЕ */
     border: 1px solid rgba(255, 255, 255, 0.25);
     animation: glassFloat 6s ease-in-out infinite;
+    
+    /* ДОБАВЛЯЕМ ОВАЛЬНУЮ ФОРМУ */
+    border-bottom: none; /* УБИРАЕМ НИЖНЮЮ ГРАНИЦУ */
+    border-bottom-left-radius: 0; /* СКРУГЛЕНИЕ СНИЗУ СЛЕВА */
+    border-bottom-right-radius: 0; /* СКРУГЛЕНИЕ СНИЗУ СПРАВА */
 }
 
 .nav-panel.active {
@@ -847,12 +852,13 @@ body {
 /* Адаптивность для мобильных */
 @media (max-width: 480px) {
     .nav-panel {
-        bottom: 16px;
-        left: 10px;
-        right: 10px;
-        border-radius: 22px;
-        padding: 14px 18px;
-        min-height: 68px;
+        bottom: 0; /* ПРИЖИМАЕМ К САМОМУ НИЗУ */
+        left: 0; /* РАСТЯГИВАЕМ ПО ЛЕВОМУ КРАЮ */
+        right: 0; /* РАСТЯГИВАЕМ ПО ПРАВОМУ КРАЮ */
+        border-radius: 25px 25px 0 0; /* ОВАЛЬНАЯ СВЕРХУ */
+        padding: 18px 16px 16px; /* БОЛЬШЕ ОТСТУП СВЕРХУ */
+        min-height: 70px;
+        border-bottom: none; /* БЕЗ НИЖНЕЙ ГРАНИЦЫ */
     }
     
     .menu-toggle {
@@ -868,7 +874,6 @@ body {
     .tab-icon {
         font-size: 21px;
     }
-}
 
 /* ЭФФЕКТ ПРИ ПОЯВЛЕНИИ */
 .nav-panel.active {
