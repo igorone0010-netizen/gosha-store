@@ -1681,10 +1681,19 @@ body {
     scroll-snap-align: center;
     position: relative;
     padding: 0;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     opacity: 0.7; /* По умолчанию все слайды полупрозрачные */
     transform: scale(0.95); /* По умолчанию все уменьшены */
+    will-change: transform, opacity;
 }
+
+/* АКТИВНЫЙ СЛАЙД - ПОЛНЫЙ РАЗМЕР И ЯРКИЙ */
+.carousel-slide.active {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 2;
+}
+
 /* Гарантируем плавность анимаций */
 .carousel-slide {
     will-change: transform, opacity; /* Улучшает производительность */
@@ -1694,22 +1703,7 @@ body {
     will-change: transform;
 }
 
-/* АКТИВНЫЙ СЛАЙД - ПОЛНЫЙ РАЗМЕР И ЯРКИЙ */
-.carousel-slide.active {
-    flex: 0 0 92%; /* Такой же ширины, но с другими эффектами */
-    opacity: 1;
-    transform: scale(1);
-    z-index: 2;
-}
 
-
-
-/* АКТИВНЫЙ СЛАЙД - БОЛЬШЕ И ЯРЧЕ */
-.carousel-slide.active {
-    opacity: 1;
-    transform: scale(1); /* Нормальный размер */
-    z-index: 2; /* Чтобы был поверх других */
-}
 
 .carousel-game {
     width: 100%;
