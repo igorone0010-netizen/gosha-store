@@ -7,7 +7,7 @@ function showProducts(category) {
     displayProducts(products);
     
     // ПОКАЗЫВАЕМ НАВИГАЦИЮ В РАЗДЕЛЕ ТОВАРОВ
-    // document.getElementById('nav-panel').classList.add('active');
+    document.getElementById('nav-panel').classList.add('active');
     
     // ПЕРЕИНИЦИАЛИЗИРУЕМ КАРУСЕЛЬ ПРИ ПЕРЕХОДЕ В РАЗДЕЛ
     setTimeout(() => {
