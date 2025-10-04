@@ -566,7 +566,7 @@ function setupCarouselDrag() {
     function smoothSnapToSlide() {
         container.style.scrollBehavior = 'smooth';
         
-        const slideWidth = container.clientWidth * 0.92 + 10;
+        const slideWidth = container.clientWidth * 0.96 + 8;
         const currentScroll = container.scrollLeft;
         const targetSlide = Math.round(currentScroll / slideWidth);
         const targetScroll = targetSlide * slideWidth;
