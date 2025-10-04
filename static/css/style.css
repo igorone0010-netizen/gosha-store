@@ -1794,26 +1794,24 @@ body {
     animation: slide 15s infinite;
 }
 
-/* Улучшенная навигационная панель - сильное размытие стекла */
+/* Точная копия навигационной панели из скриншота - темная тема */
 .nav-panel {
     position: fixed !important;
-    bottom: 12px !important;
-    left: 12px !important;
-    right: 12px !important;
+    bottom: 10px !important;
+    left: 10px !important;
+    right: 10px !important;
     transform: none !important;
-    background: rgba(255, 255, 255, 0.75) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 18px !important;
-    padding: 14px 16px !important;
+    background: rgba(0, 0, 0, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 16px !important;
+    padding: 12px 15px !important;
     display: none !important;
     z-index: 1000 !important;
-    backdrop-filter: blur(50px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(50px) saturate(200%) !important;
+    backdrop-filter: blur(40px) saturate(180%) !important;
     box-shadow: 
-        0 10px 35px rgba(0, 0, 0, 0.15),
-        0 2px 10px rgba(255, 255, 255, 0.2) inset,
-        0 -1px 5px rgba(0, 0, 0, 0.1) !important;
-    min-height: 75px !important;
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 2px 8px rgba(255, 255, 255, 0.05) inset !important;
+    min-height: 70px !important;
     height: auto !important;
     width: auto !important;
     max-width: none !important;
@@ -1833,40 +1831,39 @@ body {
     box-sizing: border-box !important;
 }
 
-/* Верхняя строка - компактное расположение */
+/* Верхняя строка - меню и поиск в одной линии */
 .nav-top {
     display: flex !important;
     align-items: center !important;
-    margin-bottom: 14px !important;
-    gap: 12px !important;
+    margin-bottom: 12px !important;
+    gap: 10px !important;
     width: 100% !important;
 }
 
-/* Кнопка меню - темные три полоски */
+/* Кнопка меню (три полоски) - белая на темном фоне */
 .menu-toggle {
-    font-size: 20px !important;
-    color: #000000 !important;
+    font-size: 18px !important;
+    color: #ffffff !important;
     cursor: pointer !important;
-    padding: 9px !important;
-    background: rgba(255, 255, 255, 0.8) !important;
-    border-radius: 12px !important;
-    width: 42px !important;
-    height: 42px !important;
+    padding: 8px !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-radius: 10px !important;
+    width: 38px !important;
+    height: 38px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     transition: all 0.3s ease !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     flex-shrink: 0 !important;
-    backdrop-filter: blur(10px) !important;
 }
 
 .menu-toggle:active {
-    background: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(255, 255, 255, 0.2) !important;
     transform: scale(0.95) !important;
 }
 
-/* Поисковая строка - светлая с темным текстом */
+/* Поисковая строка - темная с белым текстом */
 .search-container {
     flex: 1 !important;
     position: relative !important;
@@ -1874,47 +1871,43 @@ body {
 
 .search-input {
     width: 100% !important;
-    background: rgba(255, 255, 255, 0.85) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    border-radius: 14px !important;
-    padding: 12px 45px 12px 16px !important;
-    color: #000000 !important;
-    font-size: 15px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    padding: 10px 40px 10px 15px !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
     outline: none !important;
     transition: all 0.3s ease !important;
-    height: 42px !important;
+    height: 38px !important;
     box-sizing: border-box !important;
-    backdrop-filter: blur(10px) !important;
-    font-weight: 500 !important;
 }
 
 .search-input::placeholder {
-    color: #666666 !important;
-    font-size: 14px !important;
-    font-weight: normal !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-size: 13px !important;
 }
 
 .search-input:focus {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border-color: rgba(255, 255, 255, 0.8) !important;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 .search-icon {
     position: absolute !important;
-    right: 16px !important;
+    right: 12px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
-    color: #666666 !important;
-    font-size: 16px !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 15px !important;
 }
 
-/* Вкладки навигации - темные иконки и текст */
+/* Вкладки навигации - белые иконки на темном фоне */
 .nav-tabs {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
     width: 100% !important;
-    gap: 6px !important;
+    gap: 5px !important;
     margin: 0 !important;
 }
 
@@ -1923,8 +1916,8 @@ body {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 8px 4px !important;
-    border-radius: 12px !important;
+    padding: 6px 3px !important;
+    border-radius: 10px !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
     background: transparent !important;
@@ -1933,54 +1926,50 @@ body {
 }
 
 .nav-tab:hover {
-    background: rgba(255, 255, 255, 0.6) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .nav-tab.active {
-    background: rgba(255, 255, 255, 0.8) !important;
-    transform: translateY(-1px) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
 }
 
-/* Иконки вкладок - темные */
+/* Иконки вкладок - белые */
 .tab-icon {
-    font-size: 20px !important;
-    margin-bottom: 4px !important;
-    color: #000000 !important;
+    font-size: 18px !important;
+    margin-bottom: 3px !important;
+    color: #ffffff !important;
     filter: none !important;
-    opacity: 0.9 !important;
-    transition: all 0.3s ease !important;
+    opacity: 0.8 !important;
 }
 
 .nav-tab.active .tab-icon {
     opacity: 1 !important;
-    transform: scale(1.1) !important;
+    transform: scale(1.05) !important;
 }
 
-/* Текст вкладок - темный */
+/* Текст вкладок - белый полупрозрачный */
 .tab-text {
-    font-size: 10px !important;
-    font-weight: 600 !important;
-    color: #000000 !important;
+    font-size: 9px !important;
+    font-weight: 500 !important;
+    color: rgba(255, 255, 255, 0.8) !important;
     text-align: center !important;
     line-height: 1.1 !important;
-    opacity: 0.8 !important;
-    transition: all 0.3s ease !important;
 }
 
 .nav-tab.active .tab-text {
-    opacity: 1 !important;
-    font-weight: 700 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
 }
 
 /* Анимация плавного появления */
 @keyframes panelAppear {
     0% {
         opacity: 0;
-        transform: translateY(20px) scale(0.95);
+        transform: translateY(15px);
     }
     100% {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
@@ -1988,65 +1977,48 @@ body {
     animation: panelAppear 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 
-/* Эффект плавающего стекла */
-@keyframes glassFloat {
-    0%, 100% { 
-        transform: translateY(0);
-        background: rgba(255, 255, 255, 0.75);
-    }
-    50% { 
-        transform: translateY(-1px);
-        background: rgba(255, 255, 255, 0.8);
-    }
-}
-
-.nav-panel {
-    animation: glassFloat 8s ease-in-out infinite !important;
-}
-
 /* Адаптивность для мобильных */
 @media (max-width: 480px) {
     .nav-panel {
-        bottom: 10px !important;
-        left: 10px !important;
-        right: 10px !important;
-        padding: 12px 14px !important;
-        min-height: 70px !important;
-        border-radius: 16px !important;
+        bottom: 8px !important;
+        left: 8px !important;
+        right: 8px !important;
+        padding: 10px 12px !important;
+        min-height: 65px !important;
+        border-radius: 14px !important;
     }
     
     .nav-top {
-        margin-bottom: 12px !important;
-        gap: 10px !important;
+        margin-bottom: 10px !important;
+        gap: 8px !important;
     }
     
     .menu-toggle {
-        width: 40px !important;
-        height: 40px !important;
-        font-size: 18px !important;
-        padding: 8px !important;
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 16px !important;
     }
     
     .search-input {
-        height: 40px !important;
-        padding: 11px 42px 11px 14px !important;
-        font-size: 14px !important;
+        height: 36px !important;
+        padding: 9px 35px 9px 12px !important;
+        font-size: 13px !important;
     }
     
     .search-icon {
-        right: 14px !important;
-        font-size: 15px !important;
+        right: 10px !important;
+        font-size: 14px !important;
     }
     
     .nav-tab {
-        padding: 7px 3px !important;
+        padding: 5px 2px !important;
     }
     
     .tab-icon {
-        font-size: 18px !important;
+        font-size: 16px !important;
     }
     
     .tab-text {
-        font-size: 9px !important;
+        font-size: 8px !important;
     }
 }
