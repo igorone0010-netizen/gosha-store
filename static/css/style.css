@@ -1630,21 +1630,14 @@ body {
     display: none;
 }
 
-/* Первый и последний слайд прилипают к краям */
-.carousel-slide:first-child {
-    scroll-snap-align: start;
-}
-
-.carousel-slide:last-child {
-    scroll-snap-align: end;
-}
-
-.carousel-slide:not(:first-child):not(:last-child) {
+/* Все слайды центрируются */
+.carousel-slide {
     scroll-snap-align: center;
 }
 
 .carousel-slide {
     flex: 0 0 96%;
+    scroll-snap-align: center; /* ← ЭТА СТРОКА ДОЛЖНА БЫТЬ */
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     opacity: 0.6;
     transform: scale(0.9) translateZ(-20px);
