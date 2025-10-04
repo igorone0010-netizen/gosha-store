@@ -697,27 +697,25 @@ function isAdmin() {
 
 function initAdminPanel() {
     const secretButton = document.querySelector('.secret-button-header');
-    const adminPanel = document.getElementById('admin-panel');
     
     if (isAdmin()) {
         secretButton.style.display = 'flex';
-        adminPanel.style.display = 'block';
-        console.log('👑 Админ-панель активирована');
+        secretButton.onclick = showAdminPage; // Меняем обработчик
+        console.log('👑 Админ-панель доступна');
     } else {
         secretButton.style.display = 'none';
-        adminPanel.style.display = 'none';
         console.log('👤 Обычный пользователь');
     }
 }
 
-function toggleAdminPanel() {
-    const adminPanel = document.getElementById('admin-panel');
-    if (adminPanel.style.display === 'none') {
-        adminPanel.style.display = 'block';
-        updateProductsCount();
-    } else {
-        adminPanel.style.display = 'none';
-    }
+function showAdminPage() {
+    if (!isAdmin()) return;
+    
+    navigateToPage('admin', 'Панель управления');
+    updateProductsCount();
+    
+    // Скрываем навигационную панель в админке
+    document.getElementById('nav-panel').classList.remove('active');
 }
 
 function switchAdminTab(tabName) {
