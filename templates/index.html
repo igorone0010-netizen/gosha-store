@@ -32,10 +32,11 @@
                 <div class="admin-title">🚀 Панель управления</div>
                 
                 <div class="admin-tabs">
-                    <div class="admin-tab active" onclick="switchAdminTab('files')">📁 Из файлов</div>
-                    <div class="admin-tab" onclick="switchAdminTab('urls')">🌐 Из URL</div>
-                    <div class="admin-tab" onclick="switchAdminTab('manage')">⚙️ Управление</div>
-                </div>
+    <div class="admin-tab active" onclick="switchAdminTab('files')">📁 Из файлов</div>
+    <div class="admin-tab" onclick="switchAdminTab('urls')">🌐 Из URL</div>
+    <div class="admin-tab" onclick="switchAdminTab('categories')">📂 Подкатегории</div>
+    <div class="admin-tab" onclick="switchAdminTab('manage')">⚙️ Управление</div>
+</div>
                 
                 <!-- Вкладка файлов -->
                 <div id="admin-files" class="admin-section active">
@@ -83,6 +84,26 @@
                 
                 <!-- Вкладка URL -->
                 <div id="admin-urls" class="admin-section">
+
+                    <div id="admin-categories" class="admin-section">
+    <div class="admin-title">📂 Управление подкатегориями</div>
+    
+    <div class="admin-row">
+        <input type="text" class="admin-input" id="new-category-name" placeholder="Название подкатегории">
+        <select class="admin-input" id="category-type">
+            <option value="carousel">Карусель (автопрокрутка)</option>
+            <option value="grid">Сетка (пролистывание пальцем)</option>
+        </select>
+    </div>
+    
+    <button class="admin-button" onclick="createNewCategory()">➕ Создать подкатегорию</button>
+    
+    <div class="categories-list" id="categories-list" style="margin-top: 20px;">
+        <!-- Список подкатегорий будет здесь -->
+    </div>
+</div>
+
+                    
                     <div class="url-input-section">
                         <div class="admin-title">📝 Вставьте список URL</div>
                         
