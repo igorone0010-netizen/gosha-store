@@ -726,7 +726,6 @@ function toggleAdminPanel() {
     }
 }
 
-// ⬇️⬇️⬇️ ДОБАВЬТЕ ЭТУ ФУНКЦИЮ ЗДЕСЬ ⬇️⬇️⬇️
 function switchAdminTab(tabName) {
     if (!isAdmin()) return;
     
@@ -756,8 +755,6 @@ function switchAdminTab(tabName) {
     if (targetTab) {
         targetTab.classList.add('active');
         console.log('✅ Вкладка активирована');
-    } else {
-        console.error('❌ Вкладка не найдена');
     }
     
     // Если это вкладка подкатегорий - обновляем список
@@ -765,46 +762,18 @@ function switchAdminTab(tabName) {
         console.log('🔄 Обновляем список категорий');
         if (typeof loadCategoriesList === 'function') {
             loadCategoriesList();
+        } else {
+            console.error('❌ Функция loadCategoriesList не найдена!');
         }
-    }
-}
-
-function switchAdminTab(tabName) {
-    if (!isAdmin()) return;
-    
-    console.log('Переключаем на вкладку:', tabName); // Для отладки
-    
-    // Скрываем все секции
-    document.querySelectorAll('.admin-section').forEach(section => {
-        section.classList.remove('active');
-    });
-    
-    // Убираем активный класс со всех вкладок
-    document.querySelectorAll('.admin-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    
-    // Показываем выбранную секцию
-    const targetSection = document.getElementById('admin-' + tabName);
-    if (targetSection) {
-        targetSection.classList.add('active');
-    }
-    
-    // Активируем выбранную вкладку
-    const targetTab = document.querySelector(`.admin-tab[onclick="switchAdminTab('${tabName}')"]`);
-    if (targetTab) {
-        targetTab.classList.add('active');
-    }
-    
-    // Если это вкладка подкатегорий - обновляем список
-    if (tabName === 'categories') {
-        loadCategoriesList();
     }
 }
 
 function updateProductsCount() {
     const total = productsData['playstation_personal'].length;
-    document.getElementById('total-products').textContent = total;
+    const totalElement = document.getElementById('total-products');
+    if (totalElement) {
+        totalElement.textContent = total;
+    }
 }
 
 // ==================== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ ====================
