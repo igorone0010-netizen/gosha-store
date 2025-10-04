@@ -1856,6 +1856,16 @@ body {
 .carousel-slide {
     animation: slideIn 0.6s ease-out;
 }
+
+/* Отключаем snap во время перетаскивания */
+.carousel-container.no-snap {
+    scroll-snap-type: none;
+}
+
+.carousel-slide.no-snap {
+    scroll-snap-align: none;
+}
+
 /* Автопрокрутка анимация */
 @keyframes slide {
     0%, 100% { transform: translateX(0); }
