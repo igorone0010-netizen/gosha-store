@@ -153,7 +153,13 @@ function deleteCategory(categoryId) {
 }
 
 function saveCategories() {
-    localStorage.setItem('productCategories', JSON.stringify(productCategories));
+    console.log('Сохранение категорий...', productCategories);
+    try {
+        localStorage.setItem('productCategories', JSON.stringify(productCategories));
+        console.log('Категории сохранены!');
+    } catch (error) {
+        console.error('Ошибка сохранения:', error);
+    }
 }
 
 function loadCategories() {
