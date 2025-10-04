@@ -435,9 +435,6 @@ function updateProductsCount() {
     document.getElementById('total-products').textContent = total;
 }
 
-
-});
-
 // ==================== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ ====================
 document.addEventListener('DOMContentLoaded', function() {
     setupBackButton();
@@ -445,12 +442,15 @@ document.addEventListener('DOMContentLoaded', function() {
     showMain();
     updateProductsCount();
     
-    // Скрываем навигацию при загрузке (на главной) - ДОБАВЬТЕ ЭТУ СТРОКУ
+    // Скрываем навигацию при загрузке (на главной)
     document.getElementById('nav-panel').classList.remove('active');
     
     // Загружаем товары с сервера при запуске
     loadProductsFromServer();
+});
 
+// ==================== ФУНКЦИИ ГЛАВНОЙ СТРАНИЦЫ ====================
+// Показываем главную страницу (скрываем навигацию)
 function showMain() {
     hideAllPages();
     document.getElementById('main-page').classList.add('active');
@@ -472,4 +472,3 @@ function showMain() {
 function showSectionHome() {
     showMain();
 }
-
