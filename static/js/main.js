@@ -341,7 +341,16 @@ function hideAllPages() {
 
 // ==================== КАРУСЕЛЬ ИГР ====================
 function initCarousel() {
-    // Пример данных для карусели (замените на реальные данные)
+    const container = document.getElementById('carousel-container');
+    if (!container) {
+        console.log('Карусель не найдена на этой странице');
+        return;
+    }
+    
+    // Очищаем предыдущую карусель
+    container.innerHTML = '';
+    
+    // Пример данных для карусели
     featuredGames = [
         {
             id: 1,
@@ -370,8 +379,37 @@ function initCarousel() {
     ];
     
     renderCarousel();
+    
+    // Добавляем обработчик скролла для обновления активного слайда
+    container.addEventListener('scroll', updateActiveSlide);
+    
+    // Инициализируем активный слайд
+    setTimeout(updateActiveSlide, 100);
+    
     startAutoScroll();
     setupCarouselDrag();
+}
+
+function updateActiveSlide() {
+    const container = document.getElementById('carousel-container');
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.carousel-dot');
+    
+    if (!container || slides.length === 0) return;
+    
+    const scrollLeft = container.scrollLeft;
+    const slideWidth = container.clientWidth - 120; // Учитываем отступы
+    
+    currentSlide = Math.round(scrollLeft / slideWidth);
+    
+    // Обновляем активное состояние
+    slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+    });
+    
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
 }
 
 function renderCarousel() {
