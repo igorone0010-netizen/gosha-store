@@ -1645,7 +1645,6 @@ body {
 
 .carousel-slide {
     flex: 0 0 96%;
-    scroll-snap-align: center;
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     opacity: 0.6;
     transform: scale(0.9) translateZ(-20px);
