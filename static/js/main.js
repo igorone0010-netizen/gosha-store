@@ -60,26 +60,26 @@ function navigateToPage(pageId, title = '', addToHistory = true) {
     
     if (pageId === 'main') {
         showBackButton(false);
-        // СКРЫВАЕМ НАВИГАЦИЮ НА ГЛАВНОЙ
         document.getElementById('nav-panel').classList.remove('active');
         document.getElementById('profile-button').classList.remove('active');
+    } else if (pageId === 'admin') {
+        showBackButton(true);
+        document.getElementById('nav-panel').classList.remove('active'); // Скрываем навигацию в админке
+    } else if (pageId === 'profile') {
+        showBackButton(true);
+        document.getElementById('profile-button').classList.add('active');
+        hideNavPanel();
+    } else if (pageId === 'products' || pageId === 'categories' || 
+              pageId === 'cart' || pageId === 'favorites') {
+        showBackButton(true);
+        showNavPanel();
     } else {
         showBackButton(true);
-        
-        if (pageId === 'profile') {
-            document.getElementById('profile-button').classList.add('active');
-            hideNavPanel();
-        } else if (pageId === 'products' || pageId === 'categories' || 
-                  pageId === 'cart' || pageId === 'favorites') {
-            showNavPanel();
-        } else {
-            hideNavPanel();
-        }
+        hideNavPanel();
     }
     
     currentPage = pageId;
 }
-
 function goBack() {
     if (pageHistory.length > 0) {
         const previousPage = pageHistory.pop();
@@ -714,27 +714,20 @@ function showAdminPage() {
         return;
     }
     
-    hideAllPages();
-    document.getElementById('admin-page').classList.add('active');
+    // Если уже в админке, возвращаемся назад
+    if (currentPage === 'admin') {
+        goBack();
+        return;
+    }
     
-    // Показываем кнопку назад
-    showBackButton(true);
+    // Переходим в админку
+    navigateToPage('admin', 'Панель управления');
     
     // Скрываем навигационную панель
     document.getElementById('nav-panel').classList.remove('active');
     
     // Обновляем счетчик товаров
     updateProductsCount();
-    
-    // Добавляем в историю
-    if (currentPage !== 'admin') {
-        pageHistory.push({
-            page: currentPage,
-            title: 'GoshaStore'
-        });
-    }
-    
-    currentPage = 'admin';
     
     console.log('🚀 Админ-панель открыта');
 }
@@ -812,4 +805,20 @@ function startAutoScroll() {
     stopAutoScroll();
     // Запускаем новую автопрокрутку
     autoScrollInterval = setInterval(nextSlide, 5000);
+}
+
+// Скрываем админ-панель на главной странице
+function hideAdminPanelOnMain() {
+    const adminPanel = document.querySelector('.admin-panel');
+    if (adminPanel && currentPage === 'main') {
+        adminPanel.style.display = 'none';
+    } else if (adminPanel && currentPage === 'admin') {
+        adminPanel.style.display = 'block';
+    }
+}
+
+// Обнови функцию showMain
+function showMain() {
+    navigateToPage('main', 'GoshaStore');
+    hideAdminPanelOnMain();
 }
