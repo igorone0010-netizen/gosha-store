@@ -6,12 +6,13 @@ function showProducts(category) {
     const products = productsData[category] || [];
     displayProducts(products);
     
-    // ПОКАЗЫВАЕМ НАВИГАЦИЮ В РАЗДЕЛЕ ТОВАРОВ
     document.getElementById('nav-panel').classList.add('active');
     
-    // ПЕРЕИНИЦИАЛИЗИРУЕМ КАРУСЕЛЬ ПРИ ПЕРЕХОДЕ В РАЗДЕЛ
+    // ✅ Улучшенная инициализация карусели
     setTimeout(() => {
-        initCarousel();
+        if (document.getElementById('carousel-container')) {
+            initCarousel();
+        }
     }, 100);
     
     navigateToPage('products', 'PlayStation Личный');
