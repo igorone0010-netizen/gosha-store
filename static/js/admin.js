@@ -1,5 +1,4 @@
 // ==================== УПРАВЛЕНИЕ ПОДКАТЕГОРИЯМИ ====================
-// ==================== УПРАВЛЕНИЕ ПОДКАТЕГОРИЯМИ ====================
 function initCategories() {
     // Загружаем категории из localStorage или создаем по умолчанию
     const savedCategories = localStorage.getItem('productCategories');
