@@ -1801,7 +1801,7 @@ body {
     left: 12px !important;
     right: 12px !important;
     transform: none !important;
-    background: rgba(0, 0, 0, 0.65) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 22px !important;
     padding: 14px 16px !important;
@@ -2081,7 +2081,8 @@ body {
         padding: 12px 14px !important;
         min-height: 65px !important;
         border-radius: 20px !important;
-        backdrop-filter: blur(45px) saturate(150%) brightness(0.7) !important;
+        backdrop-filter: blur(80px) saturate(180%) brightness(0.6) !important; /* Усилил размытие */
+        -webkit-backdrop-filter: blur(80px) saturate(180%) brightness(0.6) !important;
     }
     
     .nav-top {
