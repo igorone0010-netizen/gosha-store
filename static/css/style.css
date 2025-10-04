@@ -150,12 +150,7 @@ body {
     margin: 0 0 20px 0;
     border: 1px solid rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(10px);
-    display: none; /* Оставляем скрытой по умолчанию */
-}
-
-/* Показываем админ-панель только на странице админки */
-#admin-page .admin-panel {
-    display: block !important;
+    display: none;
 }
 
 .admin-title {
