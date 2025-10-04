@@ -1,13 +1,16 @@
 // ==================== ФУНКЦИИ ТОВАРОВ И КОРЗИНЫ ====================
 function showProducts(category) {
-    console.log('🎮 Открываем товары категории:', category);
     currentCategory = category;
     currentSection = 'products';
     
     const products = productsData[category] || [];
     displayProducts(products);
     
+    // ПОКАЗЫВАЕМ НАВИГАЦИЮ В РАЗДЕЛЕ ТОВАРОВ
+    document.getElementById('nav-panel').classList.add('active');
+    
     navigateToPage('products', 'PlayStation Личный');
+    setActiveTab('home');
 }
 
 function displayProducts(products) {
@@ -161,7 +164,7 @@ function removeFromCart(index) {
 
 function updateCartBadge() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const cartTab = document.querySelector('.nav-tab:nth-child(4)'); // Корзина - 4-я кнопка
+    const cartTab = document.querySelector('.nav-tab:nth-child(4)');
     
     const oldBadge = cartTab.querySelector('.cart-badge');
     if (oldBadge) oldBadge.remove();
