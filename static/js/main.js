@@ -398,7 +398,7 @@ function updateActiveSlide() {
     if (!container || slides.length === 0) return;
     
     const scrollLeft = container.scrollLeft;
-    const slideWidth = container.clientWidth * 0.92 + 10;
+    const slideWidth = container.clientWidth * 0.96 + 8;
     
     // Более точное определение текущего слайда
     const rawSlide = scrollLeft / slideWidth;
