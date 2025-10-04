@@ -1,3 +1,9 @@
+// ==================== ПЕРЕМЕННЫЕ АДМИНКИ ====================
+let selectedFiles = [];
+let productTemplates = {};
+let urlProducts = [];
+let productCategories = {}; // ДОБАВЬТЕ ЭТУ СТРОЧКУ
+
 // ==================== ОСНОВНЫЕ КОНСТАНТЫ И ПЕРЕМЕННЫЕ ====================
 const tg = window.Telegram.WebApp;
 tg.expand();
