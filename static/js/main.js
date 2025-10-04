@@ -1,3 +1,33 @@
+// ==================== ИНИЦИАЛИЗАЦИЯ КАТЕГОРИЙ ====================
+let productCategories = {};
+
+function initCategories() {
+    const savedCategories = localStorage.getItem('productCategories');
+    if (savedCategories) {
+        productCategories = JSON.parse(savedCategories);
+    } else {
+        // Создаем структуру по умолчанию
+        productCategories = {
+            'playstation_personal': {
+                name: 'PlayStation Личный',
+                subcategories: {
+                    'carousel': {
+                        name: 'Горячие предложения',
+                        type: 'carousel',
+                        products: []
+                    }
+                }
+            }
+        };
+        saveCategories();
+    }
+}
+
+function saveCategories() {
+    localStorage.setItem('productCategories', JSON.stringify(productCategories));
+    console.log('✅ Категории сохранены:', productCategories);
+}
+
 // ==================== ПЕРЕМЕННЫЕ АДМИНКИ ====================
 let selectedFiles = [];
 let productTemplates = {};
