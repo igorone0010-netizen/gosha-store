@@ -398,11 +398,13 @@ function updateActiveSlide() {
     if (!container || slides.length === 0) return;
     
     const scrollLeft = container.scrollLeft;
-    const slideWidth = container.clientWidth * 0.92 + 10; // 92% ширины + отступ
+    const slideWidth = container.clientWidth * 0.92 + 10;
     
-    currentSlide = Math.round(scrollLeft / slideWidth);
+    // Более точное определение текущего слайда
+    const rawSlide = scrollLeft / slideWidth;
+    currentSlide = Math.min(Math.max(0, Math.round(rawSlide)), slides.length - 1);
     
-    // ОБНОВЛЯЕМ ВСЕ СЛАЙДЫ - ВКЛЮЧАЯ ПОСЛЕДНИЙ
+    // Плавное обновление классов
     slides.forEach((slide, index) => {
         if (index === currentSlide) {
             slide.classList.add('active');
@@ -501,68 +503,89 @@ function setupCarouselDrag() {
 
     let startX;
     let scrollLeft;
-    let isDown = false;
+    let isDragging = false;
     
-    // Простая и надежная версия для мыши
+    // Устанавливаем плавный скролл по умолчанию
+    container.style.scrollBehavior = 'smooth';
+
+    // Mouse events
     container.addEventListener('mousedown', (e) => {
-        isDown = true;
+        isDragging = true;
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
         container.style.cursor = 'grabbing';
-        container.style.scrollBehavior = 'auto';
+        container.style.scrollBehavior = 'auto'; // Только во время dragging
     });
 
     container.addEventListener('mouseleave', () => {
-        if (isDown) {
-            isDown = false;
-            container.style.cursor = 'grab';
-            updateActiveSlide();
+        if (isDragging) {
+            finishDrag();
         }
     });
 
     container.addEventListener('mouseup', () => {
-        if (isDown) {
-            isDown = false;
-            container.style.cursor = 'grab';
-            container.style.scrollBehavior = 'smooth';
-            updateActiveSlide();
+        if (isDragging) {
+            finishDrag();
         }
     });
 
     container.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
+        if (!isDragging) return;
         e.preventDefault();
         const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 2; // Чувствительность
+        const walk = (x - startX) * 1.8; // Чувствительность
         container.scrollLeft = scrollLeft - walk;
     });
 
-    // Простая версия для тач-устройств
+    // Touch events
     container.addEventListener('touchstart', (e) => {
+        isDragging = true;
         startX = e.touches[0].pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
         container.style.scrollBehavior = 'auto';
     });
 
     container.addEventListener('touchmove', (e) => {
-        if (!e.touches[0]) return;
+        if (!isDragging || !e.touches[0]) return;
         const x = e.touches[0].pageX - container.offsetLeft;
-        const walk = (x - startX);
+        const walk = (x - startX) * 1.5;
         container.scrollLeft = scrollLeft - walk;
     });
 
     container.addEventListener('touchend', () => {
-        container.style.scrollBehavior = 'smooth';
-        setTimeout(updateActiveSlide, 100);
+        if (isDragging) {
+            finishDrag();
+        }
     });
+
+    function finishDrag() {
+        isDragging = false;
+        container.style.cursor = 'grab';
+        
+        // Плавно переключаем обратно на smooth через небольшую задержку
+        setTimeout(() => {
+            container.style.scrollBehavior = 'smooth';
+            
+            // Плавно центрируем на ближайший слайд
+            const slideWidth = container.clientWidth * 0.92 + 10;
+            const currentScroll = container.scrollLeft;
+            const targetSlide = Math.round(currentScroll / slideWidth);
+            const targetScroll = targetSlide * slideWidth;
+            
+            // Плавная анимация к целевому слайду
+            container.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
+            });
+            
+            // Обновляем активный слайд после анимации
+            setTimeout(updateActiveSlide, 500);
+        }, 50);
+    }
 
     // Инициализация курсора
     container.style.cursor = 'grab';
-    
-    // Добавляем обработчики для стрелок (если нужно)
-    setupKeyboardNavigation();
 }
-
 function setupKeyboardNavigation() {
     document.addEventListener('keydown', (e) => {
         const container = document.getElementById('carousel-container');
