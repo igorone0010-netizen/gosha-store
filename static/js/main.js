@@ -510,15 +510,21 @@ function setupCarouselDrag() {
         isDown = true;
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
+        container.style.scrollBehavior = 'auto'; // Отключаем плавность при dragging
     });
 
     container.addEventListener('mouseleave', () => {
-        isDown = false;
+        if (isDown) {
+            isDown = false;
+            smoothSnapToSlide(); // Плавно к ближайшему слайду
+        }
     });
 
     container.addEventListener('mouseup', () => {
-        isDown = false;
-        updateActiveSlide();
+        if (isDown) {
+            isDown = false;
+            smoothSnapToSlide(); // Плавно к ближайшему слайду
+        }
     });
 
     container.addEventListener('mousemove', (e) => {
@@ -534,6 +540,7 @@ function setupCarouselDrag() {
         isDown = true;
         startX = e.touches[0].pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
+        container.style.scrollBehavior = 'auto';
     });
 
     container.addEventListener('touchmove', (e) => {
@@ -544,9 +551,30 @@ function setupCarouselDrag() {
     });
 
     container.addEventListener('touchend', () => {
-        isDown = false;
-        updateActiveSlide();
+        if (isDown) {
+            isDown = false;
+            smoothSnapToSlide(); // Плавно к ближайшему слайду
+        }
     });
+
+    // Функция плавного прилипания к слайду
+    function smoothSnapToSlide() {
+        container.style.scrollBehavior = 'smooth'; // Включаем плавность
+        
+        const slideWidth = container.clientWidth * 0.92 + 10;
+        const currentScroll = container.scrollLeft;
+        const targetSlide = Math.round(currentScroll / slideWidth);
+        const targetScroll = targetSlide * slideWidth;
+        
+        // Плавно скроллим к целевому слайду
+        container.scrollTo({
+            left: targetScroll,
+            behavior: 'smooth'
+        });
+        
+        // Обновляем активный слайд после анимации
+        setTimeout(updateActiveSlide, 300);
+    }
 }
 function setupKeyboardNavigation() {
     document.addEventListener('keydown', (e) => {
