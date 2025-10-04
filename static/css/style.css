@@ -640,50 +640,98 @@ body {
 }
 
 /* УЛЬТРА-СОВРЕМЕННАЯ НАВИГАЦИОННАЯ ПАНЕЛЬ - ЖИДКОЕ СТЕКЛО */
+/* Улучшенная навигационная панель */
 .nav-panel {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 10px; /* Поднимаем выше */
+    left: 50%;
+    transform: translateX(-50%);
     background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.15) 0%, 
         rgba(255, 255, 255, 0.08) 50%,
-        rgba(255, 255, 255, 0.12) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 25px 25px 0 0;
-    padding: 18px 0 16px;
+        rgba(255, 255, 255, 0.15) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 25px; /* Делаем более овальной */
+    padding: 8px 16px; /* Делаем в 2 раза тоньше (было 18px 0) */
     display: none;
     z-index: 1000;
     backdrop-filter: blur(60px) saturate(220%);
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 8px 32px rgba(0, 0, 0, 0.3),
         0 2px 8px rgba(255, 255, 255, 0.1) inset,
         0 -2px 8px rgba(255, 255, 255, 0.05) inset;
     margin: 0;
-    min-height: 70px;
+    min-height: 50px; /* Делаем тоньше (было 70px) */
     border-bottom: none;
     animation: glassFloat 6s ease-in-out infinite;
+    width: auto;
+    max-width: 500px;
 }
 
-/* ОСНОВНЫЕ СТИЛИ ДЛЯ ЦЕНТРИРОВАНИЯ НАВИГАЦИОННОЙ ПАНЕЛИ */
+/* Центрируем внутренний контейнер */
 .nav-panel-inner {
     max-width: 500px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 15px;
     width: 100%;
     box-sizing: border-box;
 }
 
-/* Для мобильных */
-@media (max-width: 480px) {
-    .nav-panel-inner {
-        max-width: 100%; /* На мобильных занимает всю ширину */
-        padding: 0 16px; /* Меньше отступы на мобильных */
-    }
+/* Уменьшаем верхнюю часть */
+.nav-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* Уменьшаем отступ */
+    gap: 10px;
 }
 
-.nav-panel.active {
-    display: block;
+/* Уменьшаем кнопку меню */
+.menu-toggle {
+    font-size: 18px;
+    padding: 8px;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+}
+
+/* Уменьшаем поисковую строку */
+.search-input {
+    padding: 12px 45px 12px 15px;
+    font-size: 14px;
+    border-radius: 18px;
+}
+
+/* Уменьшаем иконки вкладок */
+.nav-tabs {
+    gap: 8px;
+}
+
+.nav-tab {
+    padding: 8px 4px;
+    border-radius: 14px;
+}
+
+.tab-icon {
+    font-size: 20px; /* Уменьшаем иконки */
+    margin-bottom: 4px;
+}
+
+.tab-text {
+    font-size: 10px; /* Уменьшаем текст */
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .nav-panel {
+        bottom: 8px;
+        padding: 6px 12px;
+        min-height: 45px;
+        border-radius: 22px;
+    }
+    
+    .nav-panel-inner {
+        padding: 0 12px;
+    }
 }
 
 /* Анимация плавающего эффекта для жидкого стекла */
