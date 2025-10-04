@@ -700,7 +700,7 @@ function initAdminPanel() {
     
     if (isAdmin()) {
         secretButton.style.display = 'flex';
-        secretButton.onclick = showAdminPage; // Меняем обработчик
+        secretButton.setAttribute('onclick', 'showAdminPage()');
         console.log('👑 Админ-панель доступна');
     } else {
         secretButton.style.display = 'none';
