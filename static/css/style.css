@@ -2214,3 +2214,52 @@ body {
 .products-page {
     padding-bottom: 100px !important;
 }
+
+/* ==================== УМЕНЬШЕНИЕ КАРУСЕЛИ НА 10% ==================== */
+
+.carousel-game {
+    height: 324px !important; /* было 360px, уменьшили на 10% */
+    border-radius: 21.6px !important; /* было 24px */
+}
+
+.carousel-game-overlay {
+    padding: 22.5px 18px 18px !important; /* было 25px 20px 20px */
+}
+
+.carousel-game-title {
+    font-size: 18px !important; /* было 20px */
+    margin-bottom: 7.2px !important; /* было 8px */
+}
+
+.carousel-game-price {
+    font-size: 16.2px !important; /* было 18px */
+}
+
+.carousel-game-old-price {
+    font-size: 12.6px !important; /* было 14px */
+}
+
+.carousel-game-discount {
+    padding: 5.4px 10.8px !important; /* было 6px 12px */
+    border-radius: 10.8px !important; /* было 12px */
+    font-size: 11.7px !important; /* было 13px */
+}
+
+/* Уменьшаем отступы вокруг карусели */
+.games-carousel {
+    margin: 0 0 22.5px 0 !important; /* было 25px */
+}
+
+.carousel-container {
+    padding: 18px 0 !important; /* было 20px 0 */
+}
+
+/* Уменьшаем точки навигации */
+.carousel-dot {
+    width: 7.2px !important; /* было 8px */
+    height: 7.2px !important; /* было 8px */
+}
+
+.carousel-dot.active {
+    transform: scale(1.26) !important; /* было 1.4 */
+}
