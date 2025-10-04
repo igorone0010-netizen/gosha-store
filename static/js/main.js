@@ -511,7 +511,8 @@ function setupCarouselDrag() {
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
         container.style.scrollBehavior = 'auto';
-        e.preventDefault(); // Предотвращаем выделение текста
+        stopAutoScroll(); // ⬅️ ОСТАНАВЛИВАЕМ автопрокрутку
+        e.preventDefault();
     });
 
     // ВАЖНО: mouseup на ВСЁМ документе, а не только на контейнере
@@ -520,6 +521,7 @@ function setupCarouselDrag() {
             isDown = false;
             container.style.scrollBehavior = 'smooth';
             smoothSnapToSlide();
+            startAutoScroll(); // ⬅️ ЗАПУСКАЕМ автопрокрутку снова
         }
     });
 
@@ -529,6 +531,7 @@ function setupCarouselDrag() {
             isDown = false;
             container.style.scrollBehavior = 'smooth';
             smoothSnapToSlide();
+            startAutoScroll(); // ⬅️ ЗАПУСКАЕМ автопрокрутку снова
         }
     });
 
@@ -540,12 +543,13 @@ function setupCarouselDrag() {
         container.scrollLeft = scrollLeft - walk;
     });
 
-    // Касание (телефон) - оставляем как было
+    // Касание (телефон)
     container.addEventListener('touchstart', (e) => {
         isDown = true;
         startX = e.touches[0].pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
         container.style.scrollBehavior = 'auto';
+        stopAutoScroll(); // ⬅️ ОСТАНАВЛИВАЕМ автопрокрутку
     });
 
     container.addEventListener('touchmove', (e) => {
@@ -559,6 +563,7 @@ function setupCarouselDrag() {
         if (isDown) {
             isDown = false;
             smoothSnapToSlide();
+            startAutoScroll(); // ⬅️ ЗАПУСКАЕМ автопрокрутку снова
         }
     });
 
@@ -585,6 +590,7 @@ function setupCarouselDrag() {
             isDown = false;
             container.style.scrollBehavior = 'smooth';
             smoothSnapToSlide();
+            startAutoScroll(); // ⬅️ ЗАПУСКАЕМ автопрокрутку снова
         }
     });
 }
@@ -737,3 +743,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Загружаем товары с сервера при запуске
     loadProductsFromServer();
 });
+
+// Функции для управления автопрокруткой
+function stopAutoScroll() {
+    if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+    }
+}
+
+function startAutoScroll() {
+    // Останавливаем предыдущую автопрокрутку если есть
+    stopAutoScroll();
+    // Запускаем новую автопрокрутку
+    autoScrollInterval = setInterval(nextSlide, 5000);
+}
