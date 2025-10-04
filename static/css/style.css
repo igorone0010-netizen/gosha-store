@@ -1633,17 +1633,29 @@ body {
 }
 
 .carousel-slide {
-    flex: 0 0 85%; /* Фиксированная ширина 85% экрана */
+    flex: 0 0 75%; /* Неактивные слайды - 75% ширины */
     scroll-snap-align: center; /* Центрируем активный слайд */
     position: relative;
     padding: 0;
     transition: all 0.3s ease;
 }
 
-/* Активный слайд - нормального размера */
+/* АКТИВНЫЙ СЛАЙД - БОЛЬШЕ */
+.carousel-slide.active {
+    flex: 0 0 90%; /* Активный слайд - 90% ширины */
+}
+
+/* НЕАКТИВНЫЕ СЛАЙДЫ - МЕНЬШЕ И ПРОЗРАЧНЕЕ */
 .carousel-slide:not(.active) {
-    opacity: 0.7;
-    transform: scale(0.95);
+    opacity: 0.6;
+    transform: scale(0.9); /* Еще меньше уменьшаем */
+}
+
+/* АКТИВНЫЙ СЛАЙД - БОЛЬШЕ И ЯРЧЕ */
+.carousel-slide.active {
+    opacity: 1;
+    transform: scale(1); /* Нормальный размер */
+    z-index: 2; /* Чтобы был поверх других */
 }
 
 .carousel-game {
@@ -1657,6 +1669,7 @@ body {
     backdrop-filter: blur(10px);
     margin: 0;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease; /* Добавляем плавность */
 }
 
 .carousel-game-image {
