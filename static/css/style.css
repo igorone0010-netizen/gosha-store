@@ -20,6 +20,9 @@ body {
     min-height: 100vh;
     padding: 70px 16px 100px;
     overflow-y: auto;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
 }
 
 .page.active {
@@ -806,14 +809,13 @@ body {
     margin: 0;
     padding: 20px 0;
     transition: scroll-behavior 0.3s ease;
-}
-
-.carousel-container::-webkit-scrollbar {
-    display: none;
+    width: 100%;
+    max-width: 100vw;
 }
 
 .carousel-slide {
     flex: 0 0 96%;
+    max-width: 96%;
     scroll-snap-align: center;
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     opacity: 0.6;
@@ -968,17 +970,23 @@ body {
 /* СТРАНИЦА ТОВАРОВ */
 .products-page {
     padding: 70px 0 80px;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 .hot-offers {
-    margin-bottom: 20px;
+    min-height: calc(100vh - 150px);
 }
 
 .products-grid {
+    min-height: 300px;
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 14px !important;
     padding: 0 16px !important;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
 }
 
 .product-card {
@@ -1128,9 +1136,8 @@ body {
 .sale-carousel-container {
     position: relative;
     overflow: hidden;
-    padding: 0;
-    margin: 0;
     width: 100%;
+    max-width: 100vw;
 }
 
 .sale-carousel-scroll {
@@ -1142,15 +1149,13 @@ body {
     scrollbar-width: none;
     -ms-overflow-style: none;
     width: 100%;
+    max-width: 100vw;
     box-sizing: border-box;
-}
-
-.sale-carousel-scroll::-webkit-scrollbar {
-    display: none;
 }
 
 .sale-product-card {
     flex: 0 0 160px;
+    max-width: 160px;
     background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 12px;
