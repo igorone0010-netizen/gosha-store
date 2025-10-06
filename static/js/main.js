@@ -316,36 +316,65 @@ function displaySubcategories(products) {
     // Добавляем подкатегории если они есть
     if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
         const subcategories = productCategories['playstation_personal'].subcategories;
-        const subcategoryIds = Object.keys(subcategories).filter(id => id !== 'carousel');
         
-        if (subcategoryIds.length > 0) {
-            html += '<div style="margin: 30px 16px 20px;">';
-            html += '<div style="font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 16px;">Подкатегории</div>';
-            html += '<div class="categories-grid">';
+        Object.keys(subcategories).forEach(categoryId => {
+            const category = subcategories[categoryId];
             
-            subcategoryIds.forEach(categoryId => {
-                const category = subcategories[categoryId];
+            if (category.products.length > 0) {
                 html += `
-                    <div class="category-card" onclick="showSubcategoryProducts('${categoryId}')">
-                        <div class="category-icon">${category.type === 'carousel' ? '🔄' : '📱'}</div>
-                        <div class="category-name">${category.name}</div>
-                        <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 5px;">
-                            ${category.products.length} товаров
+                    <div style="margin: 40px 16px 20px;">
+                        <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; text-align: left;">
+                            ${category.name}
+                        </div>
+                        <div class="products-grid">
+                `;
+                
+                // Добавляем товары этой подкатегории
+                category.products.forEach(product => {
+                    html += `
+                        <div class="product-card">
+                            ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
+                            ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
+                            
+                            <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
+                                    onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                                ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
+                            </button>
+                            
+                            <div class="product-image">
+                                <img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
+                            </div>
+                            
+                            <div class="product-name">${product.name}</div>
+                            
+                            <div class="product-prices">
+                                <div class="product-price">${product.price} руб.</div>
+                                ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
+                            </div>
+                            
+                            <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                                Купить
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                html += `
                         </div>
                     </div>
                 `;
-            });
-            
-            html += '</div></div>';
-        }
+            }
+        });
     }
     
-    // Добавляем основные товары
+    // Добавляем раздел "Все товары" если есть товары в основной базе
     if (products.length > 0) {
         html += `
-            <div style="margin: 0 16px;">
-                <div style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 30px 0 16px;">Все товары</div>
-                <div class="products-grid" id="main-products-grid">
+            <div style="margin: 40px 16px 20px;">
+                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; text-align: left;">
+                    Все товары
+                </div>
+                <div class="products-grid">
                     ${products.map(product => `
                         <div class="product-card">
                             ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
@@ -357,10 +386,7 @@ function displaySubcategories(products) {
                             </button>
                             
                             <div class="product-image">
-                                ${product.isImage ? 
-                                    `<img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` : 
-                                    (product.image || '🎮')
-                                }
+                                <img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
                             </div>
                             
                             <div class="product-name">${product.name}</div>
@@ -378,7 +404,10 @@ function displaySubcategories(products) {
                 </div>
             </div>
         `;
-    } else {
+    }
+    
+    // Если нет товаров вообще
+    if (products.length === 0 && (!productCategories['playstation_personal'] || !productCategories['playstation_personal'].subcategories || Object.keys(productCategories['playstation_personal'].subcategories).length === 0)) {
         html += `
             <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 60px 20px;">
                 🎮<br><br>
@@ -389,7 +418,6 @@ function displaySubcategories(products) {
     
     container.innerHTML = html;
 }
-
 // ФУНКЦИИ ДЛЯ РАБОТЫ С ПОДКАТЕГОРИЯМИ
 function showSubcategoryProducts(subcategoryId) {
     const subcategory = productCategories['playstation_personal'].subcategories[subcategoryId];
