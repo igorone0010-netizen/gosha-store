@@ -280,6 +280,9 @@ function showCategories() {
 }
 
 function showProducts(category) {
+    console.log('🔍 showProducts вызвана с категорией:', category);
+    console.log('🔍 Подкатегория sale существует:', productCategories['playstation_personal']?.subcategories?.sale);
+    
     currentCategory = category;
     currentSection = 'products';
     
@@ -294,18 +297,17 @@ function showProducts(category) {
     navigateToPage('products', 'PlayStation Личный');
     setActiveTab('home');
     
-    // ЭТА СТРОКА ДОЛЖНА БЫТЬ - она вызывает отображение подкатегорий
+    // Отображение подкатегорий
     displaySubcategories(products);
 }
 
-// НОВАЯ ФУНКЦИЯ ДЛЯ ОТОБРАЖЕНИЯ ПОДКАТЕГОРИЙ
 function displaySubcategories(products) {
     const container = document.getElementById('products-container');
     if (!container) return;
     
     let html = '';
     
-    // Добавляем основную карусель
+    // Основная карусель
     html += `
         <div class="games-carousel">
             <div class="carousel-container" id="carousel-container"></div>
@@ -313,33 +315,32 @@ function displaySubcategories(products) {
         </div>
     `;
     
-    // Добавляем подкатегорию "Распродажа" как горизонтальную карусель
+    // Подкатегория "Распродажа"
     if (productCategories['playstation_personal']?.subcategories?.sale) {
         const saleCategory = productCategories['playstation_personal'].subcategories.sale;
         
         html += `
-            <div class="sale-section" style="margin: 40px 0 20px;">
-                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left;">
+            <div class="sale-section">
+                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin: 40px 0 20px; padding: 0 16px; text-align: left;">
                     ${saleCategory.name}
                 </div>
                 <div class="sale-carousel-container">
                     <div class="sale-carousel-scroll" id="sale-carousel-scroll">
         `;
         
-        // Добавляем товары распродажи как маленькие карточки
         saleCategory.products.forEach(product => {
             html += `
                 <div class="sale-product-card">
                     ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
                     
-                    <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
+                    <button class="favorite-button" 
                             onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
-                        ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
+                        🤍
                     </button>
                     
                     <div class="sale-product-image">
                         <img src="${product.imageUrl}" alt="${product.name}" 
-                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjE2MCIgdmlld0JveD0iMCAwIDEyMCAxNjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTYwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI4MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD4KPC9zdmc+'">
+                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjE2MCIgdmlld0JveD0iMCAwIDEyMCAxNjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTYwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI4MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD4KPC9zdmc+'">
                     </div>
                     
                     <div class="sale-product-info">
@@ -367,52 +368,16 @@ function displaySubcategories(products) {
     
     container.innerHTML = html;
     
-    // Инициализируем обе карусели
+    // Инициализируем карусели
     setTimeout(() => {
         initCarousel();
-        initSaleCarousel();
+        setupHorizontalCarouselDrag(document.getElementById('sale-carousel-scroll'));
     }, 100);
 }
 
-function initSaleCarousel() {
-    const scrollContainer = document.getElementById('sale-carousel-scroll');
-    if (!scrollContainer) return;
-    
-    setupHorizontalCarouselDrag(scrollContainer);
-}
-
-function initHorizontalCarousels() {
-    // Находим все контейнеры каруселей кроме основной
-    const carouselContainers = document.querySelectorAll('.carousel-container');
-    
-    carouselContainers.forEach((container, index) => {
-        // Пропускаем основную карусель (она уже настроена)
-        if (container.id === 'carousel-container') return;
-        
-        // Настраиваем горизонтальную прокрутку
-        container.style.display = 'flex';
-        container.style.overflowX = 'auto';
-        container.style.scrollSnapType = 'x mandatory';
-        container.style.scrollBehavior = 'smooth';
-        container.style.gap = '16px';
-        container.style.padding = '10px 0';
-        container.style.webkitOverflowScrolling = 'touch';
-        
-        // Скрываем scrollbar для красоты
-        container.style.scrollbarWidth = 'none';
-        container.style.msOverflowStyle = 'none';
-        
-        // Для Webkit браузеров
-        if (container.style.webkitScrollbar) {
-            container.style.webkitScrollbar = 'none';
-        }
-        
-        // Добавляем обработчики для drag & drop
-        setupHorizontalCarouselDrag(container);
-    });
-}
-
 function setupHorizontalCarouselDrag(container) {
+    if (!container) return;
+    
     let isDown = false;
     let startX;
     let scrollLeft;
@@ -461,10 +426,6 @@ function setupHorizontalCarouselDrag(container) {
         container.scrollLeft = scrollLeft - walk;
     });
 }
-
-
-
-
 
 function searchProducts() {
     const query = document.getElementById('search-input').value.toLowerCase();
@@ -767,154 +728,6 @@ function initCarousel() {
     setupCarouselDrag();
 }
 
-// ==================== МИНИ-КАРУСЕЛЬ РАСПРОДАЖИ ====================
-function initMiniCarousel() {
-    const container = document.getElementById('mini-carousel');
-    if (!container) return;
-    
-    renderMiniCarouselDots();
-    setupMiniCarouselDrag();
-}
-
-function renderMiniCarouselDots() {
-    const dotsContainer = document.getElementById('mini-carousel-dots');
-    if (!dotsContainer) return;
-    
-    const saleCategory = productCategories['playstation_personal']?.subcategories?.sale;
-    if (!saleCategory) return;
-    
-    dotsContainer.innerHTML = '';
-    
-    saleCategory.products.forEach((_, index) => {
-        const dot = document.createElement('div');
-        dot.className = `mini-carousel-dot ${index === 0 ? 'active' : ''}`;
-        dot.onclick = () => goToMiniSlide(index);
-        dotsContainer.appendChild(dot);
-    });
-}
-
-function goToMiniSlide(slideIndex) {
-    const container = document.getElementById('mini-carousel');
-    const slides = document.querySelectorAll('.mini-carousel-slide');
-    const dots = document.querySelectorAll('.mini-carousel-dot');
-    
-    if (!container || slides.length === 0) return;
-    
-    slides.forEach((slide, index) => {
-        slide.classList.toggle('active', index === slideIndex);
-    });
-    
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === slideIndex);
-    });
-    
-    const slideWidth = container.clientWidth;
-    container.scrollTo({
-        left: slideIndex * slideWidth,
-        behavior: 'smooth'
-    });
-}
-
-function setupMiniCarouselDrag() {
-    const container = document.getElementById('mini-carousel');
-    if (!container) return;
-
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    container.addEventListener('mousedown', (e) => {
-        isDown = true;
-        startX = e.pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-        container.style.scrollBehavior = 'auto';
-        container.classList.add('no-snap');
-        e.preventDefault();
-    });
-
-    document.addEventListener('mouseup', () => {
-        if (isDown) {
-            finishMiniDrag();
-        }
-    });
-
-    container.addEventListener('mouseup', () => {
-        if (isDown) {
-            finishMiniDrag();
-        }
-    });
-
-    container.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 2;
-        container.scrollLeft = scrollLeft - walk;
-    });
-
-    container.addEventListener('touchstart', (e) => {
-        isDown = true;
-        startX = e.touches[0].pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-        container.style.scrollBehavior = 'auto';
-        container.classList.add('no-snap');
-    });
-
-    container.addEventListener('touchmove', (e) => {
-        if (!isDown) return;
-        const x = e.touches[0].pageX - container.offsetLeft;
-        const walk = (x - startX);
-        container.scrollLeft = scrollLeft - walk;
-    });
-
-    container.addEventListener('touchend', () => {
-        if (isDown) {
-            finishMiniDrag();
-        }
-    });
-
-    container.addEventListener('mouseleave', () => {
-        if (isDown) {
-            finishMiniDrag();
-        }
-    });
-
-    function finishMiniDrag() {
-        if (!isDown) return;
-        isDown = false;
-        container.classList.remove('no-snap');
-        container.style.scrollBehavior = 'smooth';
-        smoothSnapToMiniSlide();
-    }
-
-    function smoothSnapToMiniSlide() {
-        const slideWidth = container.clientWidth;
-        const currentScroll = container.scrollLeft;
-        const targetSlide = Math.round(currentScroll / slideWidth);
-        const targetScroll = targetSlide * slideWidth;
-        
-        container.scrollTo({
-            left: targetScroll,
-            behavior: 'smooth'
-        });
-        
-        setTimeout(() => {
-            const slides = document.querySelectorAll('.mini-carousel-slide');
-            const dots = document.querySelectorAll('.mini-carousel-dot');
-            
-            slides.forEach((slide, index) => {
-                slide.classList.toggle('active', index === targetSlide);
-            });
-            
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === targetSlide);
-            });
-        }, 300);
-    }
-}
-
-
-
 function updateActiveSlide() {
     const container = document.getElementById('carousel-container');
     const slides = document.querySelectorAll('.carousel-slide');
@@ -1134,11 +947,10 @@ function stopAutoScroll() {
 }
 
 // ==================== ИНИЦИАЛИЗАЦИЯ ====================
-// ==================== ДОБАВЛЕНИЕ ТОВАРОВ В БАЗУ ====================
 function initProductsData() {
     console.log('🔄 Инициализация товаров...');
     
-    // Товары для основной базы (будут в карусели и в разделе "Все товары")
+    // Товары для основной базы
     productsData['playstation_personal'] = [
         {
             id: 1,
@@ -1200,96 +1012,6 @@ function initProductsData() {
     console.log('✅ Добавлено товаров в основную базу:', productsData['playstation_personal'].length);
 }
 
-function initSubcategoriesData() {
-    console.log('🔄 Создание подкатегорий...');
-    
-    // Создаем подкатегорию "Распродажа"
-    productCategories['playstation_personal'].subcategories['sale'] = {
-        name: "Распродажа",
-        type: "grid",
-        products: [
-            {
-                id: 101,
-                name: "Ratchet & Clank: Rift Apart",
-                price: 3499,
-                originalPrice: 4999,
-                imageUrl: "https://via.placeholder.com/300x400/333/white?text=Ratchet+Clank",
-                discount: 30,
-                isNew: false,
-                category: "Экшн",
-                isImage: true
-            },
-            {
-                id: 102,
-                name: "Demon's Souls",
-                price: 3799,
-                originalPrice: 5499,
-                imageUrl: "https://via.placeholder.com/300x400/333/white?text=Demons+Souls",
-                discount: 31,
-                isNew: false,
-                category: "RPG",
-                isImage: true
-            },
-            {
-                id: 103,
-                name: "Returnal",
-                price: 3299,
-                originalPrice: 4799,
-                imageUrl: "https://via.placeholder.com/300x400/333/white?text=Returnal",
-                discount: 31,
-                isNew: false,
-                category: "Экшн",
-                isImage: true
-            },
-            {
-                id: 104,
-                name: "Death Stranding: Director's Cut",
-                price: 2999,
-                originalPrice: 3999,
-                imageUrl: "https://via.placeholder.com/300x400/333/white?text=Death+Stranding",
-                discount: 25,
-                isNew: false,
-                category: "Приключения",
-                isImage: true
-            },
-            {
-                id: 105,
-                name: "Ghost of Tsushima: Director's Cut",
-                price: 3599,
-                originalPrice: 4999,
-                imageUrl: "https://via.placeholder.com/300x400/333/white?text=Ghost+of+Tsushima",
-                discount: 28,
-                isNew: false,
-                category: "Приключения",
-                isImage: true
-            }
-        ]
-    };
-    
-    console.log('✅ Создана подкатегория "Распродажа" с товарами:', 
-                productCategories['playstation_personal'].subcategories['sale'].products.length);
-    
-    // Сохраняем изменения
-    saveCategories();
-}
-
-// Функция для полной инициализации всех данных
-function initializeAllData() {
-    console.log('🎮 Начало инициализации данных...');
-    
-    initProductsData();
-    createSaleSubcategory(); // Добавляем вызов создания распродажи
-    
-    console.log('🎉 Все данные успешно загружены!');
-    
-    if (currentSection === 'products') {
-        showProducts('playstation_personal');
-    }
-    
-    showNotification('Товары загружены!', 'success');
-}
-
-// ==================== ПОДКАТЕГОРИЯ РАСПРОДАЖА ====================
 function createSaleSubcategory() {
     console.log('🔄 Создание подкатегории "Распродажа"...');
     
@@ -1358,14 +1080,20 @@ function createSaleSubcategory() {
     saveCategories();
 }
 
-function initSaleCarousel() {
-    const scrollContainer = document.getElementById('sale-carousel-scroll');
-    if (!scrollContainer) return;
+function initializeAllData() {
+    console.log('🎮 Начало инициализации данных...');
     
-    setupHorizontalCarouselDrag(scrollContainer);
+    initProductsData();
+    createSaleSubcategory();
+    
+    console.log('🎉 Все данные успешно загружены!');
+    
+    if (currentSection === 'products') {
+        showProducts('playstation_personal');
+    }
+    
+    showNotification('Товары загружены!', 'success');
 }
-
-
 
 // Запускаем инициализацию при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
