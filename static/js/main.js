@@ -1229,8 +1229,8 @@ function scrollSaleCarousel(direction) {
     const scrollContainer = document.getElementById('sale-carousel-scroll');
     if (!scrollContainer) return;
     
-    const scrollAmount = 320; // Ширина карточки + отступы
-    const newScrollLeft = scrollContainer.scrollLeft + (direction * scrollAmount);
+    const cardWidth = 280 + 12; // Ширина карточки + отступ
+    const newScrollLeft = scrollContainer.scrollLeft + (direction * cardWidth);
     
     scrollContainer.scrollTo({
         left: newScrollLeft,
