@@ -1,0 +1,58 @@
+{
+  "playstation_personal": [
+    {
+      "id": 1,
+      "name": "God of War Ragnarök",
+      "price": 3999,
+      "oldPrice": 4999,
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202207/1210/4xJ8XB3bi888QTLZYdl7Oi0s.png",
+      "category": "Экшн",
+      "description": "Кратос и Атрей отправляются в путешествие по девяти мирам в поисках ответов, пока асгардские силы готовятся к пророческой битве, которая положит конец миру."
+    },
+    {
+      "id": 2,
+      "name": "Marvel's Spider-Man 2",
+      "price": 4999,
+      "oldPrice": 5999,
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/1c7b75d8ed9271516546560d219ad0b22ee0a263b4537bd8.png",
+      "category": "Экшн",
+      "description": "Питер Паркер и Майлс Моралес возвращаются в новом приключении серии Marvel's Spider-Man."
+    },
+    {
+      "id": 3,
+      "name": "Horizon Forbidden West",
+      "price": 2999,
+      "oldPrice": 3999,
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202107/3100/HO8vkO9pfXhwbHi5WHECQJdN.png",
+      "category": "RPG",
+      "description": "Присоединяйтесь к Элой в путешествии по постапокалиптическому миру, полному механических существ и древних тайн."
+    },
+    {
+      "id": 4,
+      "name": "The Last of Us Part I",
+      "price": 3499,
+      "oldPrice": 4499,
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202206/0720/eEczyEMDd2BLa3dtkGJVE9Id.png",
+      "category": "Экшн",
+      "description": "Переживите эмоциональное путешествие Джоэла и Элли в полностью переработанной версии для PS5."
+    },
+    {
+      "id": 5,
+      "name": "Gran Turismo 7",
+      "price": 2799,
+      "oldPrice": 3799,
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202110/2618/phvVT0qZfcRms5qDAk0SI3CM.png",
+      "category": "Гонки",
+      "description": "Откройте для себя мир автомобилей в самом реалистичном симуляторе вождения."
+    },
+    {
+      "id": 6,
+      "name": "Ratchet & Clank: Rift Apart",
+      "price": 2499,
+      "oldPrice": 3499,
+      "image": "https://image.api.playstation.com/vulcan/ap/rnd/202101/2921/DwVs8ZvALGFgbq1uIgDvmANc.png",
+      "category": "Платформер",
+      "description": "Путешествуйте между измерениями с Рэтчетом и Кланком в этом визуально потрясающем приключении."
+    }
+  ]
+}
