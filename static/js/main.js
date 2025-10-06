@@ -283,16 +283,9 @@ function showProducts(category) {
     currentCategory = category;
     currentSection = 'products';
     
-    document.getElementById('nav-panel').classList.add('active');
+    const products = productsData[category] || [];
     
-    // Очищаем контейнер и показываем только карусель
-    const container = document.getElementById('products-container');
-    container.innerHTML = `
-        <div class="games-carousel">
-            <div class="carousel-container" id="carousel-container"></div>
-            <div class="carousel-dots" id="carousel-dots"></div>
-        </div>
-    `;
+    document.getElementById('nav-panel').classList.add('active');
     
     setTimeout(() => {
         initCarousel();
@@ -300,6 +293,9 @@ function showProducts(category) {
     
     navigateToPage('products', 'PlayStation Личный');
     setActiveTab('home');
+    
+    // ЭТА СТРОКА ДОЛЖНА БЫТЬ - она вызывает отображение подкатегорий
+    displaySubcategories(products);
 }
 
 // НОВАЯ ФУНКЦИЯ ДЛЯ ОТОБРАЖЕНИЯ ПОДКАТЕГОРИЙ
