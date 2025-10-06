@@ -42,6 +42,8 @@ function showBackButton(show) {
 }
 
 function navigateToPage(pageId, title = '', addToHistory = true) {
+    console.log('🔄 Переход на страницу:', pageId);
+    
     if (addToHistory && currentPage !== pageId) {
         pageHistory.push({
             page: currentPage,
@@ -50,7 +52,12 @@ function navigateToPage(pageId, title = '', addToHistory = true) {
     }
     
     hideAllPages();
-    document.getElementById(pageId + '-page').classList.add('active');
+    
+    const targetPage = document.getElementById(pageId + '-page');
+    if (targetPage) {
+        targetPage.classList.add('active');
+        console.log('✅ Показана страница:', pageId);
+    }
     
     if (pageId === 'main') {
         showBackButton(false);
@@ -84,7 +91,9 @@ function goBack() {
 
 function hideAllPages() {
     const pages = document.querySelectorAll('.page');
-    pages.forEach(page => page.classList.remove('active'));
+    pages.forEach(page => {
+        page.classList.remove('active');
+    });
 }
 
 function showMain() {
@@ -280,9 +289,6 @@ function showCategories() {
 }
 
 function showProducts(category) {
-    console.log('🔍 showProducts вызвана с категорией:', category);
-    console.log('🔍 Подкатегория sale существует:', productCategories['playstation_personal']?.subcategories?.sale);
-    
     currentCategory = category;
     currentSection = 'products';
     
@@ -297,7 +303,6 @@ function showProducts(category) {
     navigateToPage('products', 'PlayStation Личный');
     setActiveTab('home');
     
-    // Отображение подкатегорий
     displaySubcategories(products);
 }
 
@@ -307,7 +312,6 @@ function displaySubcategories(products) {
     
     let html = '';
     
-    // Основная карусель
     html += `
         <div class="games-carousel">
             <div class="carousel-container" id="carousel-container"></div>
@@ -315,13 +319,12 @@ function displaySubcategories(products) {
         </div>
     `;
     
-    // Подкатегория "Распродажа"
     if (productCategories['playstation_personal']?.subcategories?.sale) {
         const saleCategory = productCategories['playstation_personal'].subcategories.sale;
         
         html += `
             <div class="sale-section">
-                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin: 40px 0 20px; padding: 0 16px; text-align: left;">
+                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left;">
                     ${saleCategory.name}
                 </div>
                 <div class="sale-carousel-container">
@@ -368,7 +371,6 @@ function displaySubcategories(products) {
     
     container.innerHTML = html;
     
-    // Инициализируем карусели
     setTimeout(() => {
         initCarousel();
         setupHorizontalCarouselDrag(document.getElementById('sale-carousel-scroll'));
@@ -406,7 +408,6 @@ function setupHorizontalCarouselDrag(container) {
         container.scrollLeft = scrollLeft - walk;
     });
 
-    // Touch events для мобильных
     container.addEventListener('touchstart', (e) => {
         isDown = true;
         startX = e.touches[0].pageX - container.offsetLeft;
@@ -451,12 +452,10 @@ function searchProducts() {
 function getAllProducts() {
     let allProducts = [];
     
-    // Добавляем товары из основной базы
     for (const category in productsData) {
         allProducts = allProducts.concat(productsData[category]);
     }
     
-    // Добавляем товары из подкатегорий
     if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
         Object.keys(productCategories['playstation_personal'].subcategories).forEach(categoryId => {
             allProducts = allProducts.concat(productCategories['playstation_personal'].subcategories[categoryId].products);
@@ -660,30 +659,24 @@ function initCarousel() {
         return;
     }
     
-    // Очищаем предыдущую карусель
     container.innerHTML = '';
     
-    // Собираем все товары для карусели
     let allProducts = [...productsData['playstation_personal']];
     
-    // Добавляем товары из подкатегорий
     if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
         Object.keys(productCategories['playstation_personal'].subcategories).forEach(categoryId => {
             allProducts = allProducts.concat(productCategories['playstation_personal'].subcategories[categoryId].products);
         });
     }
     
-    // Берем товары со скидками или новинки
     featuredGames = allProducts
         .filter(product => product.discount || product.isNew)
         .slice(0, 5);
     
-    // Если нет товаров со скидками, берем первые 3
     if (featuredGames.length === 0) {
         featuredGames = allProducts.slice(0, 3);
     }
     
-    // Если все равно нет товаров, создаем тестовые
     if (featuredGames.length === 0) {
         featuredGames = [
             {
@@ -718,10 +711,8 @@ function initCarousel() {
     
     renderCarousel();
     
-    // Добавляем обработчик скролла для обновления активного слайда
     container.addEventListener('scroll', updateActiveSlide);
     
-    // Инициализируем активный слайд
     setTimeout(updateActiveSlide, 100);
     
     startAutoScroll();
@@ -759,11 +750,9 @@ function renderCarousel() {
     
     if (!container) return;
     
-    // Очищаем контейнер
     container.innerHTML = '';
     dots.innerHTML = '';
     
-    // Если нет товаров для карусели
     if (featuredGames.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 40px;">
@@ -773,7 +762,6 @@ function renderCarousel() {
         return;
     }
     
-    // Создаем слайды
     featuredGames.forEach((game, index) => {
         const slide = document.createElement('div');
         slide.className = 'carousel-slide';
@@ -794,7 +782,6 @@ function renderCarousel() {
         
         container.appendChild(slide);
         
-        // Создаем точки навигации
         const dot = document.createElement('div');
         dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
         dot.onclick = () => goToSlide(index);
@@ -946,11 +933,10 @@ function stopAutoScroll() {
     }
 }
 
-// ==================== ИНИЦИАЛИЗАЦИЯ ====================
+// ==================== ИНИЦИАЛИЗАЦИЯ ДАННЫХ ====================
 function initProductsData() {
     console.log('🔄 Инициализация товаров...');
     
-    // Товары для основной базы
     productsData['playstation_personal'] = [
         {
             id: 1,
@@ -1095,15 +1081,24 @@ function initializeAllData() {
     showNotification('Товары загружены!', 'success');
 }
 
-// Запускаем инициализацию при загрузке страницы
+function refreshUserData() {
+    initializeAllData();
+}
+
+// ==================== ЗАПУСК ПРИЛОЖЕНИЯ ====================
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Запуск приложения...');
+    
     setupBackButton();
     initUser();
     initCategories();
+    
+    hideAllPages();
     showMain();
     
-    // Загружаем тестовые данные через 1 секунду после загрузки
     setTimeout(initializeAllData, 1000);
     
     document.getElementById('nav-panel').classList.remove('active');
+    
+    console.log('✅ Приложение запущено');
 });
