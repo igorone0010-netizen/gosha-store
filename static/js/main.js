@@ -283,9 +283,16 @@ function showProducts(category) {
     currentCategory = category;
     currentSection = 'products';
     
-    const products = productsData[category] || [];
-    
     document.getElementById('nav-panel').classList.add('active');
+    
+    // Очищаем контейнер и показываем только карусель
+    const container = document.getElementById('products-container');
+    container.innerHTML = `
+        <div class="games-carousel">
+            <div class="carousel-container" id="carousel-container"></div>
+            <div class="carousel-dots" id="carousel-dots"></div>
+        </div>
+    `;
     
     setTimeout(() => {
         initCarousel();
@@ -293,9 +300,6 @@ function showProducts(category) {
     
     navigateToPage('products', 'PlayStation Личный');
     setActiveTab('home');
-    
-    // ПОКАЗЫВАЕМ ПОДКАТЕГОРИИ ПОД КАРУСЕЛЬЮ
-    displaySubcategories(products);
 }
 
 // НОВАЯ ФУНКЦИЯ ДЛЯ ОТОБРАЖЕНИЯ ПОДКАТЕГОРИЙ
@@ -305,7 +309,7 @@ function displaySubcategories(products) {
     
     let html = '';
     
-    // Добавляем карусель
+    // Добавляем ТОЛЬКО карусель
     html += `
         <div class="games-carousel">
             <div class="carousel-container" id="carousel-container"></div>
@@ -313,124 +317,13 @@ function displaySubcategories(products) {
         </div>
     `;
     
-    // Добавляем подкатегории если они есть
-    if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
-        const subcategories = productCategories['playstation_personal'].subcategories;
-        
-        Object.keys(subcategories).forEach(categoryId => {
-            const category = subcategories[categoryId];
-            
-            if (category.products.length > 0) {
-                html += `
-                    <div style="margin: 40px 0 20px;">
-                        <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left;">
-                            ${category.name}
-                        </div>
-                        <div class="carousel-container" style="padding: 0 16px;">
-                `;
-                
-                // Добавляем товары этой подкатегории в горизонтальную карусель
-                category.products.forEach(product => {
-                    html += `
-                        <div style="flex: 0 0 48%; scroll-snap-align: start;">
-                            <div class="product-card" style="margin: 0 8px;">
-                                ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
-                                ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
-                                
-                                <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
-                                        onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                                    ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
-                                </button>
-                                
-                                <div class="product-image">
-                                    <img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
-                                </div>
-                                
-                                <div class="product-name">${product.name}</div>
-                                
-                                <div class="product-prices">
-                                    <div class="product-price">${product.price} руб.</div>
-                                    ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
-                                </div>
-                                
-                                <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                                    Купить
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                html += `
-                        </div>
-                    </div>
-                `;
-            }
-        });
-    }
-    
-    // Добавляем раздел "Все товары" если есть товары в основной базе
-    if (products.length > 0) {
-        html += `
-            <div style="margin: 40px 0 20px;">
-                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left;">
-                    Все товары
-                </div>
-                <div class="carousel-container" style="padding: 0 16px;">
-        `;
-        
-        // Добавляем товары основной базы в горизонтальную карусель
-        products.forEach(product => {
-            html += `
-                <div style="flex: 0 0 48%; scroll-snap-align: start;">
-                    <div class="product-card" style="margin: 0 8px;">
-                        ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
-                        ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
-                        
-                        <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
-                                onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                            ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
-                        </button>
-                        
-                        <div class="product-image">
-                            <img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
-                        </div>
-                        
-                        <div class="product-name">${product.name}</div>
-                        
-                        <div class="product-prices">
-                            <div class="product-price">${product.price} руб.</div>
-                            ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
-                        </div>
-                        
-                        <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                            Купить
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-        
-        html += `
-                </div>
-            </div>
-        `;
-    }
-    
-    // Если нет товаров вообще
-    if (products.length === 0 && (!productCategories['playstation_personal'] || !productCategories['playstation_personal'].subcategories || Object.keys(productCategories['playstation_personal'].subcategories).length === 0)) {
-        html += `
-            <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 60px 20px;">
-                🎮<br><br>
-                Товары скоро появятся
-            </div>
-        `;
-    }
+    // УБИРАЕМ все подкатегории и раздел "Все товары"
+    // Оставляем только пустой контейнер для карусели
     
     container.innerHTML = html;
     
-    // Инициализируем горизонтальные карусели для разделов
-    setTimeout(initHorizontalCarousels, 100);
+    // Инициализируем карусель
+    setTimeout(initCarousel, 100);
 }
 
 function initHorizontalCarousels() {
