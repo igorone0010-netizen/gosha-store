@@ -17,6 +17,28 @@ let activeInput = null;
 let currentPage = 'main';
 const pageHistory = [];
 
+// ==================== ИСПРАВЛЕНИЕ ПРОКРУТКИ ====================
+function showProducts(category) {
+    currentCategory = category;
+    currentSection = 'products';
+    
+    const products = productsData[category] || [];
+    
+    document.getElementById('nav-panel').classList.add('active');
+    
+    setTimeout(() => {
+        initCarousel();
+    }, 100);
+    
+    navigateToPage('products', 'PlayStation Личный');
+    setActiveTab('home');
+    
+    displaySubcategories(products);
+    
+    // Исправляем прокрутку
+    setTimeout(fixScrollIssues, 200);
+}
+
 // ==================== КАТЕГОРИИ ====================
 let productCategories = {};
 
@@ -1105,6 +1127,9 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(initializeAllData, 1000);
     
     document.getElementById('nav-panel').classList.remove('active');
+    
+    // Исправляем проблемы с прокруткой при загрузке
+    setTimeout(fixScrollIssues, 1500);
     
     console.log('✅ Приложение запущено');
 });
