@@ -2299,18 +2299,34 @@ body {
 
 .horizontal-carousel-container {
     position: relative;
-    overflow: hidden;
-    padding: 0 16px;
+    overflow: hidden; /* Скрываем всё что выходит за границы */
+    padding: 0 0; /* Убираем боковые отступы */
+    margin: 0;
+    width: 100%;
 }
 
 .carousel-scroll {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
-    gap: 16px;
-    padding: 10px 0;
+    gap: 12px; /* Уменьшил отступ между карточками */
+    padding: 10px 16px; /* Отступы только слева и справа */
     scrollbar-width: none;
     -ms-overflow-style: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Добавляем отступ для первой карточки */
+.carousel-scroll::before {
+    content: '';
+    flex: 0 0 0px;
+}
+
+/* Добавляем отступ для последней карточки */
+.carousel-scroll::after {
+    content: '';
+    flex: 0 0 16px;
 }
 
 .carousel-scroll::-webkit-scrollbar {
