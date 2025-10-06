@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoshaStore | PS Store</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <!-- Фиксированная верхняя панель -->
@@ -13,7 +13,6 @@
         <div class="header-left">
             <div class="app-logo">
                 <div class="logo-icon">GS</div>
-                <div class="logo-text" id="header-title" style="display: none;">GoshaStore</div>
             </div>
         </div>
         <div class="header-right">
@@ -44,21 +43,15 @@
     </div>
 
     <!-- Страница товаров -->
-    <div id="products-page" class="page products-page">
+    <div id="products-page" class="page">
         <div class="hot-offers">
-            <!-- Карусель игр (баннер) -->
+            <!-- Карусель игр -->
             <div class="games-carousel">
-                <div class="carousel-container" id="carousel-container">
-                    <!-- Игры будут загружаться через JavaScript -->
-                </div>
-                <div class="carousel-dots" id="carousel-dots">
-                    <!-- Точки навигации -->
-                </div>
+                <div class="carousel-container" id="carousel-container"></div>
+                <div class="carousel-dots" id="carousel-dots"></div>
             </div>
             
-            <div id="products-container" class="products-grid">
-                <!-- Товары загружаются здесь -->
-            </div>
+            <div id="products-container" class="products-grid"></div>
         </div>
     </div>
 
@@ -120,16 +113,12 @@
 
     <!-- Страница категорий -->
     <div id="categories-page" class="page">
-        <div class="categories-grid" id="categories-container">
-            <!-- Категории загружаются здесь -->
-        </div>
+        <div class="categories-grid" id="categories-container"></div>
     </div>
 
     <!-- Страница корзины -->
     <div id="cart-page" class="page">
-        <div id="cart-container">
-            <!-- Товары в корзине -->
-        </div>
+        <div id="cart-container"></div>
         
         <div class="cart-total" id="cart-total">
             Итого: 0 руб.
@@ -142,9 +131,7 @@
 
     <!-- Страница избранного -->
     <div id="favorites-page" class="page">
-        <div id="favorites-container" class="products-grid">
-            <!-- Избранные товары -->
-        </div>
+        <div id="favorites-container" class="products-grid"></div>
     </div>
 
     <!-- Навигационная панель -->
@@ -153,7 +140,7 @@
             <div class="nav-top">
                 <div class="menu-toggle" onclick="showMain()">☰</div>
                 <div class="search-container">
-                    <input type="text" class="search-input" id="search-input" placeholder="" oninput="searchProducts()">
+                    <input type="text" class="search-input" id="search-input" placeholder="Поиск игр..." oninput="searchProducts()">
                     <div class="search-icon">🔍</div>
                 </div>
             </div>
@@ -195,6 +182,7 @@
         </div>
     </div>
 
-    <script src="main.js"></script>
+    <!-- Подключаем JS файлы -->
+    <script src="/static/js/main.js"></script>
 </body>
 </html>
