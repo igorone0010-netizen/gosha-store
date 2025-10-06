@@ -159,6 +159,21 @@
                     <button class="admin-button danger" onclick="clearAllProducts()">
                         🗑️ Удалить все товары
                     </button>
+
+                    <button class="admin-button" onclick="forceSync()">
+    🔄 Принудительная синхронизация
+</button>
+
+<button onclick="debugData()" style="background: #ffa726; border: none; border-radius: 6px; padding: 8px 12px; color: white; cursor: pointer; margin: 5px;">
+    🐛 Дебаг данных
+</button>
+<button onclick="clearAllData()" style="background: #ff4444; border: none; border-radius: 6px; padding: 8px 12px; color: white; cursor: pointer; margin: 5px;">
+    🗑️ Очистить ВСЕ данные
+</button>
+
+<div style="text-align: center; color: rgba(255,255,255,0.6); font-size: 12px; margin-top: 10px;">
+    Последнее обновление: <span id="last-update">неизвестно</span>
+</div>
                 </div>
             </div>
 
