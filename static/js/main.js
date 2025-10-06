@@ -1626,33 +1626,52 @@ async function saveProductsToServer() {
         };
         
         if (USE_LOCAL_STORAGE_AS_SERVER) {
-    // ВРЕМЕННОЕ РЕШЕНИЕ - сохраняем в localStorage
-    localStorage.setItem('server_products_data', JSON.stringify(dataToSave));
-    localStorage.setItem('last_server_save', new Date().toISOString());
-    console.log('✅ Данные сохранены в localStorage (временное решение)');
-    showNotification('Данные сохранены! Все пользователи увидят изменения.', 'success');
-    
-    // СИНХРОНИЗИРУЕМ ДАННЫЕ ДЛЯ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ
-    if (serverDataParsed.productsData) {
-        productsData = serverDataParsed.productsData;
-        localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
+            // ВРЕМЕННОЕ РЕШЕНИЕ - сохраняем в localStorage как "серверные данные"
+            localStorage.setItem('server_products_data', JSON.stringify(dataToSave));
+            localStorage.setItem('last_server_save', new Date().toISOString());
+            console.log('✅ Данные сохранены как серверные (localStorage)');
+            
+            // СИНХРОНИЗИРУЕМ ДАННЫЕ ДЛЯ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ (админа)
+            productsData = dataToSave.productsData;
+            productCategories = dataToSave.productCategories;
+            localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
+            localStorage.setItem('productCategories', JSON.stringify(productCategories));
+            
+            // ОБНОВЛЯЕМ ВРЕМЯ ПОСЛЕ СОХРАНЕНИЯ
+            setTimeout(updateLastSaveTime, 100);
+            
+            // ОБНОВЛЯЕМ ОТОБРАЖЕНИЕ
+            updateProductsCount();
+            loadCategoriesList();
+            if (currentSection === 'products') {
+                showProducts('playstation_personal');
+            }
+            
+            showNotification('✅ Данные сохранены! Все пользователи увидят изменения.', 'success');
+            return;
+        }
+        
+        // Код для реального сервера (пока не используется)
+        const response = await fetch(`${API_BASE_URL}/save-products`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSave)
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            showNotification('Все данные сохранены на сервер!', 'success');
+            console.log('✅ Все данные сохранены на сервер');
+        } else {
+            showNotification('Ошибка сохранения: ' + data.message, 'error');
+        }
+    } catch (error) {
+        console.error('❌ Ошибка сохранения:', error);
+        showNotification('Ошибка сети. Используется локальное сохранение.', 'warning');
     }
-    if (serverDataParsed.productCategories) {
-        productCategories = serverDataParsed.productCategories;
-        localStorage.setItem('productCategories', JSON.stringify(productCategories));
-    }
-    
-    // ОБНОВЛЯЕМ ВРЕМЯ ПОСЛЕ СОХРАНЕНИЯ
-    setTimeout(updateLastSaveTime, 100);
-    
-    // ОБНОВЛЯЕМ ОТОБРАЖЕНИЕ
-    updateProductsCount();
-    loadCategoriesList();
-    if (currentSection === 'products') {
-        showProducts('playstation_personal');
-    }
-    
-    return;
 }
         
         const response = await fetch(`${API_BASE_URL}/save-products`, {
@@ -1685,68 +1704,7 @@ async function saveProductsToServer() {
     }
 }
 
-async function loadProductsFromServer() {
-    try {
-        console.log('🔄 Загрузка данных с сервера...');
-        
-        let serverData;
-        
-        if (USE_LOCAL_STORAGE_AS_SERVER) {
-            // ВРЕМЕННОЕ РЕШЕНИЕ - загружаем из localStorage
-            const savedData = localStorage.getItem('server_products_data');
-            if (savedData) {
-                serverData = JSON.parse(savedData);
-                console.log('✅ Данные загружены из localStorage');
-            } else {
-                console.log('⚠️ Нет сохраненных данных на сервере');
-                // Если нет данных на сервере, используем локальные
-                loadFromLocalStorage();
-                return;
-            }
-        } else {
-            const response = await fetch(`${API_BASE_URL}/get-products`);
-            
-            if (!response.ok) {
-                throw new Error('Ошибка загрузки с сервера');
-            }
-            
-            serverData = await response.json();
-        }
-        
-        // ОБНОВЛЯЕМ ВСЕ ДАННЫЕ ДЛЯ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ
-        if (serverData.productsData) {
-            productsData = serverData.productsData;
-            // Сохраняем в localStorage для этого пользователя
-            localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
-        }
-        
-        if (serverData.productCategories) {
-            productCategories = serverData.productCategories;
-            // Сохраняем в localStorage для этого пользователя
-            localStorage.setItem('productCategories', JSON.stringify(productCategories));
-        }
-        
-        console.log('✅ Данные загружены с сервера');
-        
-        // Обновляем отображение
-        if (currentSection === 'products') {
-            showProducts('playstation_personal');
-        }
-        
-        // Обновляем счетчик в админке
-        updateProductsCount();
-        
-        // Обновляем список категорий
-        loadCategoriesList();
-        
-        showNotification('Данные загружены!', 'success');
-        
-    } catch (error) {
-        console.log('⚠️ Не удалось загрузить с сервера:', error.message);
-        // Если сервер не отвечает, загружаем из localStorage
-        loadFromLocalStorage();
-    }
-}
+
 
 function loadFromLocalStorage() {
     console.log('🔄 Загрузка из localStorage...');
@@ -1806,16 +1764,44 @@ function loadFromLocalStorage() {
 function loadFromLocalStorage() {
     console.log('🔄 Загрузка из localStorage...');
     
-    // Загружаем productsData
-    const savedProducts = localStorage.getItem('goshaStoreProducts');
-    if (savedProducts) {
-        productsData = JSON.parse(savedProducts);
+    // ДЛЯ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ: сначала пробуем загрузить серверные данные
+    const serverData = localStorage.getItem('server_products_data');
+    if (serverData) {
+        try {
+            const serverDataParsed = JSON.parse(serverData);
+            
+            // Используем серверные данные как основные
+            if (serverDataParsed.productsData) {
+                productsData = serverDataParsed.productsData;
+            }
+            if (serverDataParsed.productCategories) {
+                productCategories = serverDataParsed.productCategories;
+            }
+            
+            console.log('✅ Используются серверные данные');
+        } catch (e) {
+            console.error('Ошибка загрузки серверных данных:', e);
+        }
     }
     
-    // Загружаем productCategories
+    // Загружаем productsData (если нет серверных)
+    const savedProducts = localStorage.getItem('goshaStoreProducts');
+    if (savedProducts && !serverData) {
+        try {
+            productsData = JSON.parse(savedProducts);
+        } catch (e) {
+            console.error('Ошибка загрузки productsData:', e);
+        }
+    }
+    
+    // Загружаем productCategories (если нет серверных)
     const savedCategories = localStorage.getItem('productCategories');
-    if (savedCategories) {
-        productCategories = JSON.parse(savedCategories);
+    if (savedCategories && !serverData) {
+        try {
+            productCategories = JSON.parse(savedCategories);
+        } catch (e) {
+            console.error('Ошибка загрузки productCategories:', e);
+        }
     }
     
     updateProductsCount();
@@ -1826,45 +1812,14 @@ function loadFromLocalStorage() {
     }
 }
 
-function syncUserData() {
-    console.log('🔄 Синхронизация данных пользователя...');
+
+function refreshUserData() {
+    console.log('🔄 Принудительное обновление данных...');
     
-    // Для обычных пользователей: всегда синхронизируем с серверными данными
-    if (!isAdmin()) {
-        const serverData = localStorage.getItem('server_products_data');
-        if (serverData) {
-            try {
-                const serverDataParsed = JSON.parse(serverData);
-                
-                // Обновляем productsData
-                if (serverDataParsed.productsData) {
-                    productsData = serverDataParsed.productsData;
-                    localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
-                }
-                
-                // Обновляем productCategories
-                if (serverDataParsed.productCategories) {
-                    productCategories = serverDataParsed.productCategories;
-                    localStorage.setItem('productCategories', JSON.stringify(productCategories));
-                }
-                
-                console.log('✅ Данные пользователя синхронизированы с сервером');
-                
-                // Обновляем отображение
-                if (currentSection === 'products') {
-                    showProducts('playstation_personal');
-                }
-                updateProductsCount();
-                loadCategoriesList();
-                
-            } catch (e) {
-                console.error('Ошибка синхронизации:', e);
-            }
-        }
-    }
+    // Просто перезагружаем данные
+    loadFromLocalStorage();
+    showNotification('Данные обновлены!', 'success');
 }
-
-
 
 // ==================== КАРУСЕЛЬ ====================
 function initCarousel() {
@@ -2273,17 +2228,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initUser();
     initCategories();
     
-    // АВТОМАТИЧЕСКАЯ ЗАГРУЗКА И СИНХРОНИЗАЦИЯ ДАННЫХ ПРИ ЗАПУСКЕ
+    // ПРОСТАЯ ЗАГРУЗКА ДАННЫХ ПРИ ЗАПУСКЕ
     setTimeout(() => {
-        if (isAdmin()) {
-            // Админ загружает с возможностью сохранения
-            loadProductsFromServer();
-        } else {
-            // Обычный пользователь всегда синхронизируется с сервером
-            syncUserData();
-        }
+        loadFromLocalStorage(); // Всегда грузим из localStorage
         updateLastSaveTime();
-    }, 500);
+    }, 100);
     
     showMain();
     updateProductsCount();
@@ -2291,9 +2240,4 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('nav-panel').classList.remove('active');
 });
 
-// ПЕРИОДИЧЕСКАЯ СИНХРОНИЗАЦИЯ ДЛЯ ОБЫЧНЫХ ПОЛЬЗОВАТЕЛЕЙ
-setInterval(() => {
-    if (!isAdmin()) {
-        syncUserData();
-    }
-}, 30000); // Синхронизация каждые 30 секунд
+
