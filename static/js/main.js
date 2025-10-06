@@ -371,9 +371,15 @@ function displaySubcategories(products) {
     
     container.innerHTML = html;
     
+    // Принудительно обновляем размеры для прокрутки
     setTimeout(() => {
         initCarousel();
         setupHorizontalCarouselDrag(document.getElementById('sale-carousel-scroll'));
+        
+        // Проверяем, доступна ли прокрутка
+        if (container.scrollHeight > container.clientHeight) {
+            console.log('✅ Контент доступен для прокрутки');
+        }
     }, 100);
 }
 
