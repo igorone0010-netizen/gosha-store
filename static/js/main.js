@@ -1,1135 +1,277 @@
-// ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ====================
+// ===== GLOBAL VARIABLES =====
 const tg = window.Telegram.WebApp;
-tg.expand();
-tg.MainButton.hide();
-
-let productsData = {
-    'playstation_personal': []
-};
-
-let cart = [];
-let currentCategory = '';
-let userData = {};
-let autoSaveTimeout;
-let favorites = [];
-let currentSection = '';
-let activeInput = null;
 let currentPage = 'main';
-const pageHistory = [];
-
-// ==================== ИСПРАВЛЕНИЕ ПРОКРУТКИ ====================
-function showProducts(category) {
-    currentCategory = category;
-    currentSection = 'products';
-    
-    const products = productsData[category] || [];
-    
-    document.getElementById('nav-panel').classList.add('active');
-    
-    setTimeout(() => {
-        initCarousel();
-    }, 100);
-    
-    navigateToPage('products', 'PlayStation Личный');
-    setActiveTab('home');
-    
-    displaySubcategories(products);
-    
-    // Исправляем прокрутку
-    setTimeout(fixScrollIssues, 200);
-}
-
-// ==================== КАТЕГОРИИ ====================
-let productCategories = {};
-
-// ==================== КАРУСЕЛЬ ====================
+let cart = [];
+let favorites = [];
+let userData = {};
 let featuredGames = [];
-let currentSlide = 0;
-let autoScrollInterval;
+let allGames = [];
 
-// ==================== ОСНОВНЫЕ ФУНКЦИИ ====================
-function setupBackButton() {
+// ===== TELEGRAM WEB APP INITIALIZATION =====
+function initTelegramApp() {
+    tg.expand();
+    tg.MainButton.hide();
     tg.BackButton.hide();
-    tg.onEvent('backButtonClicked', function() {
-        goBack();
+    
+    tg.onEvent('backButtonClicked', goBack);
+    
+    // Initialize user data from Telegram
+    const user = tg.initDataUnsafe?.user;
+    if (user) {
+        const firstName = user.first_name || 'Пользователь';
+        document.getElementById('profile-name').textContent = firstName;
+        document.getElementById('user-greeting').textContent = `Привет, ${firstName}!`;
+    }
+}
+
+// ===== PAGE MANAGEMENT =====
+function showPage(pageId) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
     });
-}
-
-function showBackButton(show) {
-    if (show) {
-        tg.BackButton.show();
-    } else {
-        tg.BackButton.hide();
-    }
-}
-
-function navigateToPage(pageId, title = '', addToHistory = true) {
-    console.log('🔄 Переход на страницу:', pageId);
     
-    if (addToHistory && currentPage !== pageId) {
-        pageHistory.push({
-            page: currentPage,
-            title: 'GoshaStore'
-        });
-    }
+    // Update navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
     
-    hideAllPages();
-    
-    const targetPage = document.getElementById(pageId + '-page');
+    // Show target page
+    const targetPage = document.getElementById(`${pageId}-page`);
     if (targetPage) {
         targetPage.classList.add('active');
-        console.log('✅ Показана страница:', pageId);
+        
+        // Update navigation active state
+        const navMap = {
+            'main': 0,
+            'categories': 1,
+            'favorites': 2,
+            'cart': 3
+        };
+        
+        if (navMap[pageId] !== undefined) {
+            document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
+        }
     }
     
+    // Handle page-specific initialization
+    switch(pageId) {
+        case 'products':
+            initProductsPage();
+            break;
+        case 'categories':
+            initCategoriesPage();
+            break;
+        case 'cart':
+            initCartPage();
+            break;
+        case 'favorites':
+            initFavoritesPage();
+            break;
+        case 'profile':
+            loadProfileData();
+            break;
+    }
+    
+    // Update back button
     if (pageId === 'main') {
-        showBackButton(false);
-        document.getElementById('nav-panel').classList.remove('active');
-        document.getElementById('profile-button').classList.remove('active');
+        tg.BackButton.hide();
     } else {
-        showBackButton(true);
-        
-        if (pageId === 'profile') {
-            document.getElementById('profile-button').classList.add('active');
-            hideNavPanel();
-        } else if (pageId === 'products' || pageId === 'categories' || 
-                  pageId === 'cart' || pageId === 'favorites') {
-            showNavPanel();
-        } else {
-            hideNavPanel();
-        }
+        tg.BackButton.show();
     }
     
     currentPage = pageId;
 }
 
 function goBack() {
-    if (pageHistory.length > 0) {
-        const previousPage = pageHistory.pop();
-        navigateToPage(previousPage.page, previousPage.title, false);
-    } else {
+    if (currentPage === 'main') {
         tg.close();
-    }
-}
-
-function hideAllPages() {
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(page => {
-        page.classList.remove('active');
-    });
-}
-
-function showMain() {
-    navigateToPage('main', 'GoshaStore');
-}
-
-function showProfile() {
-    navigateToPage('profile', 'Профиль');
-}
-
-function showHistory() {
-    navigateToPage('history', 'История заказов');
-}
-
-function showNavPanel() {
-    document.getElementById('nav-panel').classList.add('active');
-}
-
-function hideNavPanel() {
-    document.getElementById('nav-panel').classList.remove('active');
-}
-
-function setActiveTab(tabName) {
-    const tabs = document.querySelectorAll('.nav-tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    
-    if (tabName === 'home') {
-        tabs[0].classList.add('active');
-    } else if (tabName === 'categories') {
-        tabs[1].classList.add('active');
-    } else if (tabName === 'favorites') {
-        tabs[2].classList.add('active');
-    } else if (tabName === 'cart') {
-        tabs[3].classList.add('active');
-    }
-}
-
-function showSectionHome() {
-    if (currentSection === 'products') {
-        navigateToPage('products', 'PlayStation Личный');
-        setActiveTab('home');
     } else {
-        showMain();
+        showPage('main');
     }
 }
 
-// ==================== ПРОФИЛЬ ====================
-function activateInput(type) {
-    if (activeInput) {
-        deactivateInput(activeInput);
-    }
-    
-    const card = document.getElementById(`${type}-card`);
-    const input = document.getElementById(`user-${type}`);
-    
-    card.classList.add('active');
-    input.focus();
-    activeInput = type;
-    
-    if (input.value.trim()) {
-        card.classList.add('has-value');
-    }
-}
-
-function deactivateInput(type) {
-    const card = document.getElementById(`${type}-card`);
-    const input = document.getElementById(`user-${type}`);
-    
-    if (!input.value.trim()) {
-        card.classList.remove('active');
-        card.classList.remove('has-value');
-    }
-    activeInput = null;
-}
-
-function handleInputChange(type) {
-    const card = document.getElementById(`${type}-card`);
-    const input = document.getElementById(`user-${type}`);
-    
-    if (input.value.trim()) {
-        card.classList.add('has-value');
-    } else {
-        card.classList.remove('has-value');
-    }
-    
-    autoSaveData();
-}
-
-function initUser() {
-    const user = tg.initDataUnsafe?.user;
-    
-    if (user) {
-        const firstName = user.first_name || 'Пользователь';
-        document.getElementById('profile-welcome').textContent = `Привет, ${firstName}!`;
-        document.getElementById('profile-button').textContent = firstName;
-        loadUserData();
-    } else {
-        document.getElementById('profile-welcome').textContent = 'Привет!';
-        document.getElementById('profile-button').textContent = 'Профиль';
-    }
-    
+// ===== DATA INITIALIZATION =====
+function initAppData() {
     loadCart();
     loadFavorites();
-    updateCartBadge();
+    loadProfileData();
+    initGamesData();
+    updateBadges();
 }
 
-function loadUserData() {
-    const savedData = localStorage.getItem('goshaStoreUserData');
-    if (savedData) {
-        userData = JSON.parse(savedData);
-        
-        if (userData.email) {
-            document.getElementById('user-email').value = userData.email;
-            document.getElementById('email-card').classList.add('has-value');
-        }
-        if (userData.password) {
-            document.getElementById('user-password').value = userData.password;
-            document.getElementById('password-card').classList.add('has-value');
-        }
-        if (userData.twoFA) {
-            document.getElementById('user-2fa').value = userData.twoFA;
-            document.getElementById('2fa-card').classList.add('has-value');
-        }
-    }
-}
-
-function autoSaveData() {
-    clearTimeout(autoSaveTimeout);
-    autoSaveTimeout = setTimeout(() => {
-        userData = {
-            email: document.getElementById('user-email').value,
-            password: document.getElementById('user-password').value,
-            twoFA: document.getElementById('user-2fa').value,
-            savedAt: new Date().toISOString()
-        };
-        localStorage.setItem('goshaStoreUserData', JSON.stringify(userData));
-    }, 1000);
-}
-
-// ==================== КАТЕГОРИИ И ТОВАРЫ ====================
-function initCategories() {
-    const savedCategories = localStorage.getItem('productCategories');
-    if (savedCategories) {
-        productCategories = JSON.parse(savedCategories);
-    } else {
-        createDefaultCategories();
-    }
-}
-
-function createDefaultCategories() {
-    productCategories = {
-        'playstation_personal': {
-            name: 'PlayStation Личный',
-            subcategories: {
-                'carousel': {
-                    name: 'Горячие предложения',
-                    type: 'carousel',
-                    products: []
-                }
-            }
-        }
-    };
-    saveCategories();
-}
-
-function saveCategories() {
-    localStorage.setItem('productCategories', JSON.stringify(productCategories));
-}
-
-function loadCategories() {
-    const categories = [
-        { name: 'Экшн', icon: '🔫' },
-        { name: 'Приключения', icon: '🗺️' },
-        { name: 'RPG', icon: '⚔️' },
-        { name: 'Стратегии', icon: '♟️' },
-        { name: 'Спорт', icon: '⚽' },
-        { name: 'Гонки', icon: '🏎️' }
-    ];
-    
-    const container = document.getElementById('categories-container');
-    container.innerHTML = categories.map(category => `
-        <div class="category-card" onclick="searchByCategory('${category.name}')">
-            <div class="category-icon">${category.icon}</div>
-            <div class="category-name">${category.name}</div>
-        </div>
-    `).join('');
-}
-
-function showCategories() {
-    navigateToPage('categories', 'Категории игр');
-    setActiveTab('categories');
-    loadCategories();
-}
-
-function showProducts(category) {
-    currentCategory = category;
-    currentSection = 'products';
-    
-    const products = productsData[category] || [];
-    
-    document.getElementById('nav-panel').classList.add('active');
-    
-    setTimeout(() => {
-        initCarousel();
-    }, 100);
-    
-    navigateToPage('products', 'PlayStation Личный');
-    setActiveTab('home');
-    
-    displaySubcategories(products);
-}
-
-function displaySubcategories(products) {
-    const container = document.getElementById('products-container');
-    if (!container) return;
-    
-    let html = '';
-    
-    html += `
-        <div class="games-carousel">
-            <div class="carousel-container" id="carousel-container"></div>
-            <div class="carousel-dots" id="carousel-dots"></div>
-        </div>
-    `;
-    
-    if (productCategories['playstation_personal']?.subcategories?.sale) {
-        const saleCategory = productCategories['playstation_personal'].subcategories.sale;
-        
-        html += `
-            <div class="sale-section">
-                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left;">
-                    ${saleCategory.name}
-                </div>
-                <div class="sale-carousel-container">
-                    <div class="sale-carousel-scroll" id="sale-carousel-scroll">
-        `;
-        
-        saleCategory.products.forEach(product => {
-            html += `
-                <div class="sale-product-card">
-                    ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
-                    
-                    <button class="favorite-button" 
-                            onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
-                        🤍
-                    </button>
-                    
-                    <div class="sale-product-image">
-                        <img src="${product.imageUrl}" alt="${product.name}" 
-                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjE2MCIgdmlld0JveD0iMCAwIDEyMCAxNjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTYwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI4MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD4KPC9zdmc+'">
-                    </div>
-                    
-                    <div class="sale-product-info">
-                        <div class="sale-product-name">${product.name}</div>
-                        
-                        <div class="sale-product-prices">
-                            <div class="sale-product-price">${product.price} руб.</div>
-                            ${product.originalPrice ? `<div class="sale-product-old-price">${product.originalPrice} руб.</div>` : ''}
-                        </div>
-                        
-                        <button class="sale-buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
-                            Купить
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-        
-        html += `
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-    
-    container.innerHTML = html;
-    
-    // Принудительно обновляем размеры для прокрутки
-    setTimeout(() => {
-        initCarousel();
-        setupHorizontalCarouselDrag(document.getElementById('sale-carousel-scroll'));
-        
-        // Проверяем, доступна ли прокрутка
-        if (container.scrollHeight > container.clientHeight) {
-            console.log('✅ Контент доступен для прокрутки');
-        }
-    }, 100);
-}
-
-function setupHorizontalCarouselDrag(container) {
-    if (!container) return;
-    
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    container.addEventListener('mousedown', (e) => {
-        isDown = true;
-        startX = e.pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-        container.style.scrollBehavior = 'auto';
-    });
-
-    container.addEventListener('mouseleave', () => {
-        isDown = false;
-    });
-
-    container.addEventListener('mouseup', () => {
-        isDown = false;
-        container.style.scrollBehavior = 'smooth';
-    });
-
-    container.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 2;
-        container.scrollLeft = scrollLeft - walk;
-    });
-
-    container.addEventListener('touchstart', (e) => {
-        isDown = true;
-        startX = e.touches[0].pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-        container.style.scrollBehavior = 'auto';
-    });
-
-    container.addEventListener('touchend', () => {
-        isDown = false;
-        container.style.scrollBehavior = 'smooth';
-    });
-
-    container.addEventListener('touchmove', (e) => {
-        if (!isDown) return;
-        const x = e.touches[0].pageX - container.offsetLeft;
-        const walk = (x - startX);
-        container.scrollLeft = scrollLeft - walk;
-    });
-}
-
-function searchProducts() {
-    const query = document.getElementById('search-input').value.toLowerCase();
-    const allProducts = getAllProducts();
-    
-    if (!query.trim()) {
-        if (currentCategory && productsData[currentCategory]) {
-            showProducts('playstation_personal');
-        }
-        return;
-    }
-    
-    const filteredProducts = allProducts.filter(product => 
-        product.name.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query)
-    );
-    
-    if (currentSection === 'products') {
-        displayProducts(filteredProducts);
-    }
-}
-
-function getAllProducts() {
-    let allProducts = [];
-    
-    for (const category in productsData) {
-        allProducts = allProducts.concat(productsData[category]);
-    }
-    
-    if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
-        Object.keys(productCategories['playstation_personal'].subcategories).forEach(categoryId => {
-            allProducts = allProducts.concat(productCategories['playstation_personal'].subcategories[categoryId].products);
-        });
-    }
-    
-    return allProducts;
-}
-
-function searchByCategory(category) {
-    document.getElementById('search-input').value = category;
-    searchProducts();
-}
-
-// ==================== КОРЗИНА ====================
-function showCart() {
-    navigateToPage('cart', 'Корзина');
-    setActiveTab('cart');
-    updateCartDisplay();
-}
-
-function loadCart() {
-    const savedCart = localStorage.getItem('goshaStoreCart');
-    if (savedCart) {
-        cart = JSON.parse(savedCart);
-    }
-}
-
-function saveCart() {
-    localStorage.setItem('goshaStoreCart', JSON.stringify(cart));
-    updateCartBadge();
-}
-
-function updateCartDisplay() {
-    const container = document.getElementById('cart-container');
-    const totalElement = document.getElementById('cart-total');
-    
-    if (cart.length === 0) {
-        container.innerHTML = '<div class="empty-state">🛒<br><br>Корзина пуста</div>';
-        totalElement.textContent = 'Итого: 0 руб.';
-        return;
-    }
-    
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    totalElement.textContent = `Итого: ${total} руб.`;
-    
-    container.innerHTML = cart.map((item, index) => `
-        <div class="cart-item">
-            <div class="cart-item-info">
-                <div class="cart-item-name">${item.name}</div>
-                <div class="cart-item-price">${item.price} руб. × ${item.quantity}</div>
-            </div>
-            <div class="remove-item" onclick="removeFromCart(${index})">🗑️</div>
-        </div>
-    `).join('');
-}
-
-function removeFromCart(index) {
-    const itemName = cart[index].name;
-    cart.splice(index, 1);
-    saveCart();
-    updateCartDisplay();
-    showNotification(`"${itemName}" удален из корзины`, 'warning');
-}
-
-function updateCartBadge() {
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const cartTab = document.querySelector('.nav-tab:nth-child(4)');
-    
-    const oldBadge = cartTab.querySelector('.cart-badge');
-    if (oldBadge) oldBadge.remove();
-    
-    if (totalItems > 0) {
-        const badge = document.createElement('div');
-        badge.className = 'cart-badge';
-        badge.textContent = totalItems > 9 ? '9+' : totalItems;
-        cartTab.style.position = 'relative';
-        cartTab.appendChild(badge);
-    }
-}
-
-function checkout() {
-    if (cart.length === 0) {
-        showNotification('Корзина пуста', 'error');
-        return;
-    }
-    
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    tg.showPopup({
-        title: 'Заказ оформлен!',
-        message: `Спасибо за покупку! Сумма: ${total} руб.`
-    });
-    
-    cart = [];
-    saveCart();
-    updateCartDisplay();
-    showNotification('Заказ успешно оформлен!', 'success');
-}
-
-// ==================== ИЗБРАННОЕ ====================
-function showFavorites() {
-    navigateToPage('favorites', 'Избранное');
-    setActiveTab('favorites');
-    updateFavoritesDisplay();
-}
-
-function loadFavorites() {
-    const savedFavorites = localStorage.getItem('goshaStoreFavorites');
-    if (savedFavorites) {
-        favorites = JSON.parse(savedFavorites);
-    }
-}
-
-function saveFavorites() {
-    localStorage.setItem('goshaStoreFavorites', JSON.stringify(favorites));
-}
-
-function toggleFavorite(id, name, price, image) {
-    const index = favorites.findIndex(fav => fav.id === id);
-    if (index > -1) {
-        favorites.splice(index, 1);
-        showNotification(`"${name}" удален из избранного`, 'warning');
-    } else {
-        favorites.push({ id, name, price, image });
-        showNotification(`"${name}" добавлен в избранное`, 'success');
-    }
-    saveFavorites();
-    
-    if (currentSection === 'products') {
-        showProducts('playstation_personal');
-    }
-}
-
-function updateFavoritesDisplay() {
-    const container = document.getElementById('favorites-container');
-    
-    if (favorites.length === 0) {
-        container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.6); padding: 40px;">⭐<br><br>Нет избранных товаров</div>';
-        return;
-    }
-    
-    container.innerHTML = favorites.map(product => `
-        <div class="product-card">
-            <div class="product-image">
-                ${product.isImage ? 
-                    `<img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` : 
-                    product.image
-                }
-            </div>
-            <div class="product-name">${product.name}</div>
-            <div class="product-price">${product.price} руб.</div>
-            <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.image}')">
-                Купить
-            </button>
-        </div>
-    `).join('');
-}
-
-// ==================== КОРЗИНА ФУНКЦИИ ====================
-function addToCart(id, name, price, image) {
-    const existingItem = cart.find(item => item.id === id);
-    
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        cart.push({ id, name, price, image, quantity: 1 });
-    }
-    
-    saveCart();
-    showNotification(`"${name}" добавлен в корзину`, 'success');
-}
-
-// ==================== УВЕДОМЛЕНИЯ ====================
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideUp 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-// ==================== ВНЕШНИЕ ССЫЛКИ ====================
-function openNewsChannel() {
-    tg.openLink('https://t.me/GoshaStoreBot');
-}
-
-function openSupport() {
-    tg.openTelegramLink('https://t.me/GoshaPlayStation');
-}
-
-// ==================== КАРУСЕЛЬ ====================
-function initCarousel() {
-    const container = document.getElementById('carousel-container');
-    if (!container) {
-        console.log('Карусель не найдена на этой странице');
-        return;
-    }
-    
-    container.innerHTML = '';
-    
-    let allProducts = [...productsData['playstation_personal']];
-    
-    if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
-        Object.keys(productCategories['playstation_personal'].subcategories).forEach(categoryId => {
-            allProducts = allProducts.concat(productCategories['playstation_personal'].subcategories[categoryId].products);
-        });
-    }
-    
-    featuredGames = allProducts
-        .filter(product => product.discount || product.isNew)
-        .slice(0, 5);
-    
-    if (featuredGames.length === 0) {
-        featuredGames = allProducts.slice(0, 3);
-    }
-    
-    if (featuredGames.length === 0) {
-        featuredGames = [
-            {
-                id: 1,
-                name: "God of War Ragnarok",
-                price: 3999,
-                originalPrice: 4999,
-                imageUrl: "https://via.placeholder.com/343x345/333/white?text=God+of+War",
-                discount: 20,
-                isNew: true
-            },
-            {
-                id: 2,
-                name: "Spider-Man 2",
-                price: 4999,
-                originalPrice: 0,
-                imageUrl: "https://via.placeholder.com/343x345/333/white?text=Spider-Man+2",
-                discount: 0,
-                isNew: true
-            },
-            {
-                id: 3,
-                name: "The Last of Us Part II",
-                price: 3499,
-                originalPrice: 4499,
-                imageUrl: "https://via.placeholder.com/343x345/333/white?text=Last+of+Us",
-                discount: 22,
-                isNew: false
-            }
-        ];
-    }
-    
-    renderCarousel();
-    
-    container.addEventListener('scroll', updateActiveSlide);
-    
-    setTimeout(updateActiveSlide, 100);
-    
-    startAutoScroll();
-    setupCarouselDrag();
-}
-
-function updateActiveSlide() {
-    const container = document.getElementById('carousel-container');
-    const slides = document.querySelectorAll('.carousel-slide');
-    const dots = document.querySelectorAll('.carousel-dot');
-    
-    if (!container || slides.length === 0) return;
-    
-    const scrollLeft = container.scrollLeft;
-    const slideWidth = container.clientWidth;
-    const rawSlide = scrollLeft / slideWidth;
-    currentSlide = Math.min(Math.max(0, Math.round(rawSlide)), slides.length - 1);
-    
-    slides.forEach((slide, index) => {
-        if (index === currentSlide) {
-            slide.classList.add('active');
-        } else {
-            slide.classList.remove('active');
-        }
-    });
-    
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-    });
-}
-
-function renderCarousel() {
-    const container = document.getElementById('carousel-container');
-    const dots = document.getElementById('carousel-dots');
-    
-    if (!container) return;
-    
-    container.innerHTML = '';
-    dots.innerHTML = '';
-    
-    if (featuredGames.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 40px;">
-                Карусель скоро появится
-            </div>
-        `;
-        return;
-    }
-    
-    featuredGames.forEach((game, index) => {
-        const slide = document.createElement('div');
-        slide.className = 'carousel-slide';
-        
-        slide.innerHTML = `
-            <div class="carousel-game" onclick="addToCart(${game.id}, '${game.name.replace(/'/g, "\\'")}', ${game.price}, '${game.imageUrl || game.image}')">
-                <img src="${game.imageUrl || game.image}" alt="${game.name}" class="carousel-game-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzQzIiBoZWlnaHQ9IjM0NSIgdmlld0JveD0iMCAwIDM0MyAzNDUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzNDMiIGhlaWdodD0iMzQ1IiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE3MS41IiB5PSIxNzIuNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD4KPC9zdmc+'">
-                <div class="carousel-game-overlay">
-                    <div class="carousel-game-title">${game.name}</div>
-                    <div class="carousel-game-prices">
-                        <div class="carousel-game-price">${game.price} руб.</div>
-                        ${game.originalPrice ? `<div class="carousel-game-old-price">${game.originalPrice} руб.</div>` : ''}
-                        ${game.discount ? `<div class="carousel-game-discount">-${game.discount}%</div>` : ''}
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        container.appendChild(slide);
-        
-        const dot = document.createElement('div');
-        dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
-        dot.onclick = () => goToSlide(index);
-        dots.appendChild(dot);
-    });
-}
-
-function goToSlide(slideIndex) {
-    currentSlide = slideIndex;
-    const container = document.getElementById('carousel-container');
-    const dots = document.querySelectorAll('.carousel-dot');
-    
-    if (container) {
-        container.scrollTo({
-            left: slideIndex * container.clientWidth,
-            behavior: 'smooth'
-        });
-    }
-    
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === slideIndex);
-    });
-    
-    restartAutoScroll();
-}
-
-function nextSlide() {
-    currentSlide = (currentSlide + 1) % featuredGames.length;
-    goToSlide(currentSlide);
-}
-
-function prevSlide() {
-    currentSlide = (currentSlide - 1 + featuredGames.length) % featuredGames.length;
-    goToSlide(currentSlide);
-}
-
-function startAutoScroll() {
-    autoScrollInterval = setInterval(nextSlide, 5000);
-}
-
-function restartAutoScroll() {
-    clearInterval(autoScrollInterval);
-    startAutoScroll();
-}
-
-function setupCarouselDrag() {
-    const container = document.getElementById('carousel-container');
-    if (!container) return;
-
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    container.addEventListener('mousedown', (e) => {
-        isDown = true;
-        startX = e.pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-        container.style.scrollBehavior = 'auto';
-        stopAutoScroll();
-        container.classList.add('no-snap');
-        document.querySelectorAll('.carousel-slide').forEach(slide => {
-            slide.classList.add('no-snap');
-        });
-        e.preventDefault();
-    });
-
-    document.addEventListener('mouseup', () => {
-        if (isDown) {
-            finishDrag();
-        }
-    });
-
-    container.addEventListener('mouseup', () => {
-        if (isDown) {
-            finishDrag();
-        }
-    });
-
-    container.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 2;
-        container.scrollLeft = scrollLeft - walk;
-    });
-
-    container.addEventListener('touchstart', (e) => {
-        isDown = true;
-        startX = e.touches[0].pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-        container.style.scrollBehavior = 'auto';
-        stopAutoScroll();
-        container.classList.add('no-snap');
-        document.querySelectorAll('.carousel-slide').forEach(slide => {
-            slide.classList.add('no-snap');
-        });
-    });
-
-    container.addEventListener('touchmove', (e) => {
-        if (!isDown) return;
-        const x = e.touches[0].pageX - container.offsetLeft;
-        const walk = (x - startX);
-        container.scrollLeft = scrollLeft - walk;
-    });
-
-    container.addEventListener('touchend', () => {
-        if (isDown) {
-            finishDrag();
-        }
-    });
-
-    container.addEventListener('mouseleave', () => {
-        if (isDown) {
-            finishDrag();
-        }
-    });
-
-    function finishDrag() {
-        if (!isDown) return;
-        isDown = false;
-        container.classList.remove('no-snap');
-        document.querySelectorAll('.carousel-slide').forEach(slide => {
-            slide.classList.remove('no-snap');
-        });
-        container.style.scrollBehavior = 'smooth';
-        smoothSnapToSlide();
-        startAutoScroll();
-    }
-
-    function smoothSnapToSlide() {
-        const slideWidth = container.clientWidth;
-        const currentScroll = container.scrollLeft;
-        const targetSlide = Math.round(currentScroll / slideWidth);
-        const targetScroll = targetSlide * slideWidth;
-        
-        container.scrollTo({
-            left: targetScroll,
-            behavior: 'smooth'
-        });
-        
-        setTimeout(updateActiveSlide, 300);
-    }
-}
-
-function stopAutoScroll() {
-    if (autoScrollInterval) {
-        clearInterval(autoScrollInterval);
-        autoScrollInterval = null;
-    }
-}
-
-// ==================== ИНИЦИАЛИЗАЦИЯ ДАННЫХ ====================
-function initProductsData() {
-    console.log('🔄 Инициализация товаров...');
-    
-    productsData['playstation_personal'] = [
+function initGamesData() {
+    // Featured games for carousel
+    featuredGames = [
         {
             id: 1,
-            name: "God of War Ragnarok",
+            name: "God of War Ragnarök",
             price: 3999,
             originalPrice: 4999,
-            imageUrl: "https://via.placeholder.com/300x400/333/white?text=God+of+War",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202207/1210/4xWJL9ZTz0TpR5SB0wqYGd1N.png",
             discount: 20,
-            isNew: true,
-            category: "Экшн",
-            isImage: true
+            category: "Экшн"
         },
         {
             id: 2,
-            name: "Spider-Man 2",
+            name: "Marvel's Spider-Man 2",
             price: 4999,
-            originalPrice: 0,
-            imageUrl: "https://via.placeholder.com/300x400/333/white?text=Spider-Man+2",
-            discount: 0,
-            isNew: true,
-            category: "Экшн",
-            isImage: true
+            originalPrice: 5999,
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/1c7f2c8d6d9c791e3e0d7d9c6c6a6a6a.png",
+            discount: 17,
+            category: "Экшн"
         },
         {
             id: 3,
+            name: "The Last of Us Part I",
+            price: 3499,
+            originalPrice: 4499,
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202206/0720/eEczyEMDd2BLa3dtgGJVe9wX.png",
+            discount: 22,
+            category: "Экшн"
+        }
+    ];
+
+    // All games
+    allGames = [
+        {
+            id: 4,
             name: "Horizon Forbidden West",
             price: 4599,
             originalPrice: 0,
-            imageUrl: "https://via.placeholder.com/300x400/333/white?text=Horizon+FW",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202107/3100/1dy5b4vm8eb3bXrDkRS9FWlG.png",
             discount: 0,
-            isNew: true,
-            category: "Приключения",
-            isImage: true
-        },
-        {
-            id: 4,
-            name: "The Last of Us Part I",
-            price: 3799,
-            originalPrice: 4499,
-            imageUrl: "https://via.placeholder.com/300x400/333/white?text=Last+of+Us+I",
-            discount: 15,
-            isNew: false,
-            category: "Экшн",
-            isImage: true
+            category: "Приключения"
         },
         {
             id: 5,
             name: "Gran Turismo 7",
             price: 4299,
             originalPrice: 4999,
-            imageUrl: "https://via.placeholder.com/300x400/333/white?text=Gran+Turismo+7",
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202109/2921/BWMVfyxONkI1u2kOGqThXpJM.png",
             discount: 14,
-            isNew: false,
-            category: "Гонки",
-            isImage: true
+            category: "Гонки"
+        },
+        {
+            id: 6,
+            name: "Returnal",
+            price: 3799,
+            originalPrice: 0,
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202101/0812/4WvluNcGNJC1UX6Xj4R0FRgA.png",
+            discount: 0,
+            category: "Экшн"
+        },
+        {
+            id: 7,
+            name: "Ratchet & Clank: Rift Apart",
+            price: 4699,
+            originalPrice: 0,
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202104/0119/aSDP6U761CLUj9ulG4NHp0gQ.png",
+            discount: 0,
+            category: "Приключения"
+        },
+        {
+            id: 8,
+            name: "Demon's Souls",
+            price: 4199,
+            originalPrice: 4999,
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202009/3022/1dMJhGMLpGW50SEU8aK2G6d3.png",
+            discount: 16,
+            category: "RPG"
+        },
+        {
+            id: 9,
+            name: "Final Fantasy XVI",
+            price: 4899,
+            originalPrice: 0,
+            image: "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
+            discount: 0,
+            category: "RPG"
         }
     ];
-    
-    console.log('✅ Добавлено товаров в основную базу:', productsData['playstation_personal'].length);
 }
 
-function createSaleSubcategory() {
-    console.log('🔄 Создание подкатегории "Распродажа"...');
-    
-    productCategories['playstation_personal'].subcategories['sale'] = {
-        name: "🔥 Распродажа",
-        type: "horizontal",
-        products: [
-            {
-                id: 201,
-                name: "God of War Ragnarök",
-                price: 3499,
-                originalPrice: 4999,
-                imageUrl: "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
-                discount: 30,
-                isNew: false,
-                category: "Экшн",
-                isImage: true
-            },
-            {
-                id: 202,
-                name: "Marvel's Spider-Man 2",
-                price: 4299,
-                originalPrice: 5999,
-                imageUrl: "https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/1c7f2c8d6d9c791e3e0d7d9c6c6a6a6a.png",
-                discount: 28,
-                isNew: false,
-                category: "Экшн",
-                isImage: true
-            },
-            {
-                id: 203,
-                name: "The Last of Us Part I",
-                price: 2999,
-                originalPrice: 4499,
-                imageUrl: "https://image.api.playstation.com/vulcan/ap/rnd/202206/0720/eEczyEMDd2BLa3dtgGJVe9wX.png",
-                discount: 33,
-                isNew: false,
-                category: "Экшн",
-                isImage: true
-            },
-            {
-                id: 204,
-                name: "Horizon Forbidden West",
-                price: 3199,
-                originalPrice: 4999,
-                imageUrl: "https://image.api.playstation.com/vulcan/ap/rnd/202107/3100/1dy5b4vm8eb3bXrDkRS9FWlG.png",
-                discount: 36,
-                isNew: false,
-                category: "Приключения",
-                isImage: true
-            },
-            {
-                id: 205,
-                name: "Gran Turismo 7",
-                price: 2799,
-                originalPrice: 3999,
-                imageUrl: "https://image.api.playstation.com/vulcan/ap/rnd/202109/2921/BWMVfyxONkI1u2kOGqThXpJM.png",
-                discount: 30,
-                isNew: false,
-                category: "Гонки",
-                isImage: true
-            }
-        ]
-    };
-    
-    saveCategories();
+// ===== PRODUCTS PAGE =====
+function initProductsPage() {
+    renderFeaturedCarousel();
+    renderHotOffers();
+    renderAllGames();
 }
 
-function initializeAllData() {
-    console.log('🎮 Начало инициализации данных...');
+function renderFeaturedCarousel() {
+    const container = document.getElementById('featured-carousel');
+    const dotsContainer = document.getElementById('carousel-dots');
     
-    initProductsData();
-    createSaleSubcategory();
+    if (!container) return;
     
-    console.log('🎉 Все данные успешно загружены!');
+    container.innerHTML = '';
+    dotsContainer.innerHTML = '';
     
-    if (currentSection === 'products') {
-        showProducts('playstation_personal');
+    featuredGames.forEach((game, index) => {
+        const slide = document.createElement('div');
+        slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
+        slide.innerHTML = `
+            <div class="carousel-game" onclick="addToCart(${game.id})">
+                <img src="${game.image}" alt="${game.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD48L3N2Zz4='">
+                <div class="carousel-overlay">
+                    <h3 class="carousel-title">${game.name}</h3>
+                    <div class="carousel-prices">
+                        <span class="carousel-price">${game.price} руб.</span>
+                        ${game.originalPrice ? `<span class="carousel-old-price">${game.originalPrice} руб.</span>` : ''}
+                        ${game.discount ? `<span class="carousel-discount">-${game.discount}%</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(slide);
+        
+        const dot = document.createElement('div');
+        dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
+        dot.onclick = () => goToSlide(index);
+        dotsContainer.appendChild(dot);
+    });
+    
+    setupCarouselAutoScroll();
+}
+
+function setupCarouselAutoScroll() {
+    let currentSlide = 0;
+    
+    setInterval(() => {
+        currentSlide = (currentSlide + 1) % featuredGames.length;
+        goToSlide(currentSlide);
+    }, 5000);
+}
+
+function goToSlide(slideIndex) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.carousel-dot');
+    
+    slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === slideIndex);
+    });
+    
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === slideIndex);
+    });
+    
+    const container = document.getElementById('featured-carousel');
+    if (container) {
+        container.scrollTo({
+            left: slideIndex * container.offsetWidth,
+            behavior: 'smooth'
+        });
     }
-    
-    showNotification('Товары загружены!', 'success');
 }
 
-function refreshUserData() {
-    initializeAllData();
-}
-
-// ==================== ЗАПУСК ПРИЛОЖЕНИЯ ====================
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Запуск приложения...');
+function renderHotOffers() {
+    const container = document.getElementById('offers-scroll');
+    if (!container) return;
     
-    setupBackButton();
-    initUser();
-    initCategories();
+    const offers = allGames.filter(game => game.discount > 0).slice(0, 5);
     
-    hideAllPages();
-    showMain();
-    
-    setTimeout(initializeAllData, 1000);
-    
-    document.getElementById('nav-panel').classList.remove('active');
-    
-    // Исправляем проблемы с прокруткой при загрузке
-    setTimeout(fixScrollIssues, 1500);
-    
-    console.log('✅ Приложение запущено');
-});
+    container.innerHTML = offers.map(game => `
+        <div class="offer-card">
+            <div class="offer-badge">-${game.discount}%</div>
+            <div class="offer-image">
+                <img src="${game.image}" alt="${game.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMjAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSIxMDAiIHk9IjYwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pjwvc3ZnPg==
