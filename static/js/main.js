@@ -313,7 +313,7 @@ function displaySubcategories(products) {
         </div>
     `;
     
-    // Добавляем подкатегорию "Распродажа" как горизонтальную карусель
+    // Добавляем подкатегорию "Распродажа" как уменьшенную карусель
     if (productCategories['playstation_personal'] && 
         productCategories['playstation_personal'].subcategories && 
         productCategories['playstation_personal'].subcategories['sale']) {
@@ -321,41 +321,38 @@ function displaySubcategories(products) {
         const saleCategory = productCategories['playstation_personal'].subcategories['sale'];
         
         html += `
-    <div class="sale-section" style="margin: 40px 0 20px;">
-        <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left; margin-left: 0;">
-            ${saleCategory.name}
-        </div>
-                <div class="horizontal-carousel-container" id="sale-carousel">
-                    <div class="carousel-scroll" id="sale-carousel-scroll">
+            <div class="sale-carousel-section">
+                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin: 40px 0 20px; padding: 0 16px; text-align: left;">
+                    ${saleCategory.name}
+                </div>
+                <div class="mini-carousel-container">
+                    <div class="mini-carousel" id="mini-carousel">
         `;
         
-        // Добавляем товары распродажи
-        saleCategory.products.forEach(product => {
+        // Добавляем товары распродажи как слайды мини-карусели
+        saleCategory.products.forEach((product, index) => {
             html += `
-                <div class="sale-product-card">
-                    ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
-                    
-                    <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
-                            onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
-                        ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
-                    </button>
-                    
-                    <div class="sale-product-image">
-                        <img src="${product.imageUrl}" alt="${product.name}" 
-                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjM0MCIgdmlld0JveD0iMCAwIDI0MCAzNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNDAiIGhlaWdodD0iMzQwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjEyMCIgeT0iMTcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
-                    </div>
-                    
-                    <div class="sale-product-info">
-                        <div class="product-name">${product.name}</div>
+                <div class="mini-carousel-slide ${index === 0 ? 'active' : ''}">
+                    <div class="mini-carousel-game" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
+                        ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
                         
-                        <div class="product-prices">
-                            <div class="product-price">${product.price} руб.</div>
-                            ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
+                        <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
+                                onclick="event.stopPropagation(); toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
+                            ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
+                        </button>
+                        
+                        <div class="mini-carousel-game-image">
+                            <img src="${product.imageUrl}" alt="${product.name}" 
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
                         </div>
                         
-                        <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
-                            Купить
-                        </button>
+                        <div class="mini-carousel-game-overlay">
+                            <div class="mini-carousel-game-title">${product.name}</div>
+                            <div class="mini-carousel-game-prices">
+                                <div class="mini-carousel-game-price">${product.price} руб.</div>
+                                ${product.originalPrice ? `<div class="mini-carousel-game-old-price">${product.originalPrice} руб.</div>` : ''}
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -363,6 +360,7 @@ function displaySubcategories(products) {
         
         html += `
                     </div>
+                    <div class="mini-carousel-dots" id="mini-carousel-dots"></div>
                 </div>
             </div>
         `;
@@ -373,7 +371,7 @@ function displaySubcategories(products) {
     // Инициализируем обе карусели
     setTimeout(() => {
         initCarousel();
-        initSaleCarousel();
+        initMiniCarousel();
     }, 100);
 }
 
@@ -762,6 +760,154 @@ function initCarousel() {
     startAutoScroll();
     setupCarouselDrag();
 }
+
+// ==================== МИНИ-КАРУСЕЛЬ РАСПРОДАЖИ ====================
+function initMiniCarousel() {
+    const container = document.getElementById('mini-carousel');
+    if (!container) return;
+    
+    renderMiniCarouselDots();
+    setupMiniCarouselDrag();
+}
+
+function renderMiniCarouselDots() {
+    const dotsContainer = document.getElementById('mini-carousel-dots');
+    if (!dotsContainer) return;
+    
+    const saleCategory = productCategories['playstation_personal']?.subcategories?.sale;
+    if (!saleCategory) return;
+    
+    dotsContainer.innerHTML = '';
+    
+    saleCategory.products.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = `mini-carousel-dot ${index === 0 ? 'active' : ''}`;
+        dot.onclick = () => goToMiniSlide(index);
+        dotsContainer.appendChild(dot);
+    });
+}
+
+function goToMiniSlide(slideIndex) {
+    const container = document.getElementById('mini-carousel');
+    const slides = document.querySelectorAll('.mini-carousel-slide');
+    const dots = document.querySelectorAll('.mini-carousel-dot');
+    
+    if (!container || slides.length === 0) return;
+    
+    slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === slideIndex);
+    });
+    
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === slideIndex);
+    });
+    
+    const slideWidth = container.clientWidth;
+    container.scrollTo({
+        left: slideIndex * slideWidth,
+        behavior: 'smooth'
+    });
+}
+
+function setupMiniCarouselDrag() {
+    const container = document.getElementById('mini-carousel');
+    if (!container) return;
+
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        container.style.scrollBehavior = 'auto';
+        container.classList.add('no-snap');
+        e.preventDefault();
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isDown) {
+            finishMiniDrag();
+        }
+    });
+
+    container.addEventListener('mouseup', () => {
+        if (isDown) {
+            finishMiniDrag();
+        }
+    });
+
+    container.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 2;
+        container.scrollLeft = scrollLeft - walk;
+    });
+
+    container.addEventListener('touchstart', (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        container.style.scrollBehavior = 'auto';
+        container.classList.add('no-snap');
+    });
+
+    container.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        const x = e.touches[0].pageX - container.offsetLeft;
+        const walk = (x - startX);
+        container.scrollLeft = scrollLeft - walk;
+    });
+
+    container.addEventListener('touchend', () => {
+        if (isDown) {
+            finishMiniDrag();
+        }
+    });
+
+    container.addEventListener('mouseleave', () => {
+        if (isDown) {
+            finishMiniDrag();
+        }
+    });
+
+    function finishMiniDrag() {
+        if (!isDown) return;
+        isDown = false;
+        container.classList.remove('no-snap');
+        container.style.scrollBehavior = 'smooth';
+        smoothSnapToMiniSlide();
+    }
+
+    function smoothSnapToMiniSlide() {
+        const slideWidth = container.clientWidth;
+        const currentScroll = container.scrollLeft;
+        const targetSlide = Math.round(currentScroll / slideWidth);
+        const targetScroll = targetSlide * slideWidth;
+        
+        container.scrollTo({
+            left: targetScroll,
+            behavior: 'smooth'
+        });
+        
+        setTimeout(() => {
+            const slides = document.querySelectorAll('.mini-carousel-slide');
+            const dots = document.querySelectorAll('.mini-carousel-dot');
+            
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === targetSlide);
+            });
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === targetSlide);
+            });
+        }, 300);
+    }
+}
+
+
 
 function updateActiveSlide() {
     const container = document.getElementById('carousel-container');
