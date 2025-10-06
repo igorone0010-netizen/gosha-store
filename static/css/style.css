@@ -2408,3 +2408,54 @@ body {
 .carousel-arrow:active {
     transform: scale(0.95);
 }
+
+/* Скрываем горизонтальный скроллбар */
+.carousel-scroll {
+    -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+}
+
+/* Эффект обрезки по краям */
+.horizontal-carousel-container {
+    mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 16px,
+        black calc(100% - 16px),
+        transparent 100%
+    );
+}
+
+/* Улучшаем стрелки */
+.carousel-controls {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    pointer-events: none;
+    padding: 0 8px;
+}
+
+.carousel-arrow {
+    pointer-events: all;
+    z-index: 10;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .sale-product-card {
+        flex: 0 0 260px; /* Еще меньше на мобильных */
+        height: 400px;
+    }
+    
+    .sale-product-image {
+        height: 250px;
+    }
+    
+    .carousel-scroll {
+        gap: 10px;
+        padding: 10px 12px;
+    }
+}
