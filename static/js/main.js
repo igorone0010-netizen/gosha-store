@@ -325,6 +325,10 @@ function showProducts(category) {
     
     // ПОКАЗЫВАЕМ ПОДКАТЕГОРИИ ПОД КАРУСЕЛЬЮ
     displaySubcategories(products);
+    
+    // ДЕБАГ: показываем что загружено
+    console.log('📦 Загружено товаров:', products.length);
+    console.log('📦 Всего товаров в базе:', getAllProducts().length);
 }
 
 // НОВАЯ ФУНКЦИЯ ДЛЯ ОТОБРАЖЕНИЯ ПОДКАТЕГОРИЙ
@@ -1622,16 +1626,34 @@ async function saveProductsToServer() {
         };
         
         if (USE_LOCAL_STORAGE_AS_SERVER) {
-            // ВРЕМЕННОЕ РЕШЕНИЕ - сохраняем в localStorage
-            localStorage.setItem('server_products_data', JSON.stringify(dataToSave));
-            localStorage.setItem('last_server_save', new Date().toISOString());
-            console.log('✅ Данные сохранены в localStorage (временное решение)');
-            showNotification('Данные сохранены (локально)!', 'success');
-            
-            // ОБНОВЛЯЕМ ВРЕМЯ ПОСЛЕ СОХРАНЕНИЯ
-            setTimeout(updateLastSaveTime, 100);
-            return;
-        }
+    // ВРЕМЕННОЕ РЕШЕНИЕ - сохраняем в localStorage
+    localStorage.setItem('server_products_data', JSON.stringify(dataToSave));
+    localStorage.setItem('last_server_save', new Date().toISOString());
+    console.log('✅ Данные сохранены в localStorage (временное решение)');
+    showNotification('Данные сохранены! Все пользователи увидят изменения.', 'success');
+    
+    // СИНХРОНИЗИРУЕМ ДАННЫЕ ДЛЯ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ
+    if (serverDataParsed.productsData) {
+        productsData = serverDataParsed.productsData;
+        localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
+    }
+    if (serverDataParsed.productCategories) {
+        productCategories = serverDataParsed.productCategories;
+        localStorage.setItem('productCategories', JSON.stringify(productCategories));
+    }
+    
+    // ОБНОВЛЯЕМ ВРЕМЯ ПОСЛЕ СОХРАНЕНИЯ
+    setTimeout(updateLastSaveTime, 100);
+    
+    // ОБНОВЛЯЕМ ОТОБРАЖЕНИЕ
+    updateProductsCount();
+    loadCategoriesList();
+    if (currentSection === 'products') {
+        showProducts('playstation_personal');
+    }
+    
+    return;
+}
         
         const response = await fetch(`${API_BASE_URL}/save-products`, {
             method: 'POST',
@@ -1677,6 +1699,8 @@ async function loadProductsFromServer() {
                 console.log('✅ Данные загружены из localStorage');
             } else {
                 console.log('⚠️ Нет сохраненных данных на сервере');
+                // Если нет данных на сервере, используем локальные
+                loadFromLocalStorage();
                 return;
             }
         } else {
@@ -1689,20 +1713,20 @@ async function loadProductsFromServer() {
             serverData = await response.json();
         }
         
-        // ОБНОВЛЯЕМ ВСЕ ДАННЫЕ
+        // ОБНОВЛЯЕМ ВСЕ ДАННЫЕ ДЛЯ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ
         if (serverData.productsData) {
             productsData = serverData.productsData;
+            // Сохраняем в localStorage для этого пользователя
+            localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
         }
         
         if (serverData.productCategories) {
             productCategories = serverData.productCategories;
+            // Сохраняем в localStorage для этого пользователя
+            localStorage.setItem('productCategories', JSON.stringify(productCategories));
         }
         
         console.log('✅ Данные загружены с сервера');
-        
-        // Сохраняем в localStorage для быстрого доступа
-        saveCategories();
-        localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
         
         // Обновляем отображение
         if (currentSection === 'products') {
@@ -1732,6 +1756,7 @@ function loadFromLocalStorage() {
     if (savedProducts) {
         try {
             productsData = JSON.parse(savedProducts);
+            console.log('✅ productsData загружены из localStorage');
         } catch (e) {
             console.error('Ошибка загрузки productsData:', e);
         }
@@ -1742,8 +1767,31 @@ function loadFromLocalStorage() {
     if (savedCategories) {
         try {
             productCategories = JSON.parse(savedCategories);
+            console.log('✅ productCategories загружены из localStorage');
         } catch (e) {
             console.error('Ошибка загрузки productCategories:', e);
+        }
+    }
+    
+    // ДЛЯ ОБЫЧНЫХ ПОЛЬЗОВАТЕЛЕЙ: если нет локальных данных, пробуем загрузить с сервера
+    if ((!savedProducts || !savedCategories) && !isAdmin()) {
+        console.log('🔍 У пользователя нет данных, проверяем сервер...');
+        const serverData = localStorage.getItem('server_products_data');
+        if (serverData) {
+            try {
+                const serverDataParsed = JSON.parse(serverData);
+                if (serverDataParsed.productsData) {
+                    productsData = serverDataParsed.productsData;
+                    localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
+                }
+                if (serverDataParsed.productCategories) {
+                    productCategories = serverDataParsed.productCategories;
+                    localStorage.setItem('productCategories', JSON.stringify(productCategories));
+                }
+                console.log('✅ Данные скопированы с сервера для пользователя');
+            } catch (e) {
+                console.error('Ошибка копирования данных с сервера:', e);
+            }
         }
     }
     
@@ -1777,6 +1825,46 @@ function loadFromLocalStorage() {
         showProducts('playstation_personal');
     }
 }
+
+function syncUserData() {
+    console.log('🔄 Синхронизация данных пользователя...');
+    
+    // Для обычных пользователей: всегда синхронизируем с серверными данными
+    if (!isAdmin()) {
+        const serverData = localStorage.getItem('server_products_data');
+        if (serverData) {
+            try {
+                const serverDataParsed = JSON.parse(serverData);
+                
+                // Обновляем productsData
+                if (serverDataParsed.productsData) {
+                    productsData = serverDataParsed.productsData;
+                    localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
+                }
+                
+                // Обновляем productCategories
+                if (serverDataParsed.productCategories) {
+                    productCategories = serverDataParsed.productCategories;
+                    localStorage.setItem('productCategories', JSON.stringify(productCategories));
+                }
+                
+                console.log('✅ Данные пользователя синхронизированы с сервером');
+                
+                // Обновляем отображение
+                if (currentSection === 'products') {
+                    showProducts('playstation_personal');
+                }
+                updateProductsCount();
+                loadCategoriesList();
+                
+            } catch (e) {
+                console.error('Ошибка синхронизации:', e);
+            }
+        }
+    }
+}
+
+
 
 // ==================== КАРУСЕЛЬ ====================
 function initCarousel() {
@@ -2185,9 +2273,15 @@ document.addEventListener('DOMContentLoaded', function() {
     initUser();
     initCategories();
     
-    // АВТОМАТИЧЕСКАЯ ЗАГРУЗКА ДАННЫХ ПРИ ЗАПУСКЕ
+    // АВТОМАТИЧЕСКАЯ ЗАГРУЗКА И СИНХРОНИЗАЦИЯ ДАННЫХ ПРИ ЗАПУСКЕ
     setTimeout(() => {
-        loadProductsFromServer();
+        if (isAdmin()) {
+            // Админ загружает с возможностью сохранения
+            loadProductsFromServer();
+        } else {
+            // Обычный пользователь всегда синхронизируется с сервером
+            syncUserData();
+        }
         updateLastSaveTime();
     }, 500);
     
@@ -2196,3 +2290,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('nav-panel').classList.remove('active');
 });
+
+// ПЕРИОДИЧЕСКАЯ СИНХРОНИЗАЦИЯ ДЛЯ ОБЫЧНЫХ ПОЛЬЗОВАТЕЛЕЙ
+setInterval(() => {
+    if (!isAdmin()) {
+        syncUserData();
+    }
+}, 30000); // Синхронизация каждые 30 секунд
