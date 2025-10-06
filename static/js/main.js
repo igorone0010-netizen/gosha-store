@@ -1277,20 +1277,15 @@ function initSubcategoriesData() {
 function initializeAllData() {
     console.log('🎮 Начало инициализации данных...');
     
-    initProductsData();      // Добавляем товары в основную базу
-    createSaleSubcategory(); // Создаем подкатегорию "Распродажа"
+    initProductsData();
+    createSaleSubcategory(); // Добавляем вызов создания распродажи
     
     console.log('🎉 Все данные успешно загружены!');
-    console.log('📊 Статистика:');
-    console.log('   - Товаров в основной базе:', productsData['playstation_personal'].length);
-    console.log('   - Подкатегорий:', Object.keys(productCategories['playstation_personal'].subcategories).length);
     
-    // Обновляем отображение если мы на странице товаров
     if (currentSection === 'products') {
         showProducts('playstation_personal');
     }
     
-    // Показываем уведомление
     showNotification('Товары загружены!', 'success');
 }
 
