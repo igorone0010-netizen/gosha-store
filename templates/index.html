@@ -3,186 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoshaStore | PS Store</title>
+    <title>GoshaStore | PlayStation Games</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Фиксированная верхняя панель -->
-    <div class="top-header">
-        <div class="header-left">
-            <div class="app-logo">
-                <div class="logo-icon">GS</div>
+    <!-- Верхняя панель -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🎮</div>
+                <span class="logo-text">GoshaStore</span>
             </div>
+            <button class="profile-btn" onclick="showPage('profile')">
+                <span class="profile-name" id="profile-name">Профиль</span>
+            </button>
         </div>
-        <div class="header-right">
-            <div class="profile-button" onclick="showProfile()" id="profile-button">
-                Профиль
-            </div>
-        </div>
-    </div>
+    </header>
 
-    <!-- Главная страница -->
-    <div id="main-page" class="page active">
-        <div class="main-content">
-            <div class="menu-grid">
-                <div class="menu-button playstation" onclick="showProducts('playstation_personal')">
-                    <div class="button-name">PlayStation Личный</div>
-                    <div class="button-description">Покупка игр на ваш личный аккаунт PS4/PS5</div>
+    <!-- Основной контент -->
+    <main class="main-content">
+        <!-- Главная страница -->
+        <div id="main-page" class="page active">
+            <div class="hero-section">
+                <h1 class="hero-title">Добро пожаловать в GoshaStore</h1>
+                <p class="hero-subtitle">Лучшие игры для PlayStation по выгодным ценам</p>
+            </div>
+
+            <div class="categories-grid">
+                <div class="category-card primary" onclick="showPage('products')">
+                    <div class="category-icon">🎯</div>
+                    <div class="category-info">
+                        <h3>PlayStation Store</h3>
+                        <p>Игры для PS4/PS5 на ваш аккаунт</p>
+                    </div>
+                    <div class="category-badge">🔥</div>
+                </div>
+
+                <div class="category-card" onclick="showPage('categories')">
+                    <div class="category-icon">📁</div>
+                    <div class="category-info">
+                        <h3>Категории</h3>
+                        <p>Игры по жанрам</p>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="showPage('favorites')">
+                    <div class="category-icon">⭐</div>
+                    <div class="category-info">
+                        <h3>Избранное</h3>
+                        <p>Ваши сохраненные игры</p>
+                    </div>
                 </div>
             </div>
 
             <div class="support-section" onclick="openSupport()">
-                <div class="support-icon">💬</div>
-                <div class="support-title">Поддержка</div>
-                <div class="support-description">
-                    Не нашли нужный товар? Остались вопросы? Проблема с заказом?
+                <div class="support-header">
+                    <div class="support-icon">💬</div>
+                    <div class="support-info">
+                        <h3>Поддержка 24/7</h3>
+                        <p>Ответим на все вопросы</p>
+                    </div>
                 </div>
+                <div class="support-contact">@GoshaPlayStation</div>
             </div>
         </div>
-    </div>
 
-    <!-- Страница товаров -->
-    <div id="products-page" class="page">
-        <div class="hot-offers">
-            <!-- Карусель игр -->
-            <div class="games-carousel">
-                <div class="carousel-container" id="carousel-container"></div>
+        <!-- Страница товаров -->
+        <div id="products-page" class="page">
+            <div class="page-header">
+                <h2>PlayStation Games</h2>
+                <p>Выберите игру для покупки</p>
+            </div>
+
+            <!-- Карусель популярных игр -->
+            <section class="featured-carousel">
+                <h3 class="section-title">🔥 Популярные игры</h3>
+                <div class="carousel-container" id="featured-carousel">
+                    <!-- Карусель заполняется через JS -->
+                </div>
                 <div class="carousel-dots" id="carousel-dots"></div>
-            </div>
-            
-            <div id="products-container" class="products-grid"></div>
-        </div>
-    </div>
+            </section>
 
-    <!-- Страница профиля -->
-    <div id="profile-page" class="page">
-        <div class="profile-header">
-            <div class="profile-welcome" id="profile-welcome">Привет!</div>
-            <div class="profile-subtitle">Рады тебя видеть</div>
-        </div>
-        
-        <div class="profile-section">
-            <div class="input-card" onclick="activateInput('email')" id="email-card">
-                <div class="input-label" id="email-label">Ваша почта</div>
-                <input type="email" class="input-field" id="user-email" placeholder="example@gmail.com" oninput="handleInputChange('email')" onblur="deactivateInput('email')">
-            </div>
-            
-            <div class="input-card" onclick="activateInput('password')" id="password-card">
-                <div class="input-label" id="password-label">Пароль</div>
-                <input type="password" class="input-field" id="user-password" placeholder="Введите пароль" oninput="handleInputChange('password')" onblur="deactivateInput('password')">
-            </div>
-            
-            <div class="input-card" onclick="activateInput('2fa')" id="2fa-card">
-                <div class="input-label" id="2fa-label">2FA Коды</div>
-                <input type="text" class="input-field" id="user-2fa" placeholder="Коды двухфакторной аутентификации" oninput="handleInputChange('2fa')" onblur="deactivateInput('2fa')">
-            </div>
-        </div>
-
-        <div class="center-blocks">
-            <div class="center-block" onclick="showHistory()">
-                <div class="block-icon">📋</div>
-                <div class="block-title">История</div>
-                <div class="block-description">Ваши заказы</div>
-            </div>
-            
-            <div class="center-block" onclick="openNewsChannel()">
-                <div class="block-icon">📢</div>
-                <div class="block-title">Новости</div>
-                <div class="block-description">Наш канал</div>
-            </div>
-        </div>
-
-        <div class="support-section-profile" onclick="openSupport()">
-            <div class="support-bot">@GoshaStoreBot</div>
-        </div>
-
-        <div class="support-section-profile" onclick="refreshUserData()" style="margin-top: 10px;">
-            <div class="support-bot">🔄 Обновить товары</div>
-        </div>
-    </div>
-
-    <!-- Страница истории -->
-    <div id="history-page" class="page">
-        <div class="empty-state">
-            📋<br><br>
-            Ваши последние заказы в сервисе<br>
-            Здесь будет история покупок
-        </div>
-    </div>
-
-    <!-- Страница категорий -->
-    <div id="categories-page" class="page">
-        <div class="categories-grid" id="categories-container"></div>
-    </div>
-
-    <!-- Страница корзины -->
-    <div id="cart-page" class="page">
-        <div id="cart-container"></div>
-        
-        <div class="cart-total" id="cart-total">
-            Итого: 0 руб.
-        </div>
-        
-        <button class="checkout-button" onclick="checkout()">
-            Оформить заказ
-        </button>
-    </div>
-
-    <!-- Страница избранного -->
-    <div id="favorites-page" class="page">
-        <div id="favorites-container" class="products-grid"></div>
-    </div>
-
-    <!-- Навигационная панель -->
-    <div id="nav-panel" class="nav-panel">
-        <div class="nav-panel-inner">
-            <div class="nav-top">
-                <div class="menu-toggle" onclick="showMain()">☰</div>
-                <div class="search-container">
-                    <input type="text" class="search-input" id="search-input" placeholder="Поиск игр..." oninput="searchProducts()">
-                    <div class="search-icon">🔍</div>
+            <!-- Горячие предложения -->
+            <section class="hot-offers">
+                <h3 class="section-title">🎁 Горячие предложения</h3>
+                <div class="offers-scroll" id="offers-scroll">
+                    <!-- Предложения заполняются через JS -->
                 </div>
+            </section>
+
+            <!-- Все игры -->
+            <section class="all-games">
+                <h3 class="section-title">🎮 Все игры</h3>
+                <div class="games-grid" id="games-grid">
+                    <!-- Игры заполняются через JS -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Страница профиля -->
+        <div id="profile-page" class="page">
+            <div class="page-header">
+                <h2 id="user-greeting">Привет!</h2>
+                <p>Управление вашим аккаунтом</p>
             </div>
-            
-            <div class="nav-tabs">
-                <div class="nav-tab active" onclick="showSectionHome()">
-                    <div class="tab-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;">
-                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                        </svg>
+
+            <div class="profile-form">
+                <div class="input-group">
+                    <label for="user-email">Email аккаунта PSN</label>
+                    <input type="email" id="user-email" placeholder="example@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label for="user-password">Пароль</label>
+                    <input type="password" id="user-password" placeholder="Введите пароль">
+                </div>
+
+                <div class="input-group">
+                    <label for="user-2fa">2FA коды (если включены)</label>
+                    <input type="text" id="user-2fa" placeholder="Коды двухфакторной аутентификации">
+                </div>
+
+                <button class="save-btn" onclick="saveProfile()">Сохранить данные</button>
+            </div>
+
+            <div class="profile-actions">
+                <div class="action-card" onclick="showPage('history')">
+                    <div class="action-icon">📋</div>
+                    <div class="action-info">
+                        <h4>История заказов</h4>
+                        <p>Ваши предыдущие покупки</p>
                     </div>
-                    <div class="tab-text">Главная</div>
                 </div>
-                <div class="nav-tab" onclick="showCategories()">
-                    <div class="tab-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;">
-                            <path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/>
-                        </svg>
+
+                <div class="action-card" onclick="openNewsChannel()">
+                    <div class="action-icon">📢</div>
+                    <div class="action-info">
+                        <h4>Новости и обновления</h4>
+                        <p>Будьте в курсе новинок</p>
                     </div>
-                    <div class="tab-text">Категории</div>
-                </div>
-                <div class="nav-tab" onclick="showFavorites()">
-                    <div class="tab-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;">
-                            <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
-                        </svg>
-                    </div>
-                    <div class="tab-text">Избранное</div>
-                </div>
-                <div class="nav-tab" onclick="showCart()">
-                    <div class="tab-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;">
-                            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-                        </svg>
-                    </div>
-                    <div class="tab-text">Корзина</div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Подключаем JS файлы -->
-    <script src="/static/js/main.js"></script>
+        <!-- Страница категорий -->
+        <div id="categories-page" class="page">
+            <div class="page-header">
+                <h2>Категории игр</h2>
+                <p>Выберите по жанру</p>
+            </div>
+
+            <div class="categories-list" id="categories-list">
+                <!-- Категории заполняются через JS -->
+            </div>
+        </div>
+
+        <!-- Страница корзины -->
+        <div id="cart-page" class="page">
+            <div class="page-header">
+                <h2>Корзина</h2>
+                <p>Ваши выбранные товары</p>
+            </div>
+
+            <div class="cart-items" id="cart-items">
+                <!-- Товары в корзине -->
+            </div>
+
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Итого:</span>
+                    <span id="total-price">0 руб.</span>
+                </div>
+                <button class="checkout-btn" onclick="checkout()">Оформить заказ</button>
+            </div>
+        </div>
+
+        <!-- Страница избранного -->
+        <div id="favorites-page" class="page">
+            <div class="page-header">
+                <h2>Избранное</h2>
+                <p>Ваши сохраненные игры</p>
+            </div>
+
+            <div class="favorites-grid" id="favorites-grid">
+                <!-- Избранные игры -->
+            </div>
+        </div>
+
+        <!-- Страница истории -->
+        <div id="history-page" class="page">
+            <div class="page-header">
+                <h2>История заказов</h2>
+                <p>Ваши предыдущие покупки</p>
+            </div>
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <h3>Пока нет заказов</h3>
+                <p>Ваша история покупок появится здесь</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Нижняя навигация -->
+    <nav class="bottom-nav">
+        <div class="nav-container">
+            <button class="nav-item active" onclick="showPage('main')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Главная</span>
+            </button>
+            <button class="nav-item" onclick="showPage('categories')">
+                <span class="nav-icon">📂</span>
+                <span class="nav-label">Категории</span>
+            </button>
+            <button class="nav-item" onclick="showPage('favorites')">
+                <span class="nav-icon">⭐</span>
+                <span class="nav-label">Избранное</span>
+                <span class="nav-badge" id="favorites-badge" style="display: none;">0</span>
+            </button>
+            <button class="nav-item" onclick="showPage('cart')">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-label">Корзина</span>
+                <span class="nav-badge" id="cart-badge" style="display: none;">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Уведомления -->
+    <div id="notification" class="notification hidden"></div>
+
+    <script src="main.js"></script>
 </body>
 </html>
