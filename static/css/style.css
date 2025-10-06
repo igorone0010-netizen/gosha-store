@@ -2318,14 +2318,17 @@ body {
 }
 
 .sale-product-card {
-    flex: 0 0 300px;
+    flex: 0 0 280px; /* Уменьшил ширину */
     background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 16px;
-    padding: 16px;
+    padding: 12px; /* Уменьшил отступы */
     position: relative;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    height: 420px; /* Фиксированная высота */
+    display: flex;
+    flex-direction: column;
 }
 
 .sale-product-card:hover {
@@ -2335,17 +2338,18 @@ body {
 
 .sale-product-image {
     width: 100%;
-    height: 340px;
+    height: 280px; /* Уменьшил высоту изображения */
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 12px;
     background: linear-gradient(135deg, #2d3748, #4a5568);
+    flex-shrink: 0;
 }
 
 .sale-product-image img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover; /* Заменяем contain на cover для лучшего заполнения */
     transition: transform 0.3s ease;
 }
 
