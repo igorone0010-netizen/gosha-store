@@ -321,10 +321,10 @@ function displaySubcategories(products) {
         const saleCategory = productCategories['playstation_personal'].subcategories['sale'];
         
         html += `
-            <div class="sale-section" style="margin: 40px 0 20px;">
-                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left;">
-                    ${saleCategory.name}
-                </div>
+    <div class="sale-section" style="margin: 40px 0 20px;">
+        <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left; margin-left: 0;">
+            ${saleCategory.name}
+        </div>
                 <div class="horizontal-carousel-container" id="sale-carousel">
                     <div class="carousel-scroll" id="sale-carousel-scroll">
         `;
