@@ -305,7 +305,7 @@ function displaySubcategories(products) {
     
     let html = '';
     
-    // 1. Карусель с товарами
+    // Добавляем карусель
     html += `
         <div class="games-carousel">
             <div class="carousel-container" id="carousel-container"></div>
@@ -313,7 +313,7 @@ function displaySubcategories(products) {
         </div>
     `;
     
-    // 2. Подкатегории (последовательно друг за другом)
+    // Добавляем подкатегории если они есть
     if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
         const subcategories = productCategories['playstation_personal'].subcategories;
         
@@ -321,94 +321,198 @@ function displaySubcategories(products) {
             const category = subcategories[categoryId];
             
             if (category.products.length > 0) {
-                // Название подкатегории (с левого края)
                 html += `
-                    <div style="margin: 40px 16px 16px;">
-                        <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 16px; text-align: left; padding-left: 0;">
+                    <div style="margin: 40px 0 20px;">
+                        <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left;">
                             ${category.name}
                         </div>
+                        <div class="carousel-container" style="padding: 0 16px;">
                 `;
                 
-                // Сетка с играми из этой подкатегории
-                html += `<div class="products-grid">`;
-                
+                // Добавляем товары этой подкатегории в горизонтальную карусель
                 category.products.forEach(product => {
                     html += `
-                        <div class="product-card">
-                            ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
-                            ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
-                            
-                            <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
-                                    onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                                ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
-                            </button>
-                            
-                            <div class="product-image">
-                                <img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
+                        <div style="flex: 0 0 48%; scroll-snap-align: start;">
+                            <div class="product-card" style="margin: 0 8px;">
+                                ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
+                                ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
+                                
+                                <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
+                                        onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                                    ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
+                                </button>
+                                
+                                <div class="product-image">
+                                    <img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
+                                </div>
+                                
+                                <div class="product-name">${product.name}</div>
+                                
+                                <div class="product-prices">
+                                    <div class="product-price">${product.price} руб.</div>
+                                    ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
+                                </div>
+                                
+                                <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                                    Купить
+                                </button>
                             </div>
-                            
-                            <div class="product-name">${product.name}</div>
-                            
-                            <div class="product-prices">
-                                <div class="product-price">${product.price} руб.</div>
-                                ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
-                            </div>
-                            
-                            <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                                Купить
-                            </button>
                         </div>
                     `;
                 });
                 
-                html += `</div></div>`;
+                html += `
+                        </div>
+                    </div>
+                `;
             }
         });
     }
     
-    // 3. Раздел "Все товары" (если есть товары в основной базе)
+    // Добавляем раздел "Все товары" если есть товары в основной базе
     if (products.length > 0) {
         html += `
-            <div style="margin: 40px 16px 16px;">
-                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 16px; text-align: left; padding-left: 0;">
+            <div style="margin: 40px 0 20px;">
+                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left;">
                     Все товары
                 </div>
-                <div class="products-grid">
-                    ${products.map(product => `
-                        <div class="product-card">
-                            ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
-                            ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
-                            
-                            <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
-                                    onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                                ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
-                            </button>
-                            
-                            <div class="product-image">
-                                <img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
-                            </div>
-                            
-                            <div class="product-name">${product.name}</div>
-                            
-                            <div class="product-prices">
-                                <div class="product-price">${product.price} руб.</div>
-                                ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
-                            </div>
-                            
-                            <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                                Купить
-                            </button>
+                <div class="carousel-container" style="padding: 0 16px;">
+        `;
+        
+        // Добавляем товары основной базы в горизонтальную карусель
+        products.forEach(product => {
+            html += `
+                <div style="flex: 0 0 48%; scroll-snap-align: start;">
+                    <div class="product-card" style="margin: 0 8px;">
+                        ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
+                        ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
+                        
+                        <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
+                                onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                            ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
+                        </button>
+                        
+                        <div class="product-image">
+                            <img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
                         </div>
-                    `).join('')}
+                        
+                        <div class="product-name">${product.name}</div>
+                        
+                        <div class="product-prices">
+                            <div class="product-price">${product.price} руб.</div>
+                            ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
+                        </div>
+                        
+                        <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                            Купить
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `
                 </div>
             </div>
         `;
     }
     
+    // Если нет товаров вообще
+    if (products.length === 0 && (!productCategories['playstation_personal'] || !productCategories['playstation_personal'].subcategories || Object.keys(productCategories['playstation_personal'].subcategories).length === 0)) {
+        html += `
+            <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 60px 20px;">
+                🎮<br><br>
+                Товары скоро появятся
+            </div>
+        `;
+    }
+    
     container.innerHTML = html;
+    
+    // Инициализируем горизонтальные карусели для разделов
+    setTimeout(initHorizontalCarousels, 100);
 }
 
+function initHorizontalCarousels() {
+    // Находим все контейнеры каруселей кроме основной
+    const carouselContainers = document.querySelectorAll('.carousel-container');
+    
+    carouselContainers.forEach((container, index) => {
+        // Пропускаем основную карусель (она уже настроена)
+        if (container.id === 'carousel-container') return;
+        
+        // Настраиваем горизонтальную прокрутку
+        container.style.display = 'flex';
+        container.style.overflowX = 'auto';
+        container.style.scrollSnapType = 'x mandatory';
+        container.style.scrollBehavior = 'smooth';
+        container.style.gap = '16px';
+        container.style.padding = '10px 0';
+        container.style.webkitOverflowScrolling = 'touch';
+        
+        // Скрываем scrollbar для красоты
+        container.style.scrollbarWidth = 'none';
+        container.style.msOverflowStyle = 'none';
+        
+        // Для Webkit браузеров
+        if (container.style.webkitScrollbar) {
+            container.style.webkitScrollbar = 'none';
+        }
+        
+        // Добавляем обработчики для drag & drop
+        setupHorizontalCarouselDrag(container);
+    });
+}
 
+function setupHorizontalCarouselDrag(container) {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        container.style.scrollBehavior = 'auto';
+    });
+
+    container.addEventListener('mouseleave', () => {
+        isDown = false;
+    });
+
+    container.addEventListener('mouseup', () => {
+        isDown = false;
+        container.style.scrollBehavior = 'smooth';
+    });
+
+    container.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 2;
+        container.scrollLeft = scrollLeft - walk;
+    });
+
+    // Touch events для мобильных
+    container.addEventListener('touchstart', (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        container.style.scrollBehavior = 'auto';
+    });
+
+    container.addEventListener('touchend', () => {
+        isDown = false;
+        container.style.scrollBehavior = 'smooth';
+    });
+
+    container.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        const x = e.touches[0].pageX - container.offsetLeft;
+        const walk = (x - startX);
+        container.scrollLeft = scrollLeft - walk;
+    });
+}
 
 
 
