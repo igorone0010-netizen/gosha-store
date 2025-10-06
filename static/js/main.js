@@ -309,7 +309,7 @@ function displaySubcategories(products) {
     
     let html = '';
     
-    // Добавляем ТОЛЬКО карусель
+    // Добавляем основную карусель
     html += `
         <div class="games-carousel">
             <div class="carousel-container" id="carousel-container"></div>
@@ -317,13 +317,72 @@ function displaySubcategories(products) {
         </div>
     `;
     
-    // УБИРАЕМ все подкатегории и раздел "Все товары"
-    // Оставляем только пустой контейнер для карусели
+    // Добавляем подкатегорию "Распродажа" как горизонтальную карусель
+    if (productCategories['playstation_personal'] && 
+        productCategories['playstation_personal'].subcategories && 
+        productCategories['playstation_personal'].subcategories['sale']) {
+        
+        const saleCategory = productCategories['playstation_personal'].subcategories['sale'];
+        
+        html += `
+            <div class="sale-section" style="margin: 40px 0 20px;">
+                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left;">
+                    ${saleCategory.name}
+                </div>
+                <div class="horizontal-carousel-container" id="sale-carousel">
+                    <div class="carousel-scroll" id="sale-carousel-scroll">
+        `;
+        
+        // Добавляем товары распродажи
+        saleCategory.products.forEach(product => {
+            html += `
+                <div class="sale-product-card">
+                    ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
+                    
+                    <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
+                            onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
+                        ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
+                    </button>
+                    
+                    <div class="sale-product-image">
+                        <img src="${product.imageUrl}" alt="${product.name}" 
+                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjM0MCIgdmlld0JveD0iMCAwIDI0MCAzNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNDAiIGhlaWdodD0iMzQwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjEyMCIgeT0iMTcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
+                    </div>
+                    
+                    <div class="sale-product-info">
+                        <div class="product-name">${product.name}</div>
+                        
+                        <div class="product-prices">
+                            <div class="product-price">${product.price} руб.</div>
+                            ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
+                        </div>
+                        
+                        <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
+                            Купить
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `
+                    </div>
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-arrow prev" onclick="scrollSaleCarousel(-1)">‹</button>
+                    <button class="carousel-arrow next" onclick="scrollSaleCarousel(1)">›</button>
+                </div>
+            </div>
+        `;
+    }
     
     container.innerHTML = html;
     
-    // Инициализируем карусель
-    setTimeout(initCarousel, 100);
+    // Инициализируем обе карусели
+    setTimeout(() => {
+        initCarousel();
+        initSaleCarousel();
+    }, 100);
 }
 
 function initHorizontalCarousels() {
@@ -1075,7 +1134,7 @@ function initializeAllData() {
     console.log('🎮 Начало инициализации данных...');
     
     initProductsData();      // Добавляем товары в основную базу
-    initSubcategoriesData(); // Создаем подкатегории
+    createSaleSubcategory(); // Создаем подкатегорию "Распродажа"
     
     console.log('🎉 Все данные успешно загружены!');
     console.log('📊 Статистика:');
@@ -1089,6 +1148,98 @@ function initializeAllData() {
     
     // Показываем уведомление
     showNotification('Товары загружены!', 'success');
+}
+
+// ==================== ПОДКАТЕГОРИЯ РАСПРОДАЖА ====================
+function createSaleSubcategory() {
+    console.log('🔄 Создание подкатегории "Распродажа"...');
+    
+    productCategories['playstation_personal'].subcategories['sale'] = {
+        name: "🔥 Распродажа",
+        type: "horizontal-carousel",
+        products: [
+            {
+                id: 201,
+                name: "God of War Ragnarök",
+                price: 3499,
+                originalPrice: 4999,
+                imageUrl: "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
+                discount: 30,
+                isNew: false,
+                category: "Экшн",
+                isImage: true
+            },
+            {
+                id: 202,
+                name: "Marvel's Spider-Man 2",
+                price: 4299,
+                originalPrice: 5999,
+                imageUrl: "https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/1c7f2c8d6d9c791e3e0d7d9c6c6a6a6a.png",
+                discount: 28,
+                isNew: false,
+                category: "Экшн",
+                isImage: true
+            },
+            {
+                id: 203,
+                name: "The Last of Us Part I",
+                price: 2999,
+                originalPrice: 4499,
+                imageUrl: "https://image.api.playstation.com/vulcan/ap/rnd/202206/0720/eEczyEMDd2BLa3dtgGJVe9wX.png",
+                discount: 33,
+                isNew: false,
+                category: "Экшн",
+                isImage: true
+            },
+            {
+                id: 204,
+                name: "Horizon Forbidden West",
+                price: 3199,
+                originalPrice: 4999,
+                imageUrl: "https://image.api.playstation.com/vulcan/ap/rnd/202107/3100/1dy5b4vm8eb3bXrDkRS9FWlG.png",
+                discount: 36,
+                isNew: false,
+                category: "Приключения",
+                isImage: true
+            },
+            {
+                id: 205,
+                name: "Gran Turismo 7",
+                price: 2799,
+                originalPrice: 3999,
+                imageUrl: "https://image.api.playstation.com/vulcan/ap/rnd/202109/2921/BWMVfyxONkI1u2kOGqThXpJM.png",
+                discount: 30,
+                isNew: false,
+                category: "Гонки",
+                isImage: true
+            }
+        ]
+    };
+    
+    console.log('✅ Создана подкатегория "Распродажа" с товарами:', 
+                productCategories['playstation_personal'].subcategories['sale'].products.length);
+    
+    saveCategories();
+}
+
+function initSaleCarousel() {
+    const scrollContainer = document.getElementById('sale-carousel-scroll');
+    if (!scrollContainer) return;
+    
+    setupHorizontalCarouselDrag(scrollContainer);
+}
+
+function scrollSaleCarousel(direction) {
+    const scrollContainer = document.getElementById('sale-carousel-scroll');
+    if (!scrollContainer) return;
+    
+    const scrollAmount = 320; // Ширина карточки + отступы
+    const newScrollLeft = scrollContainer.scrollLeft + (direction * scrollAmount);
+    
+    scrollContainer.scrollTo({
+        left: newScrollLeft,
+        behavior: 'smooth'
+    });
 }
 
 // Запускаем инициализацию при загрузке страницы
