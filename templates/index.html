@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoshaStore | PS Store</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Фиксированная верхняя панель -->
@@ -17,7 +17,6 @@
             </div>
         </div>
         <div class="header-right">
-            
             <div class="profile-button" onclick="showProfile()" id="profile-button">
                 Профиль
             </div>
@@ -27,8 +26,6 @@
     <!-- Главная страница -->
     <div id="main-page" class="page active">
         <div class="main-content">
-            
-
             <div class="menu-grid">
                 <div class="menu-button playstation" onclick="showProducts('playstation_personal')">
                     <div class="button-name">PlayStation Личный</div>
@@ -107,10 +104,9 @@
             <div class="support-bot">@GoshaStoreBot</div>
         </div>
 
-        <!-- ДОБАВЬТЕ в profile-page перед закрывающим div -->
-<div class="support-section-profile" onclick="refreshUserData()" style="margin-top: 10px;">
-    <div class="support-bot">🔄 Обновить товары</div>
-</div>
+        <div class="support-section-profile" onclick="refreshUserData()" style="margin-top: 10px;">
+            <div class="support-bot">🔄 Обновить товары</div>
+        </div>
     </div>
 
     <!-- Страница истории -->
@@ -199,9 +195,6 @@
         </div>
     </div>
 
-    <!-- Подключаем JS файлы -->
-    <script src="/static/js/main.js"></script>
-    <script src="/static/js/products.js"></script>
-    <script src="/static/js/admin.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
