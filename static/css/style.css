@@ -2519,6 +2519,168 @@ body {
     overflow-x: hidden !important;
 }
 
+/* Стили для мини-карусели распродажи */
+.sale-carousel-section {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.mini-carousel-container {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.mini-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    border-radius: 0;
+    scrollbar-width: none;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    transition: scroll-behavior 0.3s ease;
+}
+
+.mini-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.mini-carousel-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 0.6;
+    transform: scale(0.9);
+    filter: brightness(0.7) blur(1px);
+}
+
+.mini-carousel-slide.active {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1) blur(0);
+}
+
+/* Уменьшаем размер в 2 раза по сравнению с основной каруселью */
+.mini-carousel-game {
+    width: 100%;
+    height: 180px; /* В 2 раза меньше основной карусели (было 360px) */
+    background: linear-gradient(145deg, 
+        rgba(255,255,255,0.12) 0%, 
+        rgba(255,255,255,0.06) 50%,
+        rgba(255,255,255,0.02) 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        0 4px 12px rgba(102, 126, 234, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.mini-carousel-slide.active .mini-carousel-game {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        0 8px 20px rgba(102, 126, 234, 0.3),
+        0 3px 8px rgba(255, 255, 255, 0.08);
+}
+
+.mini-carousel-game-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s ease;
+}
+
+.mini-carousel-game-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+    padding: 15px 12px 12px;
+    color: white;
+    z-index: 3;
+}
+
+.mini-carousel-game-title {
+    font-size: 14px; /* Уменьшенный шрифт */
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mini-carousel-game-prices {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mini-carousel-game-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.mini-carousel-game-old-price {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: line-through;
+}
+
+.mini-carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+    padding: 0 16px;
+}
+
+.mini-carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.mini-carousel-dot.active {
+    background: #667eea;
+    transform: scale(1.2);
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .mini-carousel-game {
+        height: 160px;
+        border-radius: 14px;
+    }
+    
+    .mini-carousel-game-title {
+        font-size: 13px;
+    }
+    
+    .mini-carousel-game-price {
+        font-size: 13px;
+    }
+    
+    .mini-carousel-game-old-price {
+        font-size: 10px;
+    }
+}
+
 /* Адаптивность для мобильных */
 @media (max-width: 480px) {
     .sale-product-card {
