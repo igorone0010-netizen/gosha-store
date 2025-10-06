@@ -1115,11 +1115,175 @@ function stopAutoScroll() {
 }
 
 // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+// ==================== ДОБАВЛЕНИЕ ТОВАРОВ В БАЗУ ====================
+function initProductsData() {
+    console.log('🔄 Инициализация товаров...');
+    
+    // Товары для основной базы (будут в карусели и в разделе "Все товары")
+    productsData['playstation_personal'] = [
+        {
+            id: 1,
+            name: "God of War Ragnarok",
+            price: 3999,
+            originalPrice: 4999,
+            imageUrl: "https://via.placeholder.com/300x400/333/white?text=God+of+War",
+            discount: 20,
+            isNew: true,
+            category: "Экшн",
+            isImage: true
+        },
+        {
+            id: 2,
+            name: "Spider-Man 2",
+            price: 4999,
+            originalPrice: 0,
+            imageUrl: "https://via.placeholder.com/300x400/333/white?text=Spider-Man+2",
+            discount: 0,
+            isNew: true,
+            category: "Экшн",
+            isImage: true
+        },
+        {
+            id: 3,
+            name: "Horizon Forbidden West",
+            price: 4599,
+            originalPrice: 0,
+            imageUrl: "https://via.placeholder.com/300x400/333/white?text=Horizon+FW",
+            discount: 0,
+            isNew: true,
+            category: "Приключения",
+            isImage: true
+        },
+        {
+            id: 4,
+            name: "The Last of Us Part I",
+            price: 3799,
+            originalPrice: 4499,
+            imageUrl: "https://via.placeholder.com/300x400/333/white?text=Last+of+Us+I",
+            discount: 15,
+            isNew: false,
+            category: "Экшн",
+            isImage: true
+        },
+        {
+            id: 5,
+            name: "Gran Turismo 7",
+            price: 4299,
+            originalPrice: 4999,
+            imageUrl: "https://via.placeholder.com/300x400/333/white?text=Gran+Turismo+7",
+            discount: 14,
+            isNew: false,
+            category: "Гонки",
+            isImage: true
+        }
+    ];
+    
+    console.log('✅ Добавлено товаров в основную базу:', productsData['playstation_personal'].length);
+}
+
+function initSubcategoriesData() {
+    console.log('🔄 Создание подкатегорий...');
+    
+    // Создаем подкатегорию "Распродажа"
+    productCategories['playstation_personal'].subcategories['sale'] = {
+        name: "Распродажа",
+        type: "grid",
+        products: [
+            {
+                id: 101,
+                name: "Ratchet & Clank: Rift Apart",
+                price: 3499,
+                originalPrice: 4999,
+                imageUrl: "https://via.placeholder.com/300x400/333/white?text=Ratchet+Clank",
+                discount: 30,
+                isNew: false,
+                category: "Экшн",
+                isImage: true
+            },
+            {
+                id: 102,
+                name: "Demon's Souls",
+                price: 3799,
+                originalPrice: 5499,
+                imageUrl: "https://via.placeholder.com/300x400/333/white?text=Demons+Souls",
+                discount: 31,
+                isNew: false,
+                category: "RPG",
+                isImage: true
+            },
+            {
+                id: 103,
+                name: "Returnal",
+                price: 3299,
+                originalPrice: 4799,
+                imageUrl: "https://via.placeholder.com/300x400/333/white?text=Returnal",
+                discount: 31,
+                isNew: false,
+                category: "Экшн",
+                isImage: true
+            },
+            {
+                id: 104,
+                name: "Death Stranding: Director's Cut",
+                price: 2999,
+                originalPrice: 3999,
+                imageUrl: "https://via.placeholder.com/300x400/333/white?text=Death+Stranding",
+                discount: 25,
+                isNew: false,
+                category: "Приключения",
+                isImage: true
+            },
+            {
+                id: 105,
+                name: "Ghost of Tsushima: Director's Cut",
+                price: 3599,
+                originalPrice: 4999,
+                imageUrl: "https://via.placeholder.com/300x400/333/white?text=Ghost+of+Tsushima",
+                discount: 28,
+                isNew: false,
+                category: "Приключения",
+                isImage: true
+            }
+        ]
+    };
+    
+    console.log('✅ Создана подкатегория "Распродажа" с товарами:', 
+                productCategories['playstation_personal'].subcategories['sale'].products.length);
+    
+    // Сохраняем изменения
+    saveCategories();
+}
+
+// Функция для полной инициализации всех данных
+function initializeAllData() {
+    console.log('🎮 Начало инициализации данных...');
+    
+    initProductsData();      // Добавляем товары в основную базу
+    initSubcategoriesData(); // Создаем подкатегории
+    
+    console.log('🎉 Все данные успешно загружены!');
+    console.log('📊 Статистика:');
+    console.log('   - Товаров в основной базе:', productsData['playstation_personal'].length);
+    console.log('   - Подкатегорий:', Object.keys(productCategories['playstation_personal'].subcategories).length);
+    
+    // Обновляем отображение если мы на странице товаров
+    if (currentSection === 'products') {
+        showProducts('playstation_personal');
+    }
+    
+    // Показываем уведомление
+    showNotification('Товары загружены!', 'success');
+}
+
+// Запускаем инициализацию при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     setupBackButton();
     initUser();
     initCategories();
     showMain();
+    
+    // Загружаем тестовые данные через 1 секунду после загрузки
+    setTimeout(initializeAllData, 1000);
     
     document.getElementById('nav-panel').classList.remove('active');
 });
