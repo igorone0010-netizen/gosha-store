@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoshaStore | PS Store</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Фиксированная верхняя панель -->
+    <div class="top-header">
+        <div class="header-left">
+            <div class="app-logo">
+                <div class="logo-icon">GS</div>
+                <div class="logo-text" id="header-title" style="display: none;">GoshaStore</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="secret-button-header" onclick="toggleAdminPanel()">⚙️</button>
+            <div class="profile-button" onclick="showProfile()" id="profile-button">
+                Профиль
+            </div>
+        </div>
+    </div>
+
+    <!-- Главная страница -->
+    <div id="main-page" class="page active">
+        <div class="main-content">
+            <!-- Админ панель (скрыта по умолчанию) -->
+            <div id="admin-panel" class="admin-panel">
+                <div class="admin-title">🚀 Панель управления</div>
+                
+                <div class="admin-tabs">
+                    <div class="admin-tab active" onclick="switchAdminTab('files')">📁 Из файлов</div>
+                    <div class="admin-tab" onclick="switchAdminTab('urls')">🌐 Из URL</div>
+                    <div class="admin-tab" onclick="switchAdminTab('manage')">⚙️ Управление</div>
+                </div>
+                
+                <!-- Вкладка файлов -->
+                <div id="admin-files" class="admin-section active">
+                    <div class="drag-drop-area" id="drop-area" onclick="document.getElementById('file-input').click()">
+                        <div class="drag-drop-icon">📁</div>
+                        <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Перетащите фото товаров сюда</div>
+                        <div style="color: rgba(255,255,255,0.7); font-size: 14px;">
+                            или нажмите для выбора файлов<br>
+                            <small>Поддерживаются JPG, PNG, WebP</small>
+                        </div>
+                    </div>
+                    
+                    <input type="file" id="file-input" multiple accept="image/*" style="display: none;" onchange="handleFileSelect(this.files)">
+                    
+                    <div class="file-list" id="file-list">
+                        <div style="text-align: center; color: rgba(255,255,255,0.7); margin-bottom: 10px;">
+                            Выбранные файлы: <span id="file-count">0</span>
+                        </div>
+                        <div id="files-container"></div>
+                    </div>
+                    
+                    <div class="quick-template" id="quick-template">
+                        <div class="admin-title">📝 Заполните данные</div>
+                        
+                        <div class="template-header template-row">
+                            <div>Название</div>
+                            <div>Цена</div>
+                            <div>Старая цена</div>
+                            <div>Категория</div>
+                            <div>Действия</div>
+                        </div>
+                        
+                        <div id="template-container"></div>
+                        
+                        <div class="batch-controls">
+                            <button class="admin-button" onclick="applyTemplateToAll()">📋 Применить ко всем</button>
+                            <button class="admin-button save" onclick="addAllProducts()">
+                                🚀 Добавить все товары
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="batch-preview" id="batch-preview"></div>
+                </div>
+                
+                <!-- Вкладка URL -->
+                <div id="admin-urls" class="admin-section">
+                    <div class="url-input-section">
+                        <div class="admin-title">📝 Вставьте список URL</div>
+                        
+                        <div class="url-example">
+                            <strong>Формат (каждая строка - товар):</strong><br>
+                            Название | Цена | Старая цена | URL картинки | Категория<br><br>
+                            
+                            <strong>Пример:</strong><br>
+                            God of War Ragnarok | 3999 | 4999 | https://example.com/god.jpg | Экшн<br>
+                            Spider-Man 2 | 4999 | 0 | https://example.com/spider.jpg | Экшн
+                        </div>
+                        
+                        <textarea class="bulk-textarea" id="url-products" placeholder="Вставьте ваш список товаров здесь..." 
+                                  oninput="previewUrlProducts()"></textarea>
+                        
+                        <div class="processing-status" id="url-status">Готов к обработке</div>
+                        
+                        <div class="batch-preview" id="url-preview"></div>
+                        
+                        <div class="url-list" id="url-list"></div>
+                        
+                        <button class="admin-button save" onclick="addUrlProducts()">
+                            🚀 Добавить все товары из URL
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Вкладка управления -->
+                <div id="admin-manage" class="admin-section">
+                    <div class="products-count">
+                        Всего товаров: <span id="total-products">0</span>
+                    </div>
+                    
+                    <button class="admin-button save" onclick="saveProductsToServer()">
+                        💾 Сохранить на сервер
+                    </button>
+                    
+                    <button class="admin-button" onclick="loadProductsFromServer()">
+                        🔄 Загрузить с сервера
+                    </button>
+                    
+                    <div class="file-input-wrapper">
+                        <input type="file" class="file-input" id="import-file" accept=".json" onchange="importProducts(this)">
+                        <div class="file-input-label">📥 Импорт базы товаров</div>
+                    </div>
+                    
+                    <button class="admin-button danger" onclick="clearAllProducts()">
+                        🗑️ Удалить все товары
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-grid">
+                <div class="menu-button playstation" onclick="showProducts('playstation_personal')">
+                    <div class="button-name">PlayStation Личный</div>
+                    <div class="button-description">Покупка игр на ваш личный аккаунт PS4/PS5</div>
+                </div>
+            </div>
+
+            <div class="support-section" onclick="openSupport()">
+                <div class="support-icon">💬</div>
+                <div class="support-title">Поддержка</div>
+                <div class="support-description">
+                    Не нашли нужный товар? Остались вопросы? Проблема с заказом?
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница товаров -->
+    <div id="products-page" class="page products-page">
+        <div class="hot-offers">
+            <!-- Автоматическая карусель игр (баннер) - уменьшенная в 4 раза -->
+            <div class="games-carousel auto-carousel">
+                <div class="carousel-container" id="carousel-container">
+                    <!-- Игры будут загружаться через JavaScript -->
+                </div>
+                <div class="carousel-dots" id="carousel-dots">
+                    <!-- Точки навигации -->
+                </div>
+            </div>
+            
+            <!-- Ручная карусель игр -->
+            <div class="games-carousel manual-carousel">
+                <div class="carousel-header">
+                    <h3>Популярные игры</h3>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn prev-btn" id="manual-prev">‹</button>
+                        <button class="carousel-btn next-btn" id="manual-next">›</button>
+                    </div>
+                </div>
+                <div class="manual-carousel-container" id="manual-carousel-container">
+                    <!-- Игры будут загружаться через JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Карусель товаров -->
+            <div class="products-carousel-section">
+                <div class="carousel-header">
+                    <h3>Все игры</h3>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" id="products-prev">‹</button>
+                        <button class="carousel-btn" id="products-next">›</button>
+                    </div>
+                </div>
+                <div class="products-carousel-container" id="products-carousel-container">
+                    <!-- Товары загружаются здесь -->
+                </div>
+            </div>
+
+            <!-- Скрытый контейнер для совместимости со старой функцией displayProducts -->
+            <div id="products-container" class="products-grid" style="display: none;">
+                <!-- Товары загружаются здесь для совместимости -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница профиля -->
+    <div id="profile-page" class="page">
+        <div class="profile-header">
+            <div class="profile-welcome" id="profile-welcome">Привет!</div>
+            <div class="profile-subtitle">Рады тебя видеть</div>
+        </div>
+        
+        <div class="profile-section">
+            <div class="input-card" onclick="activateInput('email')" id="email-card">
+                <div class="input-label" id="email-label">Ваша почта</div>
+                <input type="email" class="input-field" id="user-email" placeholder="example@gmail.com" oninput="handleInputChange('email')" onblur="deactivateInput('email')">
+            </div>
+            
+            <div class="input-card" onclick="activateInput('password')" id="password-card">
+                <div class="input-label" id="password-label">Пароль</div>
+                <input type="password" class="input-field" id="user-password" placeholder="Введите пароль" oninput="handleInputChange('password')" onblur="deactivateInput('password')">
+            </div>
+            
+            <div class="input-card" onclick="activateInput('2fa')" id="2fa-card">
+                <div class="input-label" id="2fa-label">2FA Коды</div>
+                <input type="text" class="input-field" id="user-2fa" placeholder="Коды двухфакторной аутентификации" oninput="handleInputChange('2fa')" onblur="deactivateInput('2fa')">
+            </div>
+        </div>
+
+        <div class="center-blocks">
+            <div class="center-block" onclick="showHistory()">
+                <div class="block-icon">📋</div>
+                <div class="block-title">История</div>
+                <div class="block-description">Ваши заказы</div>
+            </div>
+            
+            <div class="center-block" onclick="openNewsChannel()">
+                <div class="block-icon">📢</div>
+                <div class="block-title">Новости</div>
+                <div class="block-description">Наш канал</div>
+            </div>
+        </div>
+
+        <div class="support-section-profile" onclick="openSupport()">
+            <div class="support-bot">@GoshaStoreBot</div>
+        </div>
+    </div>
+
+    <!-- Страница истории -->
+    <div id="history-page" class="page">
+        <div class="empty-state">
+            📋<br><br>
+            Ваши последние заказы в сервисе<br>
+            Здесь будет история покупок
+        </div>
+    </div>
+
+    <!-- Страница категорий -->
+    <div id="categories-page" class="page">
+        <div class="categories-grid" id="categories-container">
+            <!-- Категории загружаются здесь -->
+        </div>
+    </div>
+
+    <!-- Страница корзины -->
+    <div id="cart-page" class="page">
+        <div id="cart-container">
+            <!-- Товары в корзине -->
+        </div>
+        
+        <div class="cart-total" id="cart-total">
+            Итого: 0 руб.
+        </div>
+        
+        <button class="checkout-button" onclick="checkout()">
+            Оформить заказ
+        </button>
+    </div>
+
+    <!-- Страница избранного -->
+    <div id="favorites-page" class="page">
+        <div id="favorites-container" class="products-grid">
+            <!-- Избранные товары -->
+        </div>
+    </div>
+
+    <!-- Навигационная панель -->
+    <div id="nav-panel" class="nav-panel">
+        <div class="nav-panel-inner">
+            <div class="nav-top">
+                <div class="menu-toggle" onclick="showMain()">☰</div>
+                <div class="search-container">
+                    <input type="text" class="search-input" id="search-input" placeholder="" oninput="searchProducts()">
+                    <div class="search-icon">🔍</div>
+                </div>
+            </div>
+            
+            <div class="nav-tabs">
+                <div class="nav-tab active" onclick="showSectionHome()">
+                    <div class="tab-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                    </div>
+                    <div class="tab-text">Главная</div>
+                </div>
+                <div class="nav-tab" onclick="showCategories()">
+                    <div class="tab-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;">
+                            <path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/>
+                        </svg>
+                    </div>
+                    <div class="tab-text">Категории</div>
+                </div>
+                <div class="nav-tab" onclick="showFavorites()">
+                    <div class="tab-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;">
+                            <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
+                        </svg>
+                    </div>
+                    <div class="tab-text">Избранное</div>
+                </div>
+                <div class="nav-tab" onclick="showCart()">
+                    <div class="tab-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;">
+                            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                        </svg>
+                    </div>
+                    <div class="tab-text">Корзина</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключаем JS файлы -->
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/products.js"></script>
+    <script src="/static/js/admin.js"></script>
+</body>
+</html>
