@@ -278,18 +278,11 @@ function loadCategories() {
     `).join('');
 }
 
-function showCategories() {
-    navigateToPage('categories', 'Категории игр');
-    setActiveTab('categories');
-    loadCategories();
-}
-
 function showProducts(category) {
     currentCategory = category;
     currentSection = 'products';
     
     const products = productsData[category] || [];
-    displayProducts(products);
     
     document.getElementById('nav-panel').classList.add('active');
     
@@ -299,6 +292,306 @@ function showProducts(category) {
     
     navigateToPage('products', 'PlayStation Личный');
     setActiveTab('home');
+    
+    // ПОКАЗЫВАЕМ ПОДКАТЕГОРИИ ПОД КАРУСЕЛЬЮ
+    displaySubcategories(products);
+}
+
+// НОВАЯ ФУНКЦИЯ ДЛЯ ОТОБРАЖЕНИЯ ПОДКАТЕГОРИЙ
+function displaySubcategories(products) {
+    const container = document.getElementById('products-container');
+    if (!container) return;
+    
+    let html = '';
+    
+    // Добавляем карусель
+    html += `
+        <div class="games-carousel">
+            <div class="carousel-container" id="carousel-container"></div>
+            <div class="carousel-dots" id="carousel-dots"></div>
+        </div>
+    `;
+    
+    // Добавляем подкатегории если они есть
+    if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
+        const subcategories = productCategories['playstation_personal'].subcategories;
+        const subcategoryIds = Object.keys(subcategories).filter(id => id !== 'carousel');
+        
+        if (subcategoryIds.length > 0) {
+            html += '<div style="margin: 30px 16px 20px;">';
+            html += '<div style="font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 16px;">Подкатегории</div>';
+            html += '<div class="categories-grid">';
+            
+            subcategoryIds.forEach(categoryId => {
+                const category = subcategories[categoryId];
+                html += `
+                    <div class="category-card" onclick="showSubcategoryProducts('${categoryId}')">
+                        <div class="category-icon">${category.type === 'carousel' ? '🔄' : '📱'}</div>
+                        <div class="category-name">${category.name}</div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 5px;">
+                            ${category.products.length} товаров
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div></div>';
+        }
+    }
+    
+    // Добавляем основные товары
+    if (products.length > 0) {
+        html += `
+            <div style="margin: 0 16px;">
+                <div style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 30px 0 16px;">Все товары</div>
+                <div class="products-grid" id="main-products-grid">
+                    ${products.map(product => `
+                        <div class="product-card">
+                            ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
+                            ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
+                            
+                            <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
+                                    onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                                ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
+                            </button>
+                            
+                            <div class="product-image">
+                                ${product.isImage ? 
+                                    `<img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                                    (product.image || '🎮')
+                                }
+                            </div>
+                            
+                            <div class="product-name">${product.name}</div>
+                            
+                            <div class="product-prices">
+                                <div class="product-price">${product.price} руб.</div>
+                                ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
+                            </div>
+                            
+                            <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                                Купить
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    } else {
+        html += `
+            <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 60px 20px;">
+                🎮<br><br>
+                Товары скоро появятся
+            </div>
+        `;
+    }
+    
+    container.innerHTML = html;
+}
+
+// ФУНКЦИИ ДЛЯ РАБОТЫ С ПОДКАТЕГОРИЯМИ
+function showSubcategoryProducts(subcategoryId) {
+    const subcategory = productCategories['playstation_personal'].subcategories[subcategoryId];
+    if (!subcategory) return;
+    
+    const container = document.getElementById('products-container');
+    
+    if (subcategory.products.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 60px 20px;">
+                🎮<br><br>
+                В подкатегории "${subcategory.name}" пока нет товаров
+            </div>
+            <div style="text-align: center; margin: 20px;">
+                <button onclick="showProducts('playstation_personal')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 10px 20px; color: white; cursor: pointer;">
+                    ← Назад ко всем товарам
+                </button>
+            </div>
+        `;
+        return;
+    }
+    
+    if (subcategory.type === 'carousel') {
+        // Для карусельных подкатегорий
+        container.innerHTML = `
+            <div style="margin: 0 16px 30px;">
+                <div style="font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 16px;">${subcategory.name}</div>
+                <div class="games-carousel">
+                    <div class="carousel-container" id="subcategory-carousel">
+                        ${subcategory.products.map(product => `
+                            <div class="carousel-slide">
+                                <div class="carousel-game" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                                    <img src="${product.imageUrl || product.image}" alt="${product.name}" class="carousel-game-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzQzIiBoZWlnaHQ9IjM0NSIgdmlld0JveD0iMCAwIDM0MyAzNDUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzNDMiIGhlaWdodD0iMzQ1IiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE3MS41IiB5PSIxNzIuNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD4KPC9zdmc+'">
+                                    <div class="carousel-game-overlay">
+                                        <div class="carousel-game-title">${product.name}</div>
+                                        <div class="carousel-game-prices">
+                                            <div class="carousel-game-price">${product.price} руб.</div>
+                                            ${product.originalPrice ? `<div class="carousel-game-old-price">${product.originalPrice} руб.</div>` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="carousel-dots" id="subcategory-dots"></div>
+                </div>
+            </div>
+            <div style="text-align: center; margin: 20px;">
+                <button onclick="showProducts('playstation_personal')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 10px 20px; color: white; cursor: pointer;">
+                    ← Назад ко всем товарам
+                </button>
+            </div>
+        `;
+        
+        // Инициализируем карусель подкатегории
+        setTimeout(() => initSubcategoryCarousel(), 100);
+    } else {
+        // Для обычных подкатегорий (сетка)
+        container.innerHTML = `
+            <div style="margin: 0 16px;">
+                <div style="font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 20px;">${subcategory.name}</div>
+                <div class="products-grid">
+                    ${subcategory.products.map(product => `
+                        <div class="product-card">
+                            ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
+                            ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
+                            
+                            <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
+                                    onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                                ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
+                            </button>
+                            
+                            <div class="product-image">
+                                <img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            
+                            <div class="product-name">${product.name}</div>
+                            
+                            <div class="product-prices">
+                                <div class="product-price">${product.price} руб.</div>
+                                ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
+                            </div>
+                            
+                            <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
+                                Купить
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div style="text-align: center; margin: 30px;">
+                <button onclick="showProducts('playstation_personal')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 12px 24px; color: white; cursor: pointer;">
+                    ← Назад ко всем товарам
+                </button>
+            </div>
+        `;
+    }
+}
+
+function initSubcategoryCarousel() {
+    const container = document.getElementById('subcategory-carousel');
+    const dots = document.getElementById('subcategory-dots');
+    
+    if (!container) return;
+    
+    // Очищаем точки
+    dots.innerHTML = '';
+    
+    // Добавляем точки навигации
+    const slides = container.querySelectorAll('.carousel-slide');
+    slides.forEach((slide, index) => {
+        const dot = document.createElement('div');
+        dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
+        dot.onclick = () => goToSubcategorySlide(index);
+        dots.appendChild(dot);
+    });
+    
+    // Настраиваем drag & drop
+    setupSubcategoryCarouselDrag();
+}
+
+function goToSubcategorySlide(slideIndex) {
+    const container = document.getElementById('subcategory-carousel');
+    const dots = document.querySelectorAll('#subcategory-dots .carousel-dot');
+    
+    if (container) {
+        container.scrollTo({
+            left: slideIndex * container.clientWidth,
+            behavior: 'smooth'
+        });
+    }
+    
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === slideIndex);
+    });
+}
+
+function setupSubcategoryCarouselDrag() {
+    const container = document.getElementById('subcategory-carousel');
+    if (!container) return;
+
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        container.style.scrollBehavior = 'auto';
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isDown) finishSubcategoryDrag();
+    });
+
+    container.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 2;
+        container.scrollLeft = scrollLeft - walk;
+    });
+
+    container.addEventListener('touchstart', (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        container.style.scrollBehavior = 'auto';
+    });
+
+    container.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        const x = e.touches[0].pageX - container.offsetLeft;
+        const walk = (x - startX);
+        container.scrollLeft = scrollLeft - walk;
+    });
+
+    container.addEventListener('touchend', () => {
+        if (isDown) finishSubcategoryDrag();
+    });
+
+    function finishSubcategoryDrag() {
+        if (!isDown) return;
+        isDown = false;
+        container.style.scrollBehavior = 'smooth';
+        
+        const slideWidth = container.clientWidth;
+        const currentScroll = container.scrollLeft;
+        const targetSlide = Math.round(currentScroll / slideWidth);
+        const targetScroll = targetSlide * slideWidth;
+        
+        container.scrollTo({
+            left: targetScroll,
+            behavior: 'smooth'
+        });
+        
+        // Обновляем активную точку
+        const dots = document.querySelectorAll('#subcategory-dots .carousel-dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === targetSlide);
+        });
+    }
 }
 
 function displayProducts(products) {
@@ -970,6 +1263,7 @@ function previewUrlProducts() {
                     oldPrice: parts[2] && parts[2] !== '0' ? parseInt(parts[2]) : null,
                     imageUrl: parts[3] || '',
                     category: parts[4] || 'Разное',
+                    subcategory: parts[5] || '', // НОВОЕ ПОЛЕ - подкатегория
                     hasDiscount: !!(parts[2] && parts[2] !== '0'),
                     isNew: false
                 };
@@ -991,6 +1285,7 @@ function previewUrlProducts() {
                      alt="${product.name}">
                 <div class="preview-name">${product.name}</div>
                 <div style="font-size: 10px; color: #667eea;">${product.price} руб.</div>
+                ${product.subcategory ? `<div style="font-size: 9px; color: rgba(255,255,255,0.7);">Категория: ${product.subcategory}</div>` : ''}
             `;
             preview.appendChild(previewItem);
         });
@@ -1006,9 +1301,24 @@ function showUrlProductsList() {
     const list = document.getElementById('url-list');
     list.innerHTML = '';
     
+    // Получаем список доступных подкатегорий
+    const availableSubcategories = {};
+    if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
+        Object.keys(productCategories['playstation_personal'].subcategories).forEach(catId => {
+            availableSubcategories[catId] = productCategories['playstation_personal'].subcategories[catId].name;
+        });
+    }
+    
     urlProducts.forEach((product, index) => {
         const item = document.createElement('div');
         item.className = 'url-item';
+        
+        let subcategoryOptions = '<option value="">-- Основная база --</option>';
+        Object.keys(availableSubcategories).forEach(catId => {
+            const isSelected = product.subcategory === catId || product.subcategory === availableSubcategories[catId];
+            subcategoryOptions += `<option value="${catId}" ${isSelected ? 'selected' : ''}>${availableSubcategories[catId]}</option>`;
+        });
+        
         item.innerHTML = `
             <img src="${product.imageUrl}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;" 
                  onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHZpZXdCb3g9IjAgMCA3MCA3MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcwIiBoZWlnaHQ9IjcwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjM1IiB5PSIzNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+Tm8gSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='">
@@ -1027,6 +1337,10 @@ function showUrlProductsList() {
                 <option value="Спорт" ${product.category === 'Спорт' ? 'selected' : ''}>Спорт</option>
                 <option value="Гонки" ${product.category === 'Гонки' ? 'selected' : ''}>Гонки</option>
                 <option value="Разное" ${product.category === 'Разное' ? 'selected' : ''}>Разное</option>
+            </select>
+            <select onchange="updateUrlProduct(${index}, 'subcategory', this.value)"
+                    style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 8px; color: white; font-size: 12px;">
+                ${subcategoryOptions}
             </select>
             <div>
                 <label style="color: white; font-size: 10px;">
@@ -1083,8 +1397,30 @@ function addUrlProducts() {
                 isImage: true
             };
             
-            productsData['playstation_personal'].push(newProduct);
-            addedCount++;
+            // ЕСЛИ УКАЗАНА ПОДКАТЕГОРИЯ - ДОБАВЛЯЕМ В НЕЁ
+            if (product.subcategory && productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
+                let targetSubcategoryId = null;
+                
+                // Ищем подкатегорию по ID или названию
+                Object.keys(productCategories['playstation_personal'].subcategories).forEach(catId => {
+                    if (catId === product.subcategory || productCategories['playstation_personal'].subcategories[catId].name === product.subcategory) {
+                        targetSubcategoryId = catId;
+                    }
+                });
+                
+                if (targetSubcategoryId) {
+                    productCategories['playstation_personal'].subcategories[targetSubcategoryId].products.push(newProduct);
+                    addedCount++;
+                } else {
+                    // Если подкатегория не найдена, добавляем в основную базу
+                    productsData['playstation_personal'].push(newProduct);
+                    addedCount++;
+                }
+            } else {
+                // Если подкатегория не указана, добавляем в основную базу
+                productsData['playstation_personal'].push(newProduct);
+                addedCount++;
+            }
             
         } catch (error) {
             errorCount++;
@@ -1092,17 +1428,22 @@ function addUrlProducts() {
         }
     });
     
+    // Сохраняем изменения
+    saveCategories();
     updateProductsCount();
+    
     showNotification(`Добавлено: ${addedCount} товаров. Ошибок: ${errorCount}`, 'success');
     
+    // Очищаем форму
     urlProducts = [];
     document.getElementById('url-products').value = '';
     document.getElementById('url-preview').innerHTML = '';
     document.getElementById('url-list').innerHTML = '';
     document.getElementById('url-status').textContent = 'Готов к обработке';
     
+    // Обновляем отображение если мы в разделе товаров
     if (currentSection === 'products') {
-        displayProducts(productsData[currentCategory]);
+        showProducts('playstation_personal');
     }
 }
 
