@@ -364,10 +364,6 @@ function displaySubcategories(products) {
         html += `
                     </div>
                 </div>
-                <div class="carousel-controls">
-                    <button class="carousel-arrow prev" onclick="scrollSaleCarousel(-1)">‹</button>
-                    <button class="carousel-arrow next" onclick="scrollSaleCarousel(1)">›</button>
-                </div>
             </div>
         `;
     }
@@ -1225,18 +1221,7 @@ function initSaleCarousel() {
     setupHorizontalCarouselDrag(scrollContainer);
 }
 
-function scrollSaleCarousel(direction) {
-    const scrollContainer = document.getElementById('sale-carousel-scroll');
-    if (!scrollContainer) return;
-    
-    const cardWidth = 280 + 12; // Ширина карточки + отступ
-    const newScrollLeft = scrollContainer.scrollLeft + (direction * cardWidth);
-    
-    scrollContainer.scrollTo({
-        left: newScrollLeft,
-        behavior: 'smooth'
-    });
-}
+
 
 // Запускаем инициализацию при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
