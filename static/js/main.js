@@ -274,4 +274,361 @@ function renderHotOffers() {
         <div class="offer-card">
             <div class="offer-badge">-${game.discount}%</div>
             <div class="offer-image">
-                <img src="${game.image}" alt="${game.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMjAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSIxMDAiIHk9IjYwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pjwvc3ZnPg==
+                <img src="${game.image}" alt="${game.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMjAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSIxMDAiIHk9IjYwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pjwvc3ZnPg=='>
+            </div>
+            <div class="offer-info">
+                <h4>${game.name}</h4>
+                <div class="offer-prices">
+                    <span class="offer-price">${game.price} руб.</span>
+                    ${game.originalPrice ? `<span class="offer-old-price">${game.originalPrice} руб.</span>` : ''}
+                </div>
+                <button class="offer-btn" onclick="addToCart(${game.id})">Купить</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderAllGames() {
+    const container = document.getElementById('games-grid');
+    if (!container) return;
+    
+    container.innerHTML = allGames.map(game => `
+        <div class="game-card">
+            <button class="game-favorite ${isFavorite(game.id) ? 'active' : ''}" 
+                    onclick="toggleFavorite(${game.id})">
+                ${isFavorite(game.id) ? '❤️' : '🤍'}
+            </button>
+            
+            <div class="game-image">
+                <img src="${game.image}" alt="${game.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDE2MCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE2MCIgaGVpZ2h0PSIxMjAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI4MCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPlBsYXlTdGF0aW9uIEdhbWU8L3RleHQ+PC9zdmc+'>
+            </div>
+            
+            <div class="game-info">
+                <h4>${game.name}</h4>
+                <div class="game-prices">
+                    <span class="game-price">${game.price} руб.</span>
+                    ${game.originalPrice ? `<span class="game-old-price">${game.originalPrice} руб.</span>` : ''}
+                    ${game.discount ? `<span class="game-discount">-${game.discount}%</span>` : ''}
+                </div>
+                <button class="game-btn" onclick="addToCart(${game.id})">Купить</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ===== CATEGORIES PAGE =====
+function initCategoriesPage() {
+    const categories = [
+        { name: 'Экшн', icon: '🔫', description: 'Боевики и шутеры' },
+        { name: 'Приключения', icon: '🗺️', description: 'Исследования и квесты' },
+        { name: 'RPG', icon: '⚔️', description: 'Ролевые игры' },
+        { name: 'Стратегии', icon: '♟️', description: 'Тактика и планирование' },
+        { name: 'Спорт', icon: '⚽', description: 'Спортивные симуляторы' },
+        { name: 'Гонки', icon: '🏎️', description: 'Авто и мотоспорт' },
+        { name: 'Хоррор', icon: '👻', description: 'Ужасы и выживание' },
+        { name: 'Инди', icon: '🎨', description: 'Независимые проекты' }
+    ];
+    
+    const container = document.getElementById('categories-list');
+    container.innerHTML = categories.map(category => `
+        <div class="category-item" onclick="filterByCategory('${category.name}')">
+            <div class="category-item-icon">${category.icon}</div>
+            <div class="category-item-info">
+                <h3>${category.name}</h3>
+                <p>${category.description}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function filterByCategory(category) {
+    showPage('products');
+    const filteredGames = allGames.filter(game => game.category === category);
+    renderFilteredGames(filteredGames, category);
+}
+
+function renderFilteredGames(games, category) {
+    const container = document.getElementById('games-grid');
+    if (!container) return;
+    
+    container.innerHTML = games.map(game => `
+        <div class="game-card">
+            <button class="game-favorite ${isFavorite(game.id) ? 'active' : ''}" 
+                    onclick="toggleFavorite(${game.id})">
+                ${isFavorite(game.id) ? '❤️' : '🤍'}
+            </button>
+            
+            <div class="game-image">
+                <img src="${game.image}" alt="${game.name}">
+            </div>
+            
+            <div class="game-info">
+                <h4>${game.name}</h4>
+                <div class="game-prices">
+                    <span class="game-price">${game.price} руб.</span>
+                    ${game.originalPrice ? `<span class="game-old-price">${game.originalPrice} руб.</span>` : ''}
+                    ${game.discount ? `<span class="game-discount">-${game.discount}%</span>` : ''}
+                </div>
+                <button class="game-btn" onclick="addToCart(${game.id})">Купить</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ===== CART FUNCTIONS =====
+function initCartPage() {
+    updateCartDisplay();
+}
+
+function addToCart(gameId) {
+    const game = [...featuredGames, ...allGames].find(g => g.id === gameId);
+    if (!game) return;
+    
+    const existingItem = cart.find(item => item.id === gameId);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: game.id,
+            name: game.name,
+            price: game.price,
+            image: game.image,
+            quantity: 1
+        });
+    }
+    
+    saveCart();
+    showNotification(`"${game.name}" добавлен в корзину`, 'success');
+    updateBadges();
+}
+
+function removeFromCart(index) {
+    const item = cart[index];
+    cart.splice(index, 1);
+    saveCart();
+    updateCartDisplay();
+    showNotification(`"${item.name}" удален из корзины`, 'warning');
+    updateBadges();
+}
+
+function updateCartDisplay() {
+    const container = document.getElementById('cart-items');
+    const totalElement = document.getElementById('total-price');
+    
+    if (cart.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🛒</div>
+                <h3>Корзина пуста</h3>
+                <p>Добавьте товары из каталога</p>
+            </div>
+        `;
+        totalElement.textContent = '0 руб.';
+        return;
+    }
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    totalElement.textContent = `${total} руб.`;
+    
+    container.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+            <div class="cart-item-image">
+                <img src="${item.image}" alt="${item.name}">
+            </div>
+            <div class="cart-item-info">
+                <div class="cart-item-name">${item.name}</div>
+                <div class="cart-item-price">${item.price} руб. × ${item.quantity}</div>
+            </div>
+            <button class="cart-item-remove" onclick="removeFromCart(${index})">✕</button>
+        </div>
+    `).join('');
+}
+
+function checkout() {
+    if (cart.length === 0) {
+        showNotification('Корзина пуста', 'error');
+        return;
+    }
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    tg.showPopup({
+        title: 'Заказ оформлен!',
+        message: `Спасибо за покупку! Сумма: ${total} руб.`
+    });
+    
+    cart = [];
+    saveCart();
+    updateCartDisplay();
+    showNotification('Заказ успешно оформлен!', 'success');
+    updateBadges();
+}
+
+// ===== FAVORITES FUNCTIONS =====
+function initFavoritesPage() {
+    updateFavoritesDisplay();
+}
+
+function toggleFavorite(gameId) {
+    const game = [...featuredGames, ...allGames].find(g => g.id === gameId);
+    if (!game) return;
+    
+    const index = favorites.findIndex(fav => fav.id === gameId);
+    
+    if (index > -1) {
+        favorites.splice(index, 1);
+        showNotification(`"${game.name}" удален из избранного`, 'warning');
+    } else {
+        favorites.push({
+            id: game.id,
+            name: game.name,
+            price: game.price,
+            image: game.image
+        });
+        showNotification(`"${game.name}" добавлен в избранное`, 'success');
+    }
+    
+    saveFavorites();
+    updateFavoritesDisplay();
+    updateBadges();
+    
+    // Update UI if on products page
+    if (currentPage === 'products') {
+        renderAllGames();
+    }
+}
+
+function isFavorite(gameId) {
+    return favorites.some(fav => fav.id === gameId);
+}
+
+function updateFavoritesDisplay() {
+    const container = document.getElementById('favorites-grid');
+    
+    if (favorites.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <div class="empty-icon">⭐</div>
+                <h3>Нет избранных товаров</h3>
+                <p>Добавьте игры в избранное</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = favorites.map(game => `
+        <div class="game-card">
+            <button class="game-favorite active" onclick="toggleFavorite(${game.id})">
+                ❤️
+            </button>
+            
+            <div class="game-image">
+                <img src="${game.image}" alt="${game.name}">
+            </div>
+            
+            <div class="game-info">
+                <h4>${game.name}</h4>
+                <div class="game-prices">
+                    <span class="game-price">${game.price} руб.</span>
+                </div>
+                <button class="game-btn" onclick="addToCart(${game.id})">Купить</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ===== PROFILE FUNCTIONS =====
+function loadProfileData() {
+    const savedData = localStorage.getItem('goshaStoreUserData');
+    if (savedData) {
+        userData = JSON.parse(savedData);
+        document.getElementById('user-email').value = userData.email || '';
+        document.getElementById('user-password').value = userData.password || '';
+        document.getElementById('user-2fa').value = userData.twoFA || '';
+    }
+}
+
+function saveProfile() {
+    userData = {
+        email: document.getElementById('user-email').value,
+        password: document.getElementById('user-password').value,
+        twoFA: document.getElementById('user-2fa').value,
+        savedAt: new Date().toISOString()
+    };
+    
+    localStorage.setItem('goshaStoreUserData', JSON.stringify(userData));
+    showNotification('Данные сохранены', 'success');
+}
+
+// ===== DATA PERSISTENCE =====
+function loadCart() {
+    const savedCart = localStorage.getItem('goshaStoreCart');
+    if (savedCart) {
+        cart = JSON.parse(savedCart);
+    }
+}
+
+function saveCart() {
+    localStorage.setItem('goshaStoreCart', JSON.stringify(cart));
+}
+
+function loadFavorites() {
+    const savedFavorites = localStorage.getItem('goshaStoreFavorites');
+    if (savedFavorites) {
+        favorites = JSON.parse(savedFavorites);
+    }
+}
+
+function saveFavorites() {
+    localStorage.setItem('goshaStoreFavorites', JSON.stringify(favorites));
+}
+
+function updateBadges() {
+    // Cart badge
+    const cartBadge = document.getElementById('cart-badge');
+    const cartTotal = cart.reduce((sum, item) => sum + item.quantity, 0);
+    
+    if (cartTotal > 0) {
+        cartBadge.textContent = cartTotal > 9 ? '9+' : cartTotal;
+        cartBadge.style.display = 'flex';
+    } else {
+        cartBadge.style.display = 'none';
+    }
+    
+    // Favorites badge
+    const favoritesBadge = document.getElementById('favorites-badge');
+    if (favorites.length > 0) {
+        favoritesBadge.textContent = favorites.length > 9 ? '9+' : favorites.length;
+        favoritesBadge.style.display = 'flex';
+    } else {
+        favoritesBadge.style.display = 'none';
+    }
+}
+
+// ===== NOTIFICATION SYSTEM =====
+function showNotification(message, type = 'info') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    
+    setTimeout(() => {
+        notification.classList.add('hidden');
+    }, 3000);
+}
+
+// ===== EXTERNAL LINKS =====
+function openNewsChannel() {
+    tg.openLink('https://t.me/GoshaStoreBot');
+}
+
+function openSupport() {
+    tg.openTelegramLink('https://t.me/GoshaPlayStation');
+}
+
+// ===== INITIALIZATION =====
+document.addEventListener('DOMContentLoaded', function() {
+    initTelegramApp();
+    initAppData();
+    showPage('main');
+});
