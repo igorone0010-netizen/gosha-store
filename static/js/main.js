@@ -305,7 +305,7 @@ function displaySubcategories(products) {
     
     let html = '';
     
-    // Добавляем карусель
+    // 1. Карусель с товарами
     html += `
         <div class="games-carousel">
             <div class="carousel-container" id="carousel-container"></div>
@@ -313,7 +313,7 @@ function displaySubcategories(products) {
         </div>
     `;
     
-    // Добавляем подкатегории если они есть
+    // 2. Подкатегории (последовательно друг за другом)
     if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
         const subcategories = productCategories['playstation_personal'].subcategories;
         
@@ -321,15 +321,17 @@ function displaySubcategories(products) {
             const category = subcategories[categoryId];
             
             if (category.products.length > 0) {
+                // Название подкатегории (с левого края)
                 html += `
-                    <div style="margin: 40px 16px 20px;">
-                        <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; text-align: left;">
+                    <div style="margin: 40px 16px 16px;">
+                        <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 16px; text-align: left; padding-left: 0;">
                             ${category.name}
                         </div>
-                        <div class="products-grid">
                 `;
                 
-                // Добавляем товары этой подкатегории
+                // Сетка с играми из этой подкатегории
+                html += `<div class="products-grid">`;
+                
                 category.products.forEach(product => {
                     html += `
                         <div class="product-card">
@@ -359,19 +361,16 @@ function displaySubcategories(products) {
                     `;
                 });
                 
-                html += `
-                        </div>
-                    </div>
-                `;
+                html += `</div></div>`;
             }
         });
     }
     
-    // Добавляем раздел "Все товары" если есть товары в основной базе
+    // 3. Раздел "Все товары" (если есть товары в основной базе)
     if (products.length > 0) {
         html += `
-            <div style="margin: 40px 16px 20px;">
-                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; text-align: left;">
+            <div style="margin: 40px 16px 16px;">
+                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 16px; text-align: left; padding-left: 0;">
                     Все товары
                 </div>
                 <div class="products-grid">
@@ -402,16 +401,6 @@ function displaySubcategories(products) {
                         </div>
                     `).join('')}
                 </div>
-            </div>
-        `;
-    }
-    
-    // Если нет товаров вообще
-    if (products.length === 0 && (!productCategories['playstation_personal'] || !productCategories['playstation_personal'].subcategories || Object.keys(productCategories['playstation_personal'].subcategories).length === 0)) {
-        html += `
-            <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 60px 20px;">
-                🎮<br><br>
-                Товары скоро появятся
             </div>
         `;
     }
