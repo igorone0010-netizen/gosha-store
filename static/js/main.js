@@ -33,6 +33,10 @@ let featuredGames = [];
 let currentSlide = 0;
 let autoScrollInterval;
 
+// ==================== СЕРВЕРНЫЕ НАСТРОЙКИ ====================
+const PRODUCTS_DATA_URL = '/api/products';
+const SAVE_PRODUCTS_URL = '/api/admin/save-products';
+
 // ==================== ОСНОВНЫЕ ФУНКЦИИ ====================
 function setupBackButton() {
     tg.BackButton.hide();
@@ -276,6 +280,12 @@ function loadCategories() {
             <div class="category-name">${category.name}</div>
         </div>
     `).join('');
+}
+
+function showCategories() {
+    navigateToPage('categories', 'Категории игр');
+    setActiveTab('categories');
+    loadCategories();
 }
 
 function showProducts(category) {
@@ -594,52 +604,13 @@ function setupSubcategoryCarouselDrag() {
     }
 }
 
-function displayProducts(products) {
-    const container = document.getElementById('products-container');
-    
-    if (products.length === 0) {
-        container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.6); padding: 40px;">Товары скоро появятся</div>';
-        return;
-    }
-    
-    container.innerHTML = products.map(product => `
-        <div class="product-card">
-            ${product.isNew ? `<div class="product-badge">NEW</div>` : ''}
-            ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
-            
-            <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
-                    onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
-            </button>
-            
-            <div class="product-image">
-                ${product.isImage ? 
-                    `<img src="${product.imageUrl || product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` : 
-                    (product.image || '🎮')
-                }
-            </div>
-            
-            <div class="product-name">${product.name}</div>
-            
-            <div class="product-prices">
-                <div class="product-price">${product.price} руб.</div>
-                ${product.originalPrice ? `<div class="product-old-price">${product.originalPrice} руб.</div>` : ''}
-            </div>
-            
-            <button class="buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || product.image}')">
-                Купить
-            </button>
-        </div>
-    `).join('');
-}
-
 function searchProducts() {
     const query = document.getElementById('search-input').value.toLowerCase();
     const allProducts = getAllProducts();
     
     if (!query.trim()) {
         if (currentCategory && productsData[currentCategory]) {
-            displayProducts(productsData[currentCategory]);
+            showProducts('playstation_personal');
         }
         return;
     }
@@ -656,9 +627,19 @@ function searchProducts() {
 
 function getAllProducts() {
     let allProducts = [];
+    
+    // Добавляем товары из основной базы
     for (const category in productsData) {
         allProducts = allProducts.concat(productsData[category]);
     }
+    
+    // Добавляем товары из подкатегорий
+    if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
+        Object.keys(productCategories['playstation_personal'].subcategories).forEach(categoryId => {
+            allProducts = allProducts.concat(productCategories['playstation_personal'].subcategories[categoryId].products);
+        });
+    }
+    
     return allProducts;
 }
 
@@ -783,7 +764,7 @@ function toggleFavorite(id, name, price, image) {
     saveFavorites();
     
     if (currentSection === 'products') {
-        displayProducts(productsData[currentCategory]);
+        showProducts('playstation_personal');
     }
 }
 
@@ -901,10 +882,29 @@ function switchAdminTab(tabName) {
     if (tabName === 'categories') {
         loadCategoriesList();
     }
+    
+    // ОБНОВЛЯЕМ СПИСКИ КАТЕГОРИЙ ДЛЯ ВСЕХ ВКЛАДОК
+    if (tabName === 'urls') {
+        updateUrlCategorySelect();
+    }
+    if (tabName === 'files') {
+        updateBatchCategorySelect();
+    }
 }
 
 function updateProductsCount() {
-    const total = productsData['playstation_personal'].length;
+    let total = 0;
+    
+    // Считаем товары в основной базе
+    total += productsData['playstation_personal'].length;
+    
+    // Считаем товары во всех подкатегориях
+    if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
+        Object.keys(productCategories['playstation_personal'].subcategories).forEach(categoryId => {
+            total += productCategories['playstation_personal'].subcategories[categoryId].products.length;
+        });
+    }
+    
     const totalElement = document.getElementById('total-products');
     if (totalElement) {
         totalElement.textContent = total;
@@ -994,12 +994,17 @@ function loadCategoriesList() {
                 </div>
             </div>
             <div>
+                <button onclick="viewCategoryProducts('${categoryId}')" style="background: #667eea; border: none; border-radius: 6px; padding: 8px 12px; color: white; cursor: pointer; margin-left: 5px;">👁️</button>
                 <button onclick="deleteCategory('${categoryId}')" style="background: #ff6b6b; border: none; border-radius: 6px; padding: 8px 12px; color: white; cursor: pointer; margin-left: 5px;">🗑️</button>
             </div>
         `;
         
         container.appendChild(categoryElement);
     });
+    
+    // ОБНОВЛЯЕМ список категорий для других вкладок
+    updateUrlCategorySelect();
+    updateBatchCategorySelect();
 }
 
 function deleteCategory(categoryId) {
@@ -1013,6 +1018,14 @@ function deleteCategory(categoryId) {
         loadCategoriesList();
         showNotification(`Подкатегория "${categoryName}" удалена`, 'warning');
     }
+}
+
+function viewCategoryProducts(categoryId) {
+    const category = productCategories['playstation_personal'].subcategories[categoryId];
+    if (!category) return;
+    
+    alert(`В категории "${category.name}" находится ${category.products.length} товаров:\n\n` +
+          category.products.map(p => `• ${p.name} - ${p.price} руб.`).join('\n'));
 }
 
 // ==================== АДМИН: ФАЙЛЫ ====================
@@ -1062,6 +1075,9 @@ function showQuickTemplate() {
     const container = document.getElementById('template-container');
     
     container.innerHTML = '';
+    
+    // ОБНОВЛЯЕМ ВЫБОР КАТЕГОРИИ ДЛЯ ПАКЕТНОГО ДОБАВЛЕНИЯ
+    updateBatchCategorySelect();
     
     selectedFiles.forEach((file, index) => {
         const nameFromFile = file.name
@@ -1171,6 +1187,9 @@ function generatePreviews() {
 async function addAllProducts() {
     if (!isAdmin()) return;
     
+    const categorySelect = document.getElementById('batch-category-select');
+    const targetCategoryId = categorySelect ? categorySelect.value : '';
+    
     let addedCount = 0;
     let errorCount = 0;
     
@@ -1200,8 +1219,18 @@ async function addAllProducts() {
                 isImage: true
             };
             
-            productsData['playstation_personal'].push(newProduct);
-            addedCount++;
+            // ЕСЛИ ВЫБРАНА ПОДКАТЕГОРИЯ - ДОБАВЛЯЕМ В НЕЁ
+            if (targetCategoryId && productCategories['playstation_personal'] && 
+                productCategories['playstation_personal'].subcategories &&
+                productCategories['playstation_personal'].subcategories[targetCategoryId]) {
+                
+                productCategories['playstation_personal'].subcategories[targetCategoryId].products.push(newProduct);
+                addedCount++;
+            } else {
+                // ИНАЧЕ ДОБАВЛЯЕМ В ОСНОВНУЮ БАЗУ
+                productsData['playstation_personal'].push(newProduct);
+                addedCount++;
+            }
             
         } catch (error) {
             errorCount++;
@@ -1209,9 +1238,13 @@ async function addAllProducts() {
         }
     }
     
+    // СОХРАНЯЕМ ИЗМЕНЕНИЯ
+    saveCategories();
     updateProductsCount();
+    
     showNotification(`Добавлено: ${addedCount} товаров. Ошибок: ${errorCount}`, 'success');
     
+    // Очищаем форму
     selectedFiles = [];
     productTemplates = {};
     document.getElementById('file-list').style.display = 'none';
@@ -1220,7 +1253,7 @@ async function addAllProducts() {
     document.getElementById('file-input').value = '';
     
     if (currentSection === 'products') {
-        displayProducts(productsData[currentCategory]);
+        showProducts('playstation_personal');
     }
 }
 
@@ -1447,6 +1480,43 @@ function addUrlProducts() {
     }
 }
 
+function updateUrlCategorySelect() {
+    const select = document.getElementById('url-category-select');
+    if (!select) return;
+    
+    select.innerHTML = '<option value="">-- Выберите подкатегорию --</option>';
+    
+    if (!productCategories['playstation_personal'] || !productCategories['playstation_personal'].subcategories) {
+        select.innerHTML += '<option value="carousel">Горячие предложения (по умолчанию)</option>';
+        return;
+    }
+    
+    const subcategories = productCategories['playstation_personal'].subcategories;
+    
+    Object.keys(subcategories).forEach(categoryId => {
+        const category = subcategories[categoryId];
+        select.innerHTML += `<option value="${categoryId}">${category.name}</option>`;
+    });
+}
+
+function updateBatchCategorySelect() {
+    const select = document.getElementById('batch-category-select');
+    if (!select) return;
+    
+    select.innerHTML = '<option value="">-- Основная база товаров --</option>';
+    
+    if (!productCategories['playstation_personal'] || !productCategories['playstation_personal'].subcategories) {
+        return;
+    }
+    
+    const subcategories = productCategories['playstation_personal'].subcategories;
+    
+    Object.keys(subcategories).forEach(categoryId => {
+        const category = subcategories[categoryId];
+        select.innerHTML += `<option value="${categoryId}">${category.name}</option>`;
+    });
+}
+
 // ==================== АДМИН: УПРАВЛЕНИЕ ====================
 function importProducts(input) {
     if (!isAdmin()) return;
@@ -1457,12 +1527,22 @@ function importProducts(input) {
         reader.onload = function(e) {
             try {
                 const importedData = JSON.parse(e.target.result);
-                productsData = importedData;
+                
+                // ОБНОВЛЯЕМ ВСЕ ДАННЫЕ
+                if (importedData.productsData) {
+                    productsData = importedData.productsData;
+                }
+                
+                if (importedData.productCategories) {
+                    productCategories = importedData.productCategories;
+                }
+                
                 updateProductsCount();
-                showNotification('База товаров загружена!', 'success');
+                loadCategoriesList();
+                showNotification('Все данные загружены!', 'success');
                 
                 if (currentSection === 'products') {
-                    displayProducts(productsData[currentCategory]);
+                    showProducts('playstation_personal');
                 }
             } catch (error) {
                 showNotification('Ошибка загрузки файла', 'error');
@@ -1475,14 +1555,123 @@ function importProducts(input) {
 function clearAllProducts() {
     if (!isAdmin()) return;
     
-    if (confirm('Вы уверены что хотите удалить ВСЕ товары? Это действие нельзя отменить!')) {
+    if (confirm('Вы уверены что хотите удалить ВСЕ товары из всех категорий? Это действие нельзя отменить!')) {
+        // Очищаем основную базу
         productsData['playstation_personal'] = [];
+        
+        // Очищаем все подкатегории
+        if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
+            Object.keys(productCategories['playstation_personal'].subcategories).forEach(categoryId => {
+                productCategories['playstation_personal'].subcategories[categoryId].products = [];
+            });
+        }
+        
         updateProductsCount();
-        showNotification('Все товары удалены', 'warning');
+        saveCategories();
+        showNotification('Все товары удалены из всех категорий', 'warning');
         
         if (currentSection === 'products') {
-            displayProducts(productsData[currentCategory]);
+            showProducts('playstation_personal');
         }
+    }
+}
+
+// ==================== СЕРВЕРНЫЕ ФУНКЦИИ ====================
+async function saveProductsToServer() {
+    if (!isAdmin()) return;
+    
+    try {
+        console.log('💾 Сохранение товаров на сервер...');
+        
+        // СОБИРАЕМ ВСЕ ДАННЫЕ ДЛЯ СОХРАНЕНИЯ
+        const dataToSave = {
+            productsData: productsData,
+            productCategories: productCategories,
+            savedAt: new Date().toISOString()
+        };
+        
+        const response = await fetch(SAVE_PRODUCTS_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSave)
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            showNotification('Все данные сохранены на сервер!', 'success');
+            console.log('✅ Все данные сохранены на сервер');
+        } else {
+            showNotification('Ошибка сохранения: ' + data.message, 'error');
+        }
+    } catch (error) {
+        console.error('❌ Ошибка сохранения:', error);
+        showNotification('Ошибка сети при сохранении', 'error');
+    }
+}
+
+async function loadProductsFromServer() {
+    try {
+        console.log('🔄 Загрузка данных с сервера...');
+        const response = await fetch(PRODUCTS_DATA_URL);
+        
+        if (!response.ok) {
+            throw new Error('Ошибка загрузки с сервера');
+        }
+        
+        const serverData = await response.json();
+        
+        // ОБНОВЛЯЕМ ВСЕ ДАННЫЕ
+        if (serverData.productsData) {
+            productsData = serverData.productsData;
+        }
+        
+        if (serverData.productCategories) {
+            productCategories = serverData.productCategories;
+        }
+        
+        console.log('✅ Данные загружены с сервера');
+        
+        // Обновляем отображение
+        if (currentSection === 'products') {
+            showProducts('playstation_personal');
+        }
+        
+        // Обновляем счетчик в админке
+        updateProductsCount();
+        
+        // Обновляем список категорий
+        loadCategoriesList();
+        
+    } catch (error) {
+        console.log('⚠️ Не удалось загрузить с сервера:', error.message);
+        // Если сервер не отвечает, загружаем из localStorage
+        loadFromLocalStorage();
+    }
+}
+
+function loadFromLocalStorage() {
+    console.log('🔄 Загрузка из localStorage...');
+    
+    // Загружаем productsData
+    const savedProducts = localStorage.getItem('goshaStoreProducts');
+    if (savedProducts) {
+        productsData = JSON.parse(savedProducts);
+    }
+    
+    // Загружаем productCategories
+    const savedCategories = localStorage.getItem('productCategories');
+    if (savedCategories) {
+        productCategories = JSON.parse(savedCategories);
+    }
+    
+    updateProductsCount();
+    loadCategoriesList();
+    
+    if (currentSection === 'products') {
+        showProducts('playstation_personal');
     }
 }
 
@@ -1497,8 +1686,28 @@ function initCarousel() {
     // Очищаем предыдущую карусель
     container.innerHTML = '';
     
-    // Создаем тестовые данные для карусели, если нет товаров
-    if (productsData['playstation_personal'].length === 0) {
+    // Собираем все товары для карусели
+    let allProducts = [...productsData['playstation_personal']];
+    
+    // Добавляем товары из подкатегорий
+    if (productCategories['playstation_personal'] && productCategories['playstation_personal'].subcategories) {
+        Object.keys(productCategories['playstation_personal'].subcategories).forEach(categoryId => {
+            allProducts = allProducts.concat(productCategories['playstation_personal'].subcategories[categoryId].products);
+        });
+    }
+    
+    // Берем товары со скидками или новинки
+    featuredGames = allProducts
+        .filter(product => product.discount || product.isNew)
+        .slice(0, 5);
+    
+    // Если нет товаров со скидками, берем первые 3
+    if (featuredGames.length === 0) {
+        featuredGames = allProducts.slice(0, 3);
+    }
+    
+    // Если все равно нет товаров, создаем тестовые
+    if (featuredGames.length === 0) {
         featuredGames = [
             {
                 id: 1,
@@ -1528,16 +1737,6 @@ function initCarousel() {
                 isNew: false
             }
         ];
-    } else {
-        // Берем товары из базы
-        featuredGames = productsData['playstation_personal']
-            .filter(product => product.discount || product.isNew)
-            .slice(0, 5);
-        
-        // Если нет товаров со скидками, берем первые 3
-        if (featuredGames.length === 0) {
-            featuredGames = productsData['playstation_personal'].slice(0, 3);
-        }
     }
     
     renderCarousel();
@@ -1807,6 +2006,22 @@ document.addEventListener('DOMContentLoaded', function() {
         handleFileSelect(files);
     }
 });
+
+// ==================== ДЕБАГ ФУНКЦИИ ====================
+function debugCategories() {
+    console.log('=== ДЕБАГ КАТЕГОРИЙ ===');
+    console.log('productCategories:', productCategories);
+    console.log('productsData:', productsData);
+    console.log('=== КОНЕЦ ДЕБАГА ===');
+}
+
+function debugCarousel() {
+    console.log('=== ДЕБАГ КАРУСЕЛИ ===');
+    console.log('Карусель контейнер:', document.getElementById('carousel-container'));
+    console.log('featuredGames:', featuredGames);
+    console.log('productsData:', productsData);
+    console.log('=== КОНЕЦ ДЕБАГА ===');
+}
 
 // ==================== ИНИЦИАЛИЗАЦИЯ ====================
 document.addEventListener('DOMContentLoaded', function() {
