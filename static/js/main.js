@@ -1148,19 +1148,65 @@ function clearAllProducts() {
 // ==================== КАРУСЕЛЬ ====================
 function initCarousel() {
     const container = document.getElementById('carousel-container');
-    if (!container) return;
+    if (!container) {
+        console.log('Карусель не найдена на этой странице');
+        return;
+    }
     
+    // Очищаем предыдущую карусель
     container.innerHTML = '';
     
-    featuredGames = productsData['playstation_personal'].filter(product => product.discount || product.isNew).slice(0, 5);
-    
-    if (featuredGames.length === 0) {
-        featuredGames = productsData['playstation_personal'].slice(0, 3);
+    // Создаем тестовые данные для карусели, если нет товаров
+    if (productsData['playstation_personal'].length === 0) {
+        featuredGames = [
+            {
+                id: 1,
+                name: "God of War Ragnarok",
+                price: 3999,
+                originalPrice: 4999,
+                imageUrl: "https://via.placeholder.com/343x345/333/white?text=God+of+War",
+                discount: 20,
+                isNew: true
+            },
+            {
+                id: 2,
+                name: "Spider-Man 2",
+                price: 4999,
+                originalPrice: 0,
+                imageUrl: "https://via.placeholder.com/343x345/333/white?text=Spider-Man+2",
+                discount: 0,
+                isNew: true
+            },
+            {
+                id: 3,
+                name: "The Last of Us Part II",
+                price: 3499,
+                originalPrice: 4499,
+                imageUrl: "https://via.placeholder.com/343x345/333/white?text=Last+of+Us",
+                discount: 22,
+                isNew: false
+            }
+        ];
+    } else {
+        // Берем товары из базы
+        featuredGames = productsData['playstation_personal']
+            .filter(product => product.discount || product.isNew)
+            .slice(0, 5);
+        
+        // Если нет товаров со скидками, берем первые 3
+        if (featuredGames.length === 0) {
+            featuredGames = productsData['playstation_personal'].slice(0, 3);
+        }
     }
     
     renderCarousel();
+    
+    // Добавляем обработчик скролла для обновления активного слайда
     container.addEventListener('scroll', updateActiveSlide);
+    
+    // Инициализируем активный слайд
     setTimeout(updateActiveSlide, 100);
+    
     startAutoScroll();
     setupCarouselDrag();
 }
@@ -1196,9 +1242,21 @@ function renderCarousel() {
     
     if (!container) return;
     
+    // Очищаем контейнер
     container.innerHTML = '';
     dots.innerHTML = '';
     
+    // Если нет товаров для карусели
+    if (featuredGames.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 40px;">
+                Карусель скоро появится
+            </div>
+        `;
+        return;
+    }
+    
+    // Создаем слайды
     featuredGames.forEach((game, index) => {
         const slide = document.createElement('div');
         slide.className = 'carousel-slide';
@@ -1219,6 +1277,7 @@ function renderCarousel() {
         
         container.appendChild(slide);
         
+        // Создаем точки навигации
         const dot = document.createElement('div');
         dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
         dot.onclick = () => goToSlide(index);
