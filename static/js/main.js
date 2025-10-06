@@ -313,46 +313,46 @@ function displaySubcategories(products) {
         </div>
     `;
     
-    // Добавляем подкатегорию "Распродажа" как уменьшенную карусель
-    if (productCategories['playstation_personal'] && 
-        productCategories['playstation_personal'].subcategories && 
-        productCategories['playstation_personal'].subcategories['sale']) {
-        
-        const saleCategory = productCategories['playstation_personal'].subcategories['sale'];
+    // Добавляем подкатегорию "Распродажа" как горизонтальную карусель
+    if (productCategories['playstation_personal']?.subcategories?.sale) {
+        const saleCategory = productCategories['playstation_personal'].subcategories.sale;
         
         html += `
-            <div class="sale-carousel-section">
-                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin: 40px 0 20px; padding: 0 16px; text-align: left;">
+            <div class="sale-section" style="margin: 40px 0 20px;">
+                <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 20px; padding: 0 16px; text-align: left;">
                     ${saleCategory.name}
                 </div>
-                <div class="mini-carousel-container">
-                    <div class="mini-carousel" id="mini-carousel">
+                <div class="sale-carousel-container">
+                    <div class="sale-carousel-scroll" id="sale-carousel-scroll">
         `;
         
-        // Добавляем товары распродажи как слайды мини-карусели
-        saleCategory.products.forEach((product, index) => {
+        // Добавляем товары распродажи как маленькие карточки
+        saleCategory.products.forEach(product => {
             html += `
-                <div class="mini-carousel-slide ${index === 0 ? 'active' : ''}">
-                    <div class="mini-carousel-game" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
-                        ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
+                <div class="sale-product-card">
+                    ${product.discount ? `<div class="product-badge discount">-${product.discount}%</div>` : ''}
+                    
+                    <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
+                            onclick="toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
+                        ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
+                    </button>
+                    
+                    <div class="sale-product-image">
+                        <img src="${product.imageUrl}" alt="${product.name}" 
+                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjE2MCIgdmlld0JveD0iMCAwIDEyMCAxNjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTYwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI4MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UGxheVN0YXRpb24gR2FtZTwvdGV4dD4KPC9zdmc+'">
+                    </div>
+                    
+                    <div class="sale-product-info">
+                        <div class="sale-product-name">${product.name}</div>
                         
-                        <button class="favorite-button ${favorites.some(fav => fav.id === product.id) ? 'active' : ''}" 
-                                onclick="event.stopPropagation(); toggleFavorite(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
-                            ${favorites.some(fav => fav.id === product.id) ? '❤️' : '🤍'}
+                        <div class="sale-product-prices">
+                            <div class="sale-product-price">${product.price} руб.</div>
+                            ${product.originalPrice ? `<div class="sale-product-old-price">${product.originalPrice} руб.</div>` : ''}
+                        </div>
+                        
+                        <button class="sale-buy-button" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">
+                            Купить
                         </button>
-                        
-                        <div class="mini-carousel-game-image">
-                            <img src="${product.imageUrl}" alt="${product.name}" 
-                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5QbGF5U3RhdGlvbiBHYW1lPC90ZXh0Pgo8L3N2Zz4K'">
-                        </div>
-                        
-                        <div class="mini-carousel-game-overlay">
-                            <div class="mini-carousel-game-title">${product.name}</div>
-                            <div class="mini-carousel-game-prices">
-                                <div class="mini-carousel-game-price">${product.price} руб.</div>
-                                ${product.originalPrice ? `<div class="mini-carousel-game-old-price">${product.originalPrice} руб.</div>` : ''}
-                            </div>
-                        </div>
                     </div>
                 </div>
             `;
@@ -360,7 +360,6 @@ function displaySubcategories(products) {
         
         html += `
                     </div>
-                    <div class="mini-carousel-dots" id="mini-carousel-dots"></div>
                 </div>
             </div>
         `;
@@ -371,8 +370,15 @@ function displaySubcategories(products) {
     // Инициализируем обе карусели
     setTimeout(() => {
         initCarousel();
-        initMiniCarousel();
+        initSaleCarousel();
     }, 100);
+}
+
+function initSaleCarousel() {
+    const scrollContainer = document.getElementById('sale-carousel-scroll');
+    if (!scrollContainer) return;
+    
+    setupHorizontalCarouselDrag(scrollContainer);
 }
 
 function initHorizontalCarousels() {
@@ -1294,7 +1300,7 @@ function createSaleSubcategory() {
     
     productCategories['playstation_personal'].subcategories['sale'] = {
         name: "🔥 Распродажа",
-        type: "horizontal-carousel",
+        type: "horizontal",
         products: [
             {
                 id: 201,
@@ -1353,9 +1359,6 @@ function createSaleSubcategory() {
             }
         ]
     };
-    
-    console.log('✅ Создана подкатегория "Распродажа" с товарами:', 
-                productCategories['playstation_personal'].subcategories['sale'].products.length);
     
     saveCategories();
 }
