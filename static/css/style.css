@@ -2443,6 +2443,15 @@ body {
     z-index: 10;
 }
 
+/* Отключаем скролл для всей страницы товаров */
+.products-page {
+    overflow: hidden !important;
+}
+
+.hot-offers {
+    overflow: hidden !important;
+}
+
 /* Адаптивность для мобильных */
 @media (max-width: 480px) {
     .sale-product-card {
