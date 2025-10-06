@@ -88,13 +88,14 @@
         <div class="admin-title">📝 Вставьте список URL</div>
         
         <div class="url-example">
-            <strong>Формат (каждая строка - товар):</strong><br>
-            Название | Цена | Старая цена | URL картинки | Категория<br><br>
-            
-            <strong>Пример:</strong><br>
-            God of War Ragnarok | 3999 | 4999 | https://example.com/god.jpg | Экшн<br>
-            Spider-Man 2 | 4999 | 0 | https://example.com/spider.jpg | Экшн
-        </div>
+    <strong>Формат (каждая строка - товар):</strong><br>
+    Название | Цена | Старая цена | URL картинки | Категория | Подкатегория<br><br>
+    
+    <strong>Пример:</strong><br>
+    God of War Ragnarok | 3999 | 4999 | https://example.com/god.jpg | Экшн | cat_123456789<br>
+    Spider-Man 2 | 4999 | 0 | https://example.com/spider.jpg | Экшн | Новинки<br>
+    The Last of Us | 3499 | 0 | https://example.com/last.jpg | Приключения | 
+</div>
         
         <textarea class="bulk-textarea" id="url-products" placeholder="Вставьте ваш список товаров здесь..." 
                   oninput="previewUrlProducts()"></textarea>
