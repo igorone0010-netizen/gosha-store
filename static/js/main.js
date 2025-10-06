@@ -34,8 +34,9 @@ let currentSlide = 0;
 let autoScrollInterval;
 
 // ==================== СЕРВЕРНЫЕ НАСТРОЙКИ ====================
-const PRODUCTS_DATA_URL = '/api/products';
-const SAVE_PRODUCTS_URL = '/api/admin/save-products';
+const API_BASE_URL = 'https://your-server.com/api'; // ЗАМЕНИТЕ на ваш URL
+// Или для теста используйте localStorage как временное решение:
+const USE_LOCAL_STORAGE_AS_SERVER = true;
 
 // ==================== ОСНОВНЫЕ ФУНКЦИИ ====================
 function setupBackButton() {
@@ -241,26 +242,45 @@ function autoSaveData() {
 function initCategories() {
     const savedCategories = localStorage.getItem('productCategories');
     if (savedCategories) {
-        productCategories = JSON.parse(savedCategories);
+        try {
+            productCategories = JSON.parse(savedCategories);
+        } catch (e) {
+            console.error('Ошибка загрузки категорий:', e);
+            createDefaultCategories();
+        }
     } else {
-        productCategories = {
-            'playstation_personal': {
-                name: 'PlayStation Личный',
-                subcategories: {
-                    'carousel': {
-                        name: 'Горячие предложения',
-                        type: 'carousel',
-                        products: []
-                    }
-                }
-            }
-        };
-        saveCategories();
+        createDefaultCategories();
     }
 }
 
+function createDefaultCategories() {
+    productCategories = {
+        'playstation_personal': {
+            name: 'PlayStation Личный',
+            subcategories: {
+                'carousel': {
+                    name: 'Горячие предложения',
+                    type: 'carousel',
+                    products: []
+                }
+            }
+        }
+    };
+    saveCategories();
+}
+
 function saveCategories() {
-    localStorage.setItem('productCategories', JSON.stringify(productCategories));
+    try {
+        localStorage.setItem('productCategories', JSON.stringify(productCategories));
+        console.log('✅ Категории сохранены в localStorage');
+        
+        // Также сохраняем productsData
+        localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
+        console.log('✅ Товары сохранены в localStorage');
+        
+    } catch (error) {
+        console.error('❌ Ошибка сохранения в localStorage:', error);
+    }
 }
 
 function loadCategories() {
@@ -1239,8 +1259,13 @@ async function addAllProducts() {
     }
     
     // СОХРАНЯЕМ ИЗМЕНЕНИЯ
-    saveCategories();
-    updateProductsCount();
+saveCategories();
+updateProductsCount();
+
+// АВТОСОХРАНЕНИЕ НА СЕРВЕР
+setTimeout(() => {
+    saveProductsToServer();
+}, 1000);
     
     showNotification(`Добавлено: ${addedCount} товаров. Ошибок: ${errorCount}`, 'success');
     
@@ -1462,8 +1487,13 @@ function addUrlProducts() {
     });
     
     // Сохраняем изменения
-    saveCategories();
-    updateProductsCount();
+saveCategories();
+updateProductsCount();
+
+// АВТОСОХРАНЕНИЕ НА СЕРВЕР
+setTimeout(() => {
+    saveProductsToServer();
+}, 1000);
     
     showNotification(`Добавлено: ${addedCount} товаров. Ошибок: ${errorCount}`, 'success');
     
@@ -1587,10 +1617,23 @@ async function saveProductsToServer() {
         const dataToSave = {
             productsData: productsData,
             productCategories: productCategories,
-            savedAt: new Date().toISOString()
+            savedAt: new Date().toISOString(),
+            version: '1.0'
         };
         
-        const response = await fetch(SAVE_PRODUCTS_URL, {
+        if (USE_LOCAL_STORAGE_AS_SERVER) {
+            // ВРЕМЕННОЕ РЕШЕНИЕ - сохраняем в localStorage
+            localStorage.setItem('server_products_data', JSON.stringify(dataToSave));
+            localStorage.setItem('last_server_save', new Date().toISOString());
+            console.log('✅ Данные сохранены в localStorage (временное решение)');
+            showNotification('Данные сохранены (локально)!', 'success');
+            
+            // ОБНОВЛЯЕМ ВРЕМЯ ПОСЛЕ СОХРАНЕНИЯ
+            setTimeout(updateLastSaveTime, 100);
+            return;
+        }
+        
+        const response = await fetch(`${API_BASE_URL}/save-products`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1608,20 +1651,43 @@ async function saveProductsToServer() {
         }
     } catch (error) {
         console.error('❌ Ошибка сохранения:', error);
-        showNotification('Ошибка сети при сохранении', 'error');
+        showNotification('Ошибка сети. Используется локальное сохранение.', 'warning');
+        
+        // Резервное сохранение в localStorage
+        const dataToSave = {
+            productsData: productsData,
+            productCategories: productCategories,
+            savedAt: new Date().toISOString()
+        };
+        localStorage.setItem('server_products_data', JSON.stringify(dataToSave));
     }
 }
 
 async function loadProductsFromServer() {
     try {
         console.log('🔄 Загрузка данных с сервера...');
-        const response = await fetch(PRODUCTS_DATA_URL);
         
-        if (!response.ok) {
-            throw new Error('Ошибка загрузки с сервера');
+        let serverData;
+        
+        if (USE_LOCAL_STORAGE_AS_SERVER) {
+            // ВРЕМЕННОЕ РЕШЕНИЕ - загружаем из localStorage
+            const savedData = localStorage.getItem('server_products_data');
+            if (savedData) {
+                serverData = JSON.parse(savedData);
+                console.log('✅ Данные загружены из localStorage');
+            } else {
+                console.log('⚠️ Нет сохраненных данных на сервере');
+                return;
+            }
+        } else {
+            const response = await fetch(`${API_BASE_URL}/get-products`);
+            
+            if (!response.ok) {
+                throw new Error('Ошибка загрузки с сервера');
+            }
+            
+            serverData = await response.json();
         }
-        
-        const serverData = await response.json();
         
         // ОБНОВЛЯЕМ ВСЕ ДАННЫЕ
         if (serverData.productsData) {
@@ -1634,6 +1700,10 @@ async function loadProductsFromServer() {
         
         console.log('✅ Данные загружены с сервера');
         
+        // Сохраняем в localStorage для быстрого доступа
+        saveCategories();
+        localStorage.setItem('goshaStoreProducts', JSON.stringify(productsData));
+        
         // Обновляем отображение
         if (currentSection === 'products') {
             showProducts('playstation_personal');
@@ -1645,10 +1715,43 @@ async function loadProductsFromServer() {
         // Обновляем список категорий
         loadCategoriesList();
         
+        showNotification('Данные загружены!', 'success');
+        
     } catch (error) {
         console.log('⚠️ Не удалось загрузить с сервера:', error.message);
         // Если сервер не отвечает, загружаем из localStorage
         loadFromLocalStorage();
+    }
+}
+
+function loadFromLocalStorage() {
+    console.log('🔄 Загрузка из localStorage...');
+    
+    // Загружаем productsData
+    const savedProducts = localStorage.getItem('goshaStoreProducts');
+    if (savedProducts) {
+        try {
+            productsData = JSON.parse(savedProducts);
+        } catch (e) {
+            console.error('Ошибка загрузки productsData:', e);
+        }
+    }
+    
+    // Загружаем productCategories
+    const savedCategories = localStorage.getItem('productCategories');
+    if (savedCategories) {
+        try {
+            productCategories = JSON.parse(savedCategories);
+        } catch (e) {
+            console.error('Ошибка загрузки productCategories:', e);
+        }
+    }
+    
+    updateProductsCount();
+    loadCategoriesList();
+    
+    if (currentSection === 'products') {
+        showProducts('playstation_personal');
     }
 }
 
@@ -2023,11 +2126,71 @@ function debugCarousel() {
     console.log('=== КОНЕЦ ДЕБАГА ===');
 }
 
+// ==================== ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ СИНХРОНИЗАЦИИ ====================
+function forceSync() {
+    if (!isAdmin()) return;
+    
+    showNotification('Синхронизация...', 'info');
+    
+    // Сохраняем текущие данные на сервер
+    saveProductsToServer();
+    
+    // Через 2 секунды загружаем обратно (для синхронизации)
+    setTimeout(() => {
+        loadProductsFromServer();
+        showNotification('Синхронизация завершена!', 'success');
+    }, 2000);
+}
+
+function updateLastSaveTime() {
+    const lastSave = localStorage.getItem('last_server_save');
+    const element = document.getElementById('last-update');
+    if (element && lastSave) {
+        const date = new Date(lastSave);
+        element.textContent = date.toLocaleString();
+    }
+}
+
+function debugData() {
+    console.log('=== ДЕБАГ ДАННЫХ ===');
+    console.log('productsData:', productsData);
+    console.log('productCategories:', productCategories);
+    
+    const serverData = localStorage.getItem('server_products_data');
+    console.log('server_products_data:', serverData ? JSON.parse(serverData) : 'нет данных');
+    
+    showNotification('Данные выведены в консоль', 'info');
+}
+
+function clearAllData() {
+    if (!isAdmin()) return;
+    
+    if (confirm('ОЧИСТИТЬ ВСЕ ДАННЫЕ? Это удалит все товары и настройки!')) {
+        localStorage.removeItem('server_products_data');
+        localStorage.removeItem('goshaStoreProducts');
+        localStorage.removeItem('productCategories');
+        localStorage.removeItem('last_server_save');
+        
+        productsData = {'playstation_personal': []};
+        productCategories = {};
+        
+        showNotification('Все данные очищены!', 'warning');
+        setTimeout(() => location.reload(), 1000);
+    }
+}
+
 // ==================== ИНИЦИАЛИЗАЦИЯ ====================
 document.addEventListener('DOMContentLoaded', function() {
     setupBackButton();
     initUser();
     initCategories();
+    
+    // АВТОМАТИЧЕСКАЯ ЗАГРУЗКА ДАННЫХ ПРИ ЗАПУСКЕ
+    setTimeout(() => {
+        loadProductsFromServer();
+        updateLastSaveTime();
+    }, 500);
+    
     showMain();
     updateProductsCount();
     
