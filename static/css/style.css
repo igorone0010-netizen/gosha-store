@@ -2291,3 +2291,100 @@ body {
     background: rgba(255,255,255,0.3);
     border-radius: 2px;
 }
+
+/* Стили для горизонтальной карусели распродажи */
+.sale-section {
+    position: relative;
+}
+
+.horizontal-carousel-container {
+    position: relative;
+    overflow: hidden;
+    padding: 0 16px;
+}
+
+.carousel-scroll {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 16px;
+    padding: 10px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.carousel-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.sale-product-card {
+    flex: 0 0 300px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 16px;
+    position: relative;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.sale-product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.sale-product-image {
+    width: 100%;
+    height: 340px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #2d3748, #4a5568);
+}
+
+.sale-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.sale-product-card:hover .sale-product-image img {
+    transform: scale(1.05);
+}
+
+.sale-product-info {
+    text-align: left;
+}
+
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.carousel-arrow {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 24px;
+    color: white;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.carousel-arrow:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.carousel-arrow:active {
+    transform: scale(0.95);
+}
