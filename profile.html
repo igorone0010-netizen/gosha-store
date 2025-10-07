@@ -230,6 +230,28 @@ body {
       <p>Рады тебя видеть</p>
     </div>
 
+    <script>
+  // Проверяем, доступен ли Telegram WebApp
+  if (window.Telegram && Telegram.WebApp) {
+      const app = Telegram.WebApp;
+
+      // Когда Telegram готов — показываем кнопку
+      app.ready();
+
+      // небольшой таймаут, чтобы Telegram успел проинициализироваться
+      setTimeout(() => {
+          app.BackButton.show();
+      }, 200);
+
+      // Обработчик клика по кнопке "Назад"
+      app.onEvent('backButtonClicked', () => {
+          window.location.href = 'index.html';
+      });
+  } else {
+      console.log("⚠️ Telegram WebApp не найден — запусти через Telegram.");
+  }
+  </script>
+
     <div class="section-title">Данные от аккаунта</div>
     <div class="card"><i class="fa-solid fa-at"></i> Ваша почта</div>
     <div class="card"><i class="fa-solid fa-user"></i> Пароль</div>
