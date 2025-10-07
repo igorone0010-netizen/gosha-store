@@ -1,254 +1,202 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlayStation Store | Telegram Mini App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="static/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GoshaStore</title>
+
+  <style>
+    :root {
+      --bg-dark: #0e0e12;
+      --text-light: #ffffff;
+      --ps-blue: #0072ff;
+      --ps-plus: #ffcc00;
+      --wallet-purple: #7a1aff;
+      --support-gray: #1a1a22;
+      --radius: 16px;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: linear-gradient(90deg, var(--ps-blue), #6a00ff);
+      box-sizing: border-box;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-name {
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    main {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: none;
+      border-radius: var(--radius);
+      color: var(--text-light);
+      font-size: 0.95rem;
+      padding: 14px;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .btn:hover {
+      transform: scale(1.03);
+      opacity: 0.9;
+    }
+
+    .btn.ps {
+      background: var(--ps-blue);
+    }
+
+    .btn.plus {
+      background: var(--ps-plus);
+      color: #111;
+      font-weight: 600;
+    }
+
+    .btn.wallet {
+      grid-column: span 2;
+      background: var(--wallet-purple);
+    }
+
+    .btn.support {
+      grid-column: span 2;
+      background: var(--support-gray);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      opacity: 0.6;
+      padding: 16px;
+      margin-top: auto;
+    }
+  </style>
 </head>
 <body>
-    <!-- Заголовок приложения -->
-    <header class="app-header">
-        <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon">PS</div>
-                <span class="logo-text">PlayStation Store</span>
-            </div>
-            <div class="user-info">
-                <span id="user-name">Gosha</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- Главное меню -->
-    <main id="main-menu" class="main-content active">
-        <div class="section-title">Выберите раздел</div>
-        
-        <div class="menu-grid">
-            <!-- PlayStation Личный -->
-            <div class="menu-item playstation-personal" onclick="showSection('playstation-personal')">
-                <div class="menu-icon">🎮</div>
-                <div class="menu-content">
-                    <div class="menu-title">PlayStation Личный</div>
-                    <div class="menu-description">Покупка игр на ваш личный аккаунт PS4/PS5</div>
-                </div>
-            </div>
-
-            <!-- PS Plus -->
-            <div class="menu-item ps-plus" onclick="showSection('ps-plus')">
-                <div class="menu-icon">⭐</div>
-                <div class="menu-content">
-                    <div class="menu-title">PS Plus</div>
-                    <div class="menu-description">Подписки PlayStation Plus</div>
-                </div>
-            </div>
-
-            <!-- Пополнение кошелька -->
-            <div class="menu-item wallet-refill" onclick="showSection('wallet-refill')">
-                <div class="menu-icon">💳</div>
-                <div class="menu-content">
-                    <div class="menu-title">Пополнение кошелька</div>
-                    <div class="menu-description">Коды пополнения PlayStation Store</div>
-                </div>
-            </div>
-
-            <!-- Дополнительные категории (динамически добавляемые) -->
-            <div id="dynamic-categories"></div>
-        </div>
-
-        <!-- Support секция -->
-        <div class="support-section" onclick="showSupport()">
-            <div class="support-icon">💬</div>
-            <div class="support-content">
-                <div class="support-title">Support</div>
-                <div class="support-description">
-                    Не нашли нужный товар? Остались вопросы?<br>
-                    Проблема с заказом? Пишите сюда!
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Страница PlayStation Личный -->
-    <section id="playstation-personal" class="content-section">
-        <div class="section-header">
-            <button class="back-btn" onclick="showMainMenu()">←</button>
-            <h2>PlayStation Личный</h2>
-            <button class="cart-btn" onclick="showCart()">
-                🛒 <span id="cart-count">0</span>
-            </button>
-        </div>
-        
-        <div class="search-bar">
-            <input type="text" id="search-personal" placeholder="Поиск игр..." oninput="searchProducts('playstation-personal')">
-        </div>
-        
-        <div class="products-grid" id="products-personal">
-            <!-- Товары загружаются динамически -->
-        </div>
-    </section>
-
-    <!-- Страница PS Plus -->
-    <section id="ps-plus" class="content-section">
-        <div class="section-header">
-            <button class="back-btn" onclick="showMainMenu()">←</button>
-            <h2>PS Plus</h2>
-            <button class="cart-btn" onclick="showCart()">
-                🛒 <span id="cart-count-plus">0</span>
-            </button>
-        </div>
-        
-        <div class="products-grid" id="products-plus">
-            <!-- PS Plus подписки -->
-        </div>
-    </section>
-
-    <!-- Страница пополнения кошелька -->
-    <section id="wallet-refill" class="content-section">
-        <div class="section-header">
-            <button class="back-btn" onclick="showMainMenu()">←</button>
-            <h2>Пополнение кошелька</h2>
-            <button class="cart-btn" onclick="showCart()">
-                🛒 <span id="cart-count-wallet">0</span>
-            </button>
-        </div>
-        
-        <div class="products-grid" id="products-wallet">
-            <!-- Коды пополнения -->
-        </div>
-    </section>
-
-    <!-- Корзина -->
-    <section id="cart" class="content-section">
-        <div class="section-header">
-            <button class="back-btn" onclick="goBack()">←</button>
-            <h2>Корзина</h2>
-        </div>
-        
-        <div id="cart-items" class="cart-items">
-            <!-- Товары в корзине -->
-        </div>
-        
-        <div class="cart-summary">
-            <div class="cart-total">
-                Итого: <span id="total-price">0</span> ₽
-            </div>
-            <button class="checkout-btn" onclick="checkout()" id="checkout-btn" disabled>
-                Оформить заказ
-            </button>
-        </div>
-    </section>
-
-    <!-- Страница Support -->
-    <section id="support" class="content-section">
-        <div class="section-header">
-            <button class="back-btn" onclick="showMainMenu()">←</button>
-            <h2>Поддержка</h2>
-        </div>
-        
-        <div class="support-content-page">
-            <div class="support-info">
-                <h3>Контакты для связи</h3>
-                <div class="contact-item">
-                    <div class="contact-icon">📱</div>
-                    <div class="contact-info">
-                        <div class="contact-title">Telegram</div>
-                        <div class="contact-value">@GoshaStoreBot</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="ticket-form">
-                <h3>Создать тикет</h3>
-                <form id="support-form">
-                    <div class="form-group">
-                        <label for="ticket-subject">Тема обращения</label>
-                        <select id="ticket-subject" required>
-                            <option value="">Выберите тему</option>
-                            <option value="order">Вопрос по заказу</option>
-                            <option value="payment">Проблема с оплатой</option>
-                            <option value="product">Вопрос о товаре</option>
-                            <option value="technical">Техническая проблема</option>
-                            <option value="other">Другое</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="ticket-message">Сообщение</label>
-                        <textarea id="ticket-message" placeholder="Опишите вашу проблему или вопрос..." required></textarea>
-                    </div>
-                    
-                    <button type="submit" class="submit-btn">Отправить тикет</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- История заказов -->
-    <section id="order-history" class="content-section">
-        <div class="section-header">
-            <button class="back-btn" onclick="showMainMenu()">←</button>
-            <h2>История заказов</h2>
-        </div>
-        
-        <div id="history-items" class="history-items">
-            <!-- История заказов -->
-        </div>
-    </section>
-
-    <!-- Модальное окно товара -->
-    <div id="product-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div id="modal-product-info">
-                <!-- Информация о товаре -->
-            </div>
-        </div>
+  <header>
+    <!-- ✅ SVG логотип GS -->
+    <div class="logo">
+      <svg width="48" height="48" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="grad-gs" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0072ff"/>
+            <stop offset="100%" stop-color="#6a00ff"/>
+          </linearGradient>
+          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0ff" flood-opacity="0.25"/>
+          </filter>
+        </defs>
+        <rect x="2" y="2" width="52" height="52" rx="12" fill="url(#grad-gs)" filter="url(#shadow)"/>
+        <path d="M15 35 C15 27, 23 26, 27 30 S39 37, 41 26
+                 M23 20 L33 20 L33 23 L26 23 L26 25 L33 25" 
+              stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
     </div>
+    <div class="user-name">Gosha</div>
+  </header>
 
-    <!-- Модальное окно подтверждения -->
-    <div id="confirm-modal" class="modal">
-        <div class="modal-content">
-            <div id="confirm-message"></div>
-            <div class="modal-buttons">
-                <button class="btn-cancel" onclick="closeConfirmModal()">Отмена</button>
-                <button class="btn-confirm" onclick="confirmAction()">Подтвердить</button>
-            </div>
-        </div>
+  <main>
+    <h2>Выберите раздел</h2>
+
+    <div class="grid">
+      <!-- 🎮 PlayStation Личный -->
+      <button class="btn ps">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="white">
+          <path d="M40 10L22 4v40l18 6V10zM6 36l12 4v-4l-12-4v4zm40 8l12-4v-4l-12 4v4z"/>
+        </svg>
+        <span>PlayStation<br>Личный</span>
+      </button>
+
+      <!-- 💠 PS Plus -->
+      <button class="btn plus">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor">
+          <path d="M28 8h8v12h12v8H36v12h-8V28H16v-8h12z"/>
+        </svg>
+        <span>PS Plus</span>
+      </button>
+
+      <!-- 💳 Пополнение кошелька (добавлен логотип PlayStation) -->
+      <button class="btn wallet">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="white">
+          <path d="M40 10L22 4v40l18 6V10zM6 36l12 4v-4l-12-4v4zm40 8l12-4v-4l-12 4v4z"/>
+        </svg>
+        <span>Пополнение кошелька</span>
+      </button>
+
+      <!-- 💬 Support -->
+      <button class="btn support">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="white">
+          <path d="M32 8a24 24 0 1 0 0 48h4v-8h-4a16 16 0 1 1 16-16h8A24 24 0 0 0 32 8z"/>
+        </svg>
+        <span>Support</span>
+      </button>
     </div>
+  </main>
 
-    <!-- Уведомления -->
-    <div id="notification" class="notification">
-        <span id="notification-text"></span>
-    </div>
+  <footer>© 2025 GoshaStore</footer>
 
-    <!-- Нижняя навигация -->
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="showMainMenu()">
-            <div class="nav-icon">🏠</div>
-            <div class="nav-text">Главная</div>
-        </div>
-        <div class="nav-item" onclick="showCart()">
-            <div class="nav-icon">🛒</div>
-            <div class="nav-text">Корзина</div>
-            <div class="nav-badge" id="nav-cart-count">0</div>
-        </div>
-        <div class="nav-item" onclick="showOrderHistory()">
-            <div class="nav-icon">📋</div>
-            <div class="nav-text">История</div>
-        </div>
-        <div class="nav-item" onclick="showSupport()">
-            <div class="nav-icon">💬</div>
-            <div class="nav-text">Поддержка</div>
-        </div>
-    </nav>
+  <!-- ✅ Telegram WebApp API -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
-    <!-- Скрипты -->
-    <script src="static/js/telegram-api.js"></script>
-    <script src="static/js/app.js"></script>
-    <script src="static/js/cart.js"></script>
-    <script src="static/js/products.js"></script>
-    <script src="static/js/support.js"></script>
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        tg.HapticFeedback.impactOccurred('light');
+        alert(`Вы выбрали: ${btn.innerText}`);
+      });
+    });
+  </script>
 </body>
 </html>
