@@ -288,23 +288,27 @@ document.querySelectorAll('.menu__item').forEach(btn => {
 
 <script src="telegram.js"></script>
 <script>
+// Персонализация для профиля
 if (window.Telegram && Telegram.WebApp) {
-  const tg = Telegram.WebApp;
-  tg.ready();
-
-  // Пример персонализации приветствия
-  const user = tg.initDataUnsafe?.user;
-  if (user && user.first_name) {
-    document.getElementById('greeting').textContent = `Привет, ${user.first_name}!`;
-  }
+    const tg = Telegram.WebApp;
+    const user = tg.initDataUnsafe?.user;
+    
+    if (user && user.first_name) {
+        document.getElementById('greeting').textContent = `Привет, ${user.first_name}!`;
+    }
 }
 
 // Переключение активной кнопки меню
 document.querySelectorAll('.menu__item').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.menu__item').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  });
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.menu__item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
+
+// Обработка кнопки "домой" - возврат на главную
+document.querySelector('.menu__item .fa-house')?.closest('.menu__item').addEventListener('click', () => {
+    window.location.href = '/';
 });
 </script>
 
