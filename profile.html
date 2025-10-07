@@ -288,22 +288,25 @@ document.querySelectorAll('.menu__item').forEach(btn => {
 
 <script>
 if (window.Telegram && Telegram.WebApp) {
-  Telegram.WebApp.ready();
+  const app = Telegram.WebApp;
+  app.ready();
 
-  // показать кнопку "Назад"
-  Telegram.WebApp.BackButton.show();
+  // Делаем тёмную тему под Telegram
+  app.setBackgroundColor('#0d0f1a');
+  app.setHeaderColor('#0d0f1a');
 
-  // действие по нажатию
-  Telegram.WebApp.onEvent('backButtonClicked', () => {
-    // если есть история — вернуться
+  // Показываем кнопку "Назад / Закрыть"
+  app.BackButton.show();
+
+  app.onEvent('backButtonClicked', () => {
     if (document.referrer) {
       window.history.back();
     } else {
-      // иначе закрыть приложение
-      Telegram.WebApp.close();
+      app.close(); // если больше некуда возвращаться
     }
   });
 }
 </script>
+
 </body>
 </html>
