@@ -1,31 +1,16 @@
-[
-  {
-    "type": "new_order",
-    "order": {
-      "id": 1759791918930,
-      "userId": null,
-      "userName": "Пользователь",
-      "items": [
-        {
-          "id": 1,
-          "name": "God of War Ragnarök",
-          "price": 3999,
-          "image": "https://image.api.playstation.com/vulcan/ap/rnd/202207/1210/4xJ8XB3bi888QTLZYdl7Oi0s.png",
-          "category": "Экшн",
-          "quantity": 1
-        },
-        {
-          "id": 2,
-          "name": "Marvel's Spider-Man 2",
-          "price": 4999,
-          "image": "https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/1c7b75d8ed9271516546560d219ad0b22ee0a263b4537bd8.png",
-          "category": "Экшн",
-          "quantity": 1
-        }
-      ],
-      "total": 8998,
-      "timestamp": "2025-10-06T23:05:18.930Z",
-      "status": "pending"
+// static/telegram.js
+if (window.Telegram && Telegram.WebApp) {
+  const tg = Telegram.WebApp;
+  tg.ready();
+
+  // Показать кнопку "Назад"
+  tg.BackButton.show();
+
+  tg.BackButton.onClick(() => {
+    if (window.history.length > 1) {
+      window.history.back(); // Назад по истории
+    } else {
+      tg.close(); // Закрыть WebApp, если истории нет
     }
-  }
-]
+  });
+}
