@@ -290,20 +290,7 @@ body {
   </div>
 </div>
 
-<script>
-if (window.Telegram && Telegram.WebApp) {
-  Telegram.WebApp.ready();
-  
-  // показываем кнопку "Назад"
-  Telegram.WebApp.BackButton.show();
-  
-  // обработчик клика по кнопке
-  Telegram.WebApp.onEvent('backButtonClicked', () => {
-    // возвращаемся на главную
-    window.location.href = 'index.html';
-  });
-}
-</script>
+
 
 
 </body>
