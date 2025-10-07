@@ -11,6 +11,7 @@ def index():
 def profile():
     return send_from_directory('.', 'profile.html')
 
+# telegram.js будет отдавать этот маршрут
 @app.route('/telegram.js')
 def telegram_js():
     return send_from_directory('.', 'telegram.js')
