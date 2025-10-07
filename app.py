@@ -7,6 +7,14 @@ app = Flask(__name__, static_folder='.')
 def index():
     return send_from_directory('.', 'index.html')
 
+@app.route('/profile.html')
+def profile():
+    return send_from_directory('.', 'profile.html')
+
+@app.route('/telegram.js')
+def telegram_js():
+    return send_from_directory('.', 'telegram.js')
+
 @app.route('/<path:path>')
 def static_files(path):
     if os.path.exists(path):
