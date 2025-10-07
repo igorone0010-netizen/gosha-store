@@ -11,7 +11,6 @@
   --card-bg: #1a1d2b;
   --text-light: #fff;
   --text-gray: #a3a3a3;
-  --accent: #0070ff;
   --radius: 14px;
 }
 
@@ -34,13 +33,14 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
 }
 
 /* Заголовок */
 .header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .header h1 {
   font-size: 22px;
@@ -51,13 +51,6 @@ body {
   font-size: 13px;
   color: var(--text-gray);
   margin: 2px 0 0;
-}
-.back-btn {
-  background: none;
-  border: none;
-  color: var(--text-light);
-  font-size: 24px;
-  cursor: pointer;
 }
 
 /* Карточки */
@@ -71,8 +64,12 @@ body {
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 10px;
+  cursor: pointer;
+  transition: 0.3s;
 }
-
+.card:hover {
+  background: #22263b;
+}
 .card i {
   font-size: 16px;
   opacity: 0.8;
@@ -100,6 +97,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   transition: 0.3s;
+  cursor: pointer;
 }
 .small-card:hover {
   background: #22263b;
@@ -116,14 +114,46 @@ body {
   font-size: 12px;
 }
 
-/* Нижняя панель */
-.bottom-nav {
-  display: flex;
-  align-items: center;
+/* Support (на всю ширину) */
+.support-card {
   background: var(--card-bg);
   border-radius: var(--radius);
-  padding: 8px 10px;
+  padding: 16px;
+  margin-top: 10px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.support-card:hover {
+  background: #22263b;
+}
+.support-card strong {
+  display: flex;
+  align-items: center;
   gap: 8px;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.support-card small {
+  color: var(--text-gray);
+  font-size: 12px;
+}
+
+/* Парящая нижняя панель */
+.bottom-nav {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
 }
 .bottom-nav input {
   flex: 1;
@@ -137,19 +167,27 @@ body {
   background: none;
   border: none;
   color: var(--text-light);
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
 }
 
+/* Иконки под панелью */
 .icons {
   display: flex;
   justify-content: space-around;
-  margin-top: 12px;
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
 }
-
 .icons i {
   font-size: 22px;
   opacity: 0.85;
+  transition: 0.3s;
+}
+.icons i:hover {
+  opacity: 1;
 }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -159,15 +197,8 @@ body {
 
   <div>
     <div class="header">
-      <div>
-        <h1 id="greeting">Привет!</h1>
-        <p>Рады тебя видеть</p>
-      </div>
-      <button class="back-btn" id="backBtn"><i class="fa-solid fa-arrow-left"></i></button>
-    </div>
-
-    <div class="card">
-      <i class="fa-solid fa-envelope"></i> Почта для чеков
+      <h1 id="greeting">Привет!</h1>
+      <p>Рады тебя видеть</p>
     </div>
 
     <div class="section-title">Данные от аккаунта</div>
@@ -183,27 +214,29 @@ body {
         <strong><i class="fa-brands fa-telegram"></i> Telegram</strong>
         <small>Наш канал с новостями</small>
       </div>
-      <div class="small-card">
-        <strong><i class="fa-solid fa-circle-question"></i> Support</strong>
-        <small>Если будут вопросы</small>
-      </div>
+    </div>
+
+    <div class="support-card">
+      <strong><i class="fa-solid fa-circle-question"></i> Support</strong>
+      <small>Если будут вопросы</small>
     </div>
   </div>
 
-  <div>
-    <div class="bottom-nav">
-      <button><i class="fa-solid fa-bars"></i></button>
-      <input type="text" placeholder="Поиск">
-      <button><i class="fa-solid fa-magnifying-glass"></i></button>
-    </div>
-    <div class="icons">
-      <i class="fa-solid fa-house"></i>
-      <i class="fa-solid fa-layer-group"></i>
-      <i class="fa-solid fa-bag-shopping"></i>
-      <i class="fa-solid fa-user"></i>
-    </div>
-  </div>
+</div>
 
+<!-- Парящая нижняя панель -->
+<div class="bottom-nav">
+  <button><i class="fa-solid fa-bars"></i></button>
+  <input type="text" placeholder="Поиск">
+  <button><i class="fa-solid fa-magnifying-glass"></i></button>
+</div>
+
+<!-- Иконки навигации -->
+<div class="icons">
+  <i class="fa-solid fa-house"></i>
+  <i class="fa-solid fa-layer-group"></i>
+  <i class="fa-solid fa-bag-shopping"></i>
+  <i class="fa-solid fa-user"></i>
 </div>
 
 <script>
@@ -213,11 +246,12 @@ if (window.Telegram && Telegram.WebApp) {
   if (user && user.first_name) {
     document.getElementById('greeting').textContent = `Привет, ${user.first_name}!`;
   }
-}
 
-document.getElementById('backBtn').addEventListener('click', () => {
-  window.location.href = 'index.html';
-});
+  Telegram.WebApp.BackButton.show();
+  Telegram.WebApp.onEvent('backButtonClicked', () => {
+    window.location.href = 'index.html';
+  });
+}
 </script>
 </body>
 </html>
