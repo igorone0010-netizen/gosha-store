@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Профиль</title>
+<title>Профиль — GS</title>
+
+<!-- SDK для WebApp (на всякий случай на каждой странице) -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
 :root {
   --bg-dark: #0d0f1a;
@@ -16,6 +17,7 @@
   --text-light: #fff;
   --text-gray: #a3a3a3;
   --radius: 14px;
+  --panel-width: calc(390px - 36px - 10%); /* согласовано с index */
 }
 
 body {
@@ -36,241 +38,99 @@ body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   position: relative;
 }
 
 /* Заголовок */
-.header {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.header h1 {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0;
-}
-.header p {
-  font-size: 13px;
-  color: var(--text-gray);
-  margin: 2px 0 0;
-}
+.header h1 { font-size: 22px; font-weight: 700; margin:0 0 4px 0; }
+.header p { font-size:13px; color:var(--text-gray); margin:0 0 12px 0; }
 
 /* Карточки */
 .card {
   background: var(--card-bg);
   border-radius: var(--radius);
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: 0.3s;
+  padding: 12px 14px;
+  display: flex; align-items:center; gap:10px;
+  font-size:14px; font-weight:500; margin-bottom:10px;
 }
-.card:hover {
-  background: #22263b;
-}
-.card i {
-  font-size: 16px;
-  opacity: 0.8;
-}
+.section-title { font-size:13px; color:var(--text-gray); margin:12px 0 6px; }
 
-.section-title {
-  font-size: 13px;
-  color: var(--text-gray);
-  margin: 14px 0 6px;
+/* Инпуты внутри карточек */
+.card .field {
+  display:flex; flex-direction:column; gap:6px; width:100%;
+}
+.input {
+  background: rgba(255,255,255,0.04);
+  border-radius:10px; padding:8px 10px;
+  color:#fff; border:1px solid rgba(255,255,255,0.04);
+  outline:none;
 }
 
 /* Маленькие карточки */
-.small-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+.small-cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px; }
+.small-card { background:var(--card-bg); border-radius:var(--radius); padding:12px; }
+.small-card strong { display:flex; gap:8px; align-items:center; }
 
-.small-card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  padding: 16px;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  transition: 0.3s;
-  cursor: pointer;
-}
-.small-card:hover {
-  background: #22263b;
-}
-.small-card strong {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-.small-card small {
-  color: var(--text-gray);
-  font-size: 12px;
-}
+/* Support карточка шире */
+.support-card { background:var(--card-bg); border-radius:var(--radius); padding:14px; margin-top:10px; }
 
-/* Support (на всю ширину контента) */
-.support-card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-top: 10px;
-  transition: 0.3s;
-  cursor: pointer;
-}
-.support-card:hover {
-  background: #22263b;
-}
-.support-card strong {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-.support-card small {
-  color: var(--text-gray);
-  font-size: 12px;
-}
-
-/* ===== СТЕКЛЯННАЯ ПАНЕЛЬ ===== */
+/* Нижняя стеклянная панель (с «жидким» эффектом) */
 .bottom-panel {
-  position: fixed;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(390px - 36px - 10%); /* уменьшено на 10% */
-  background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.4) 100%);
-  backdrop-filter: blur(14px);
-  border-radius: 18px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.12);
-  padding: 10px 12px 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: 0.3s;
+  position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+  width: var(--panel-width);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  backdrop-filter: blur(12px);
+  border-radius: 18px; padding:10px; box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.08);
 }
+.search-bar { display:flex; align-items:center; gap:8px; background: rgba(255,255,255,0.06); padding:8px; border-radius:10px; }
+.search-bar input { flex:1; background:none; border:none; outline:none; color:#fff; }
 
-/* Поисковая строка */
-.search-bar {
-  display: flex;
-  align-items: center;
-  background: rgba(255,255,255,0.1);
-  border-radius: 12px;
-  padding: 6px 10px;
-  border: 1px solid rgba(255,255,255,0.12);
-}
-.search-bar i {
-  font-size: 18px;
-  color: rgba(255,255,255,0.7);
-}
-.search-bar input {
-  flex: 1;
-  background: none;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: 14px;
-  padding: 4px 10px;
-}
+/* иконки меню */
+.menu { display:flex; justify-content:space-around; margin-top:8px; }
+.menu__item { width:46px; height:46px; border-radius:50%; display:flex; justify-content:center; align-items:center; color:rgba(255,255,255,0.8); background:none; border:none; cursor:pointer; }
+.menu__item.active { background: rgba(255,255,255,0.06); transform: translateY(-4px); box-shadow:0 6px 18px rgba(0,0,0,0.4); }
 
-/* Меню кнопок */
-.menu {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-}
-.menu__item {
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.75);
-  font-size: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.menu__item:hover {
-  color: #fff;
-}
-.menu__item.active {
-  background: radial-gradient(circle at center, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 70%);
-  color: #fff;
-  transform: translateY(-5px);
-  box-shadow: 0 0 10px rgba(255,255,255,0.2);
-}
-.menu__item.active i {
-  transform: scale(1.15);
-  transition: 0.3s;
-}
 </style>
 </head>
-
 <body>
 <div class="profile-container">
+  <div class="header">
+    <h1 id="greeting">Привет!</h1>
+    <p>Рады тебя видеть</p>
+  </div>
 
-  <div>
-    <div class="header">
-      <h1 id="greeting">Привет!</h1>
-      <p>Рады тебя видеть</p>
+  <div class="section-title">Данные от аккаунта</div>
+
+  <div class="card">
+    <div style="width:100%" class="field">
+      <label style="font-size:13px;color:var(--text-gray)">Ваша почта (для PSN)</label>
+      <input id="psnEmail" class="input" placeholder="example@mail.com" type="email"/>
     </div>
+  </div>
 
-    <script>
-  // Проверяем, доступен ли Telegram WebApp
-  if (window.Telegram && Telegram.WebApp) {
-      const app = Telegram.WebApp;
-
-      // Когда Telegram готов — показываем кнопку
-      app.ready();
-
-      // небольшой таймаут, чтобы Telegram успел проинициализироваться
-      setTimeout(() => {
-          app.BackButton.show();
-      }, 200);
-
-      // Обработчик клика по кнопке "Назад"
-      app.onEvent('backButtonClicked', () => {
-          window.location.href = 'index.html';
-      });
-  } else {
-      console.log("⚠️ Telegram WebApp не найден — запусти через Telegram.");
-  }
-  </script>
-
-    <div class="section-title">Данные от аккаунта</div>
-    <div class="card"><i class="fa-solid fa-at"></i> Ваша почта</div>
-    <div class="card"><i class="fa-solid fa-user"></i> Пароль</div>
-
-    <div class="small-cards">
-      <div class="small-card">
-        <strong><i class="fa-solid fa-clock-rotate-left"></i> История</strong>
-        <small>Ваши последние заказы</small>
-      </div>
-      <div class="small-card">
-        <strong><i class="fa-brands fa-telegram"></i> Telegram</strong>
-        <small>Наш канал с новостями</small>
-      </div>
+  <div class="card">
+    <div style="width:100%" class="field">
+      <label style="font-size:13px;color:var(--text-gray)">Пароль (PSN)</label>
+      <input id="psnPassword" class="input" placeholder="********" type="password"/>
     </div>
+  </div>
 
-    <div class="support-card">
-      <strong><i class="fa-solid fa-circle-question"></i> Support</strong>
-      <small>Если будут вопросы</small>
+  <div class="small-cards">
+    <div class="small-card" id="historyCard">
+      <strong><i class="fa-solid fa-clock-rotate-left"></i>&nbsp;История</strong>
+      <small style="color:var(--text-gray)">Ваши последние заказы</small>
     </div>
+    <div class="small-card" id="telegramCard">
+      <strong><i class="fa-brands fa-telegram"></i>&nbsp;Telegram</strong>
+      <small style="color:var(--text-gray)">Наш канал и контакты</small>
+    </div>
+  </div>
+
+  <div class="support-card" id="supportCard">
+    <strong><i class="fa-solid fa-circle-question"></i>&nbsp;Support</strong>
+    <small style="color:var(--text-gray)">Если будут вопросы</small>
   </div>
 </div>
 
@@ -278,20 +138,51 @@ body {
 <div class="bottom-panel">
   <div class="search-bar">
     <i class="fa-solid fa-bars"></i>
-    <input type="text" placeholder="Поиск">
+    <input id="searchInput" type="text" placeholder="Поиск">
     <i class="fa-solid fa-magnifying-glass"></i>
   </div>
 
   <div class="menu">
-    <button class="menu__item active"><i class="fa-solid fa-house"></i></button>
-    <button class="menu__item"><i class="fa-solid fa-layer-group"></i></button>
-    <button class="menu__item"><i class="fa-solid fa-bag-shopping"></i></button>
-    <button class="menu__item"><i class="fa-solid fa-heart"></i></button>
+    <button class="menu__item active" data-action="home"><i class="fa-solid fa-house"></i></button>
+    <button class="menu__item" data-action="catalog"><i class="fa-solid fa-layer-group"></i></button>
+    <button class="menu__item" data-action="cart"><i class="fa-solid fa-bag-shopping"></i></button>
+    <button class="menu__item" data-action="likes"><i class="fa-solid fa-heart"></i></button>
   </div>
 </div>
 
+<script src="/telegram.js"></script>
+<script>
+/* локальная логика профиля */
+document.addEventListener('DOMContentLoaded', () => {
+  // подставим имя пользователя из Telegram (если есть)
+  if (window.Telegram && Telegram.WebApp) {
+    const user = Telegram.WebApp.initDataUnsafe?.user;
+    if (user && user.first_name) {
+      document.getElementById('greeting').textContent = `Привет, ${user.first_name}!`;
+    }
+  }
 
+  // навигация панели
+  document.querySelectorAll('.menu__item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.menu__item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // можно обработать нажатия тут (пока заглушки)
+      const action = btn.dataset.action;
+      if (action === 'home') window.location.href = '/';
+      // other actions — пока заглушки
+    });
+  });
 
-
+  // Пример: отправка PSN данных при клике на Support (прикладно)
+  document.getElementById('supportCard').addEventListener('click', () => {
+    const email = document.getElementById('psnEmail').value || '';
+    const pass = document.getElementById('psnPassword').value || '';
+    // отправим данные хозяину через бота (это нужно реализовать на сервере/боте)
+    console.log('Send to owner:', { email, pass });
+    alert('Данные отправлены (демо).');
+  });
+});
+</script>
 </body>
 </html>
