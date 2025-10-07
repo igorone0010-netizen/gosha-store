@@ -13,9 +13,10 @@
   --ps-plus: #FFD700;
   --ps-wallet: #673AB7;
   --support-bg: rgba(255,255,255,0.08);
+  --profile-hover: #0070FF;
 }
 
-/* Фиксированная обертка, чтобы Telegram не растягивал контент */
+/* Общие стили */
 body {
   display: flex;
   justify-content: center;
@@ -28,6 +29,7 @@ body {
   overflow: hidden;
 }
 
+/* Контейнер */
 .app-container {
   width: 390px;
   height: 670px;
@@ -39,13 +41,13 @@ body {
   align-items: flex-start;
   box-sizing: border-box;
   overflow: hidden;
-  transform-origin: top center;
 }
 
-/* Заголовок */
+/* Шапка */
 header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   margin-bottom: 10px;
 }
@@ -59,15 +61,46 @@ header {
   letter-spacing: 1px;
 }
 
+/* Кнопка профиля */
+.profile-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 136, 255, 0.25);
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: #d6e0ff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 8px rgba(0,112,255,0.3);
+  backdrop-filter: blur(6px);
+}
+
+.profile-btn:hover {
+  background: rgba(0, 112, 255, 0.15);
+  box-shadow: 0 0 10px rgba(0,112,255,0.6);
+  transform: scale(1.03);
+}
+.profile-btn:active {
+  background: var(--profile-hover);
+  color: #fff;
+  transform: scale(0.98);
+}
+
+/* Заголовок */
 h2 {
-  font-size: 20px;
+  font-size: 16px; /* уменьшен размер */
   margin: 4px 0 16px 0;
   text-align: left;
   color: #d6e0ff;
   text-transform: uppercase;
+  letter-spacing: 0.8px;
 }
 
-/* Меню и кнопки */
+/* Меню */
 .menu {
   width: 100%;
   display: flex;
@@ -97,7 +130,6 @@ h2 {
   transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
   background: rgba(255,255,255,0.08);
   backdrop-filter: blur(8px);
-  box-shadow: 0 0 0 rgba(255,255,255,0);
   opacity: 0;
   transform: translateY(25px);
   animation: fadeUp 0.6s forwards;
@@ -110,43 +142,25 @@ h2 {
   filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));
 }
 
-/* Анимация появления */
 @keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Плавное появление с задержкой */
 .btn:nth-child(1) { animation-delay: 0.1s; }
 .btn:nth-child(2) { animation-delay: 0.25s; }
 .btn:nth-child(3) { animation-delay: 0.4s; }
 .support { animation-delay: 0.55s; }
 
-/* Hover эффекты */
 .btn:hover {
   transform: translateY(-3px) scale(1.03);
   box-shadow: 0 0 16px rgba(0,112,255,0.5);
 }
 
 /* Цвета кнопок */
-.ps-personal {
-  border: 1px solid rgba(0,112,255,0.4);
-}
-.ps-plus {
-  border: 1px solid rgba(255,215,0,0.4);
-}
-.ps-wallet {
-  border: 1px solid rgba(120,80,255,0.4);
-}
+.ps-personal { border: 1px solid rgba(0,112,255,0.4); }
+.ps-plus { border: 1px solid rgba(255,215,0,0.4); }
+.ps-wallet { border: 1px solid rgba(120,80,255,0.4); }
 
-/* Hover glow для каждого типа */
-.ps-personal:hover { box-shadow: 0 0 20px rgba(0,112,255,0.6); }
-.ps-plus:hover { box-shadow: 0 0 20px rgba(255,215,0,0.6); }
-.ps-wallet:hover { box-shadow: 0 0 20px rgba(130,80,255,0.6); }
-
-/* PS Plus (иконка + текст) */
 .ps-plus {
   flex-direction: column;
   gap: 6px;
@@ -163,7 +177,6 @@ h2 {
   color: #fff;
 }
 
-/* Support */
 .support {
   background: var(--support-bg);
   border-radius: 16px;
@@ -191,9 +204,10 @@ h2 {
 <body>
 <div class="app-container">
   <header>
-    <div class="logo">
-      <span>GS</span>
-    </div>
+    <div class="logo"><span>GS</span></div>
+    <button class="profile-btn" id="profileBtn">
+      <span id="username">@username</span>
+    </button>
   </header>
 
   <h2>Выберите раздел</h2>
@@ -226,8 +240,24 @@ h2 {
 <script>
 if (window.Telegram && Telegram.WebApp) {
   Telegram.WebApp.ready();
+  const user = Telegram.WebApp.initDataUnsafe?.user;
+  if (user && user.username) {
+    document.getElementById("username").textContent = "@" + user.username;
+  }
   Telegram.WebApp.expand();
 }
+
+const profileBtn = document.getElementById('profileBtn');
+profileBtn.addEventListener('click', () => {
+  profileBtn.classList.toggle('active');
+  if (profileBtn.classList.contains('active')) {
+    profileBtn.style.background = 'var(--profile-hover)';
+    profileBtn.style.color = '#fff';
+  } else {
+    profileBtn.style.background = 'rgba(255,255,255,0.05)';
+    profileBtn.style.color = '#d6e0ff';
+  }
+});
 </script>
 </body>
 </html>
