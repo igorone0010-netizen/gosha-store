@@ -8,16 +8,12 @@
     :root {
       --bg-main: #0d0f1a;
       --text-color: #ffffff;
-
       --ps-blue: #0057B8;
       --ps-blue-hover: #0070FF;
-
       --ps-plus: #FFD700;
       --ps-plus-hover: #FFE55C;
-
       --ps-wallet: #673AB7;
       --ps-wallet-hover: #7E57C2;
-
       --support-bg: #1c1e25;
       --support-hover: #2b2f3a;
     }
@@ -27,18 +23,15 @@
       color: var(--text-color);
       font-family: "Segoe UI", Arial, sans-serif;
       margin: 0;
+      padding: 16px;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     .app {
       width: 360px;
       max-width: 90%;
-      background: transparent;
-      text-align: center;
       animation: fadeIn 0.8s ease-in-out;
     }
 
@@ -49,9 +42,8 @@
 
     header {
       display: flex;
-      justify-content: center;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 8px;
     }
 
     .logo {
@@ -68,43 +60,47 @@
     h2 {
       font-size: 18px;
       color: #d0d0d0;
-      margin-bottom: 20px;
+      margin: 10px 0 16px 0;
+      text-align: left;
     }
 
     .menu {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px; /* уменьшено расстояние между рядами */
     }
 
     .row {
       display: flex;
-      gap: 12px;
+      justify-content: center;
+      gap: 10px; /* уменьшено расстояние между кнопками */
+      width: 100%;
     }
 
     .btn {
       flex: 1;
       border: none;
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 14px;
+      height: 75px; /* чуть ниже, чтобы визуально сблизить */
       font-size: 16px;
       font-weight: 600;
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       cursor: pointer;
       transition: all 0.25s ease;
       opacity: 0;
       transform: translateY(30px);
       animation: fadeUp 0.6s ease forwards;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     }
 
     .btn svg, .btn img {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
     }
 
     .row:nth-child(1) .btn:nth-child(1) { animation-delay: 0.1s; }
@@ -117,36 +113,44 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Цвета кнопок */
     .ps-personal { background: var(--ps-blue); }
     .ps-personal:hover { background: var(--ps-blue-hover); }
 
     .ps-plus { background: var(--ps-plus); color: #111; }
     .ps-plus:hover { background: var(--ps-plus-hover); }
 
-    .ps-wallet { background: var(--ps-wallet); }
+    .ps-wallet {
+      background: var(--ps-wallet);
+      width: 100%;
+    }
     .ps-wallet:hover { background: var(--ps-wallet-hover); }
 
     .support {
       background: var(--support-bg);
       color: #fff;
-      border-radius: 16px;
-      padding: 18px;
-      text-align: center;
-      width: 100%;
+      border-radius: 14px;
+      height: 75px;
       font-weight: 600;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       opacity: 0;
       transform: translateY(30px);
       animation: fadeUp 0.6s ease forwards;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     }
 
     .support:hover { background: var(--support-hover); }
 
     .support small {
       color: #a9a9a9;
-      display: block;
-      margin-top: 6px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 400;
+      margin-top: 3px;
     }
   </style>
 </head>
@@ -175,22 +179,25 @@
         </button>
       </div>
 
-      <button class="btn ps-wallet">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
-          <path d="M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2H2V7zm0 4h20v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z"/>
-        </svg>
-        Пополнение кошелька
-      </button>
+      <div class="row">
+        <button class="btn ps-wallet">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
+            <path d="M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2H2V7zm0 4h20v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z"/>
+          </svg>
+          Пополнение кошелька
+        </button>
+      </div>
 
-      <div class="support">
-        Support
-        <small>Не нашли нужный товар?<br>Проблема с заказом? Напишите сюда!</small>
+      <div class="row">
+        <div class="btn support">
+          Support
+          <small>Не нашли нужный товар?<br>Проблема с заказом?</small>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Telegram Mini App API
     if (window.Telegram && Telegram.WebApp) {
       Telegram.WebApp.ready();
       Telegram.WebApp.expand();
