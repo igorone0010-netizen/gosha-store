@@ -16,6 +16,8 @@
   --valorant-red: #FF4655;
   --support-bg: rgba(255,255,255,0.08);
   --profile-hover: #0070FF;
+  --profile-bg: #0d0f1a;
+  --card-bg: #1a1d2b;
 }
 
 /* Общие стили */
@@ -31,17 +33,14 @@ body {
   overflow: hidden;
 }
 
-/* Контейнер */
 .app-container {
   width: 390px;
   height: 670px;
   background: var(--bg-main);
   padding: 16px;
   border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   box-sizing: border-box;
+  position: relative;
   overflow: hidden;
 }
 
@@ -117,7 +116,7 @@ h2 {
   width: 100%;
 }
 
-/* Базовый стиль кнопок */
+/* Кнопки */
 .btn {
   flex: 1;
   border: none;
@@ -134,9 +133,6 @@ h2 {
   transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
   background: rgba(255,255,255,0.08);
   backdrop-filter: blur(8px);
-  opacity: 0;
-  transform: translateY(25px);
-  animation: fadeUp 0.6s forwards;
 }
 
 .btn img {
@@ -146,33 +142,22 @@ h2 {
   filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));
 }
 
-@keyframes fadeUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Анимации ряды */
-.btn:nth-child(1) { animation-delay: 0.1s; }
-.btn:nth-child(2) { animation-delay: 0.25s; }
-.btn:nth-child(3) { animation-delay: 0.4s; }
-.support { animation-delay: 0.55s; }
-
 .btn:hover {
   transform: translateY(-3px) scale(1.03);
   box-shadow: 0 0 16px rgba(0,112,255,0.5);
 }
 
-/* Цвета и рамки */
+/* Цвета */
 .ps-personal { border: 1px solid rgba(0,112,255,0.4); }
 .ps-plus     { border: 1px solid rgba(255,215,0,0.4); }
 .ps-wallet   { border: 1px solid rgba(120,80,255,0.4); }
 .gamepass    { border: 1px solid rgba(16,124,16,0.5); }
 .valorant    { border: 1px solid rgba(255,70,85,0.5); }
 
-/* PS Plus специфично */
+/* PS Plus */
 .ps-plus {
   flex-direction: column;
   gap: 4px;
-  color: #fff;
 }
 .ps-plus img {
   width: 46px;
@@ -185,19 +170,16 @@ h2 {
   color: #fff;
 }
 
-/* Game Pass и Valorant логотипы и стили */
+/* Game Pass и Valorant */
 .gamepass, .valorant {
   flex-direction: column;
   gap: 4px;
-  color: #fff;
 }
-
 .gamepass img {
   width: 100px;
   height: auto;
   filter: drop-shadow(0 0 5px rgba(255,255,255,0.4));
 }
-
 .valorant img {
   width: 60px;
   height: auto;
@@ -218,82 +200,75 @@ h2 {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-.support:hover {
-  background: rgba(255,255,255,0.15);
-}
+.support:hover { background: rgba(255,255,255,0.15); }
 .support small {
   color: #a9a9a9;
   display: block;
   margin-top: 4px;
-  font-size: 13px;
 }
 </style>
 </head>
 <body>
 <div class="app-container">
-  <header>
-    <div class="logo"><span>GS</span></div>
-    <button class="profile-btn" id="profileBtn">
-      <span id="username">@username</span>
-    </button>
-  </header>
-
-  <h2>Выберите раздел</h2>
-
-  <div class="menu">
-    <div class="row">
-      <button class="btn ps-personal">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg" alt="PlayStation">
-        PlayStation Личный
+  <!-- Главное меню -->
+  <div class="section main-menu active">
+    <header>
+      <div class="logo"><span>GS</span></div>
+      <button class="profile-btn" id="openProfile">
+        <span id="username">@username</span>
       </button>
-      <button class="btn ps-plus">
-        <img src="https://raw.githubusercontent.com/igorone0010-netizen/gosha-store/main/PlayStation%20Plus%20simple%20Logo%20Vector.svg%20.png" alt="PS Plus">
-        <span>PS Plus</span>
-      </button>
-    </div>
+    </header>
 
-    <button class="btn ps-wallet">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg" alt="Wallet">
-      Пополнение кошелька
-    </button>
+    <h2>Выберите раздел</h2>
 
-    <div class="row">
-      <button class="btn gamepass">
-        <img src="https://cms-assets.xboxservices.com/assets/aa/5b/aa5b0eb8-4950-4f28-88d5-12cf02052321.svg" alt="Game Pass">
-      </button>
-      <button class="btn valorant">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/250px-Valorant_logo_-_pink_color_version.svg.png" alt="Valorant">
-      </button>
-    </div>
+    <div class="menu">
+      <div class="row">
+        <button class="btn ps-personal">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg">
+          PlayStation Личный
+        </button>
+        <button class="btn ps-plus">
+          <img src="https://raw.githubusercontent.com/igorone0010-netizen/gosha-store/main/PlayStation%20Plus%20simple%20Logo%20Vector.svg%20.png">
+          <span>PS Plus</span>
+        </button>
+      </div>
 
-    <div class="support">
-      <strong>Support</strong>
-      <small>Не нашли нужный товар? Остались вопросы?<br>Проблема с заказом? Напишите сюда!</small>
+      <button class="btn ps-wallet">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg">
+        Пополнение кошелька
+      </button>
+
+      <div class="row">
+        <button class="btn gamepass">
+          <img src="https://cms-assets.xboxservices.com/assets/aa/5b/aa5b0eb8-4950-4f28-88d5-12cf02052321.svg">
+        </button>
+        <button class="btn valorant">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/250px-Valorant_logo_-_pink_color_version.svg.png">
+        </button>
+      </div>
+
+      <div class="support">
+        <strong>Support</strong>
+        <small>Не нашли нужный товар?<br>Проблема с заказом? Напишите сюда!</small>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- 🔹 Новый скрипт -->
 <script>
+const openProfile = document.querySelector('#openProfile');
+openProfile.addEventListener('click', () => {
+  window.location.href = 'profile.html';
+});
+
 if (window.Telegram && Telegram.WebApp) {
   Telegram.WebApp.ready();
   const user = Telegram.WebApp.initDataUnsafe?.user;
-  if (user && user.username) {
-    document.getElementById("username").textContent = "@" + user.username;
+  if (user) {
+    document.getElementById('username').textContent = '@' + user.username;
   }
-  Telegram.WebApp.expand();
 }
-
-const profileBtn = document.getElementById('profileBtn');
-profileBtn.addEventListener('click', () => {
-  profileBtn.classList.toggle('active');
-  if (profileBtn.classList.contains('active')) {
-    profileBtn.style.background = 'var(--profile-hover)';
-    profileBtn.style.color = '#fff';
-  } else {
-    profileBtn.style.background = 'rgba(255,255,255,0.05)';
-    profileBtn.style.color = '#d6e0ff';
-  }
-});
 </script>
 </body>
 </html>
