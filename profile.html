@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Профиль</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-dark: #0d0f1a;
+  --card-bg: #1a1d2b;
+  --text-light: #fff;
+  --text-gray: #a3a3a3;
+  --accent: #0070ff;
+  --radius: 14px;
+}
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-light);
+  font-family: "Orbitron", sans-serif;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+}
+
+.profile-container {
+  width: 390px;
+  height: 670px;
+  padding: 18px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Заголовок */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+.header p {
+  font-size: 13px;
+  color: var(--text-gray);
+  margin: 2px 0 0;
+}
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Карточки */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.card i {
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.section-title {
+  font-size: 13px;
+  color: var(--text-gray);
+  margin: 14px 0 6px;
+}
+
+/* Маленькие карточки */
+.small-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.small-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: 0.3s;
+}
+.small-card:hover {
+  background: #22263b;
+}
+.small-card strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.small-card small {
+  color: var(--text-gray);
+  font-size: 12px;
+}
+
+/* Нижняя панель */
+.bottom-nav {
+  display: flex;
+  align-items: center;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  gap: 8px;
+}
+.bottom-nav input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-light);
+  font-size: 14px;
+}
+.bottom-nav button {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.icons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 12px;
+}
+
+.icons i {
+  font-size: 22px;
+  opacity: 0.85;
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="profile-container">
+
+  <div>
+    <div class="header">
+      <div>
+        <h1 id="greeting">Привет!</h1>
+        <p>Рады тебя видеть</p>
+      </div>
+      <button class="back-btn" id="backBtn"><i class="fa-solid fa-arrow-left"></i></button>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-envelope"></i> Почта для чеков
+    </div>
+
+    <div class="section-title">Данные от аккаунта</div>
+    <div class="card"><i class="fa-solid fa-at"></i> Ваша почта</div>
+    <div class="card"><i class="fa-solid fa-user"></i> Пароль</div>
+
+    <div class="small-cards">
+      <div class="small-card">
+        <strong><i class="fa-solid fa-clock-rotate-left"></i> История</strong>
+        <small>Ваши последние заказы в сервисе</small>
+      </div>
+      <div class="small-card">
+        <strong><i class="fa-brands fa-telegram"></i> Telegram</strong>
+        <small>Наш канал с новостями</small>
+      </div>
+      <div class="small-card">
+        <strong><i class="fa-solid fa-circle-question"></i> Support</strong>
+        <small>Если будут вопросы</small>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="bottom-nav">
+      <button><i class="fa-solid fa-bars"></i></button>
+      <input type="text" placeholder="Поиск">
+      <button><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+    <div class="icons">
+      <i class="fa-solid fa-house"></i>
+      <i class="fa-solid fa-layer-group"></i>
+      <i class="fa-solid fa-bag-shopping"></i>
+      <i class="fa-solid fa-user"></i>
+    </div>
+  </div>
+
+</div>
+
+<script>
+if (window.Telegram && Telegram.WebApp) {
+  Telegram.WebApp.ready();
+  const user = Telegram.WebApp.initDataUnsafe?.user;
+  if (user && user.first_name) {
+    document.getElementById('greeting').textContent = `Привет, ${user.first_name}!`;
+  }
+}
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  window.location.href = 'index.html';
+});
+</script>
+</body>
+</html>
