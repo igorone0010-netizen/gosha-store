@@ -12,6 +12,8 @@
   --ps-blue: #0057B8;
   --ps-plus: #FFD700;
   --ps-wallet: #673AB7;
+  --gp-green: #107C10;
+  --valorant-red: #FF4655;
   --support-bg: rgba(255,255,255,0.08);
   --profile-hover: #0070FF;
 }
@@ -49,7 +51,7 @@ header {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .logo span {
@@ -92,8 +94,8 @@ header {
 
 /* Заголовок */
 h2 {
-  font-size: 16px; /* уменьшен размер */
-  margin: 4px 0 16px 0;
+  font-size: 16px;
+  margin: 4px 0 10px 0;
   text-align: left;
   color: #d6e0ff;
   text-transform: uppercase;
@@ -105,27 +107,29 @@ h2 {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 
+/* Ряды кнопок */
 .row {
   display: flex;
-  gap: 12px;
+  gap: 6px;
   width: 100%;
 }
 
+/* Базовый стиль кнопок */
 .btn {
   flex: 1;
   border: none;
   border-radius: 18px;
-  padding: 16px 12px;
+  padding: 14px 10px;
   font-size: 14px;
   font-weight: 600;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 6px;
   cursor: pointer;
   transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
   background: rgba(255,255,255,0.08);
@@ -146,6 +150,7 @@ h2 {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Анимации ряды */
 .btn:nth-child(1) { animation-delay: 0.1s; }
 .btn:nth-child(2) { animation-delay: 0.25s; }
 .btn:nth-child(3) { animation-delay: 0.4s; }
@@ -156,19 +161,22 @@ h2 {
   box-shadow: 0 0 16px rgba(0,112,255,0.5);
 }
 
-/* Цвета кнопок */
+/* Цвета и рамки */
 .ps-personal { border: 1px solid rgba(0,112,255,0.4); }
-.ps-plus { border: 1px solid rgba(255,215,0,0.4); }
-.ps-wallet { border: 1px solid rgba(120,80,255,0.4); }
+.ps-plus     { border: 1px solid rgba(255,215,0,0.4); }
+.ps-wallet   { border: 1px solid rgba(120,80,255,0.4); }
+.gamepass    { border: 1px solid rgba(16,124,16,0.5); }
+.valorant    { border: 1px solid rgba(255,70,85,0.5); }
 
+/* PS Plus специфично */
 .ps-plus {
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   color: #fff;
 }
 .ps-plus img {
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   filter: drop-shadow(0 0 6px rgba(255,255,255,0.4));
 }
 .ps-plus span {
@@ -177,10 +185,30 @@ h2 {
   color: #fff;
 }
 
+/* Game Pass и Valorant логотипы и стили */
+.gamepass, .valorant {
+  flex-direction: column;
+  gap: 4px;
+  color: #fff;
+}
+
+.gamepass img {
+  width: 100px;
+  height: auto;
+  filter: drop-shadow(0 0 5px rgba(255,255,255,0.4));
+}
+
+.valorant img {
+  width: 60px;
+  height: auto;
+  filter: drop-shadow(0 0 8px rgba(255,192,203,0.5));
+}
+
+/* Support */
 .support {
   background: var(--support-bg);
   border-radius: 16px;
-  padding: 18px;
+  padding: 14px;
   text-align: center;
   transition: background 0.3s;
   font-size: 13px;
@@ -196,7 +224,7 @@ h2 {
 .support small {
   color: #a9a9a9;
   display: block;
-  margin-top: 6px;
+  margin-top: 4px;
   font-size: 13px;
 }
 </style>
@@ -218,7 +246,6 @@ h2 {
         <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg" alt="PlayStation">
         PlayStation Личный
       </button>
-
       <button class="btn ps-plus">
         <img src="https://raw.githubusercontent.com/igorone0010-netizen/gosha-store/main/PlayStation%20Plus%20simple%20Logo%20Vector.svg%20.png" alt="PS Plus">
         <span>PS Plus</span>
@@ -229,6 +256,15 @@ h2 {
       <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg" alt="Wallet">
       Пополнение кошелька
     </button>
+
+    <div class="row">
+      <button class="btn gamepass">
+        <img src="https://cms-assets.xboxservices.com/assets/aa/5b/aa5b0eb8-4950-4f28-88d5-12cf02052321.svg" alt="Game Pass">
+      </button>
+      <button class="btn valorant">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/250px-Valorant_logo_-_pink_color_version.svg.png" alt="Valorant">
+      </button>
+    </div>
 
     <div class="support">
       <strong>Support</strong>
