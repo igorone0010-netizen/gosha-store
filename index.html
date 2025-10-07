@@ -1,224 +1,122 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GoshaStore</title>
-  <style>
-    :root {
-      /* Основные цвета */
-      --bg-main: #0d0f1a;
-      --text-color: #ffffff;
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>GoshaStore — Главное</title>
+<style>
+:root{
+  --bg-start: #f2f6fb;
+  --bg-end: #e8f2ff;
+  --ps-blue: #0070D1;
+  --ps-blue-dark: #0057A8;
+  --ps-plus: #FFB800;
+  --ps-wallet: #673AB7;
+  --support-gray: #333333;
+  --card-radius: 14px;
+  --tile-width: 320px;
+  --tile-height: 96px;
+  --gap: 16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Segoe UI,Arial,sans-serif}
+html,body{height:100%}
+body{background:linear-gradient(180deg,var(--bg-start),var(--bg-end));display:flex;align-items:flex-start;justify-content:center;padding:28px;color:#0b1220}
+.container{width:100%;max-width:420px;}
+.header{text-align:center;margin-bottom:22px}
+.gs-logo{font-weight:800;font-size:36px;display:inline-block;padding:10px 18px;border-radius:12px;
+  background:linear-gradient(90deg,var(--ps-blue),#5c2bff);
+  color:white;
+  box-shadow:0 8px 30px rgba(92,43,255,0.15),0 2px 6px rgba(7,20,60,0.12);
+  transform:translateY(-6px);
+  animation:logoIn .7s ease forwards;
+}
+@keyframes logoIn{from{opacity:0;transform:translateY(-20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 
-      /* PlayStation */
-      --ps-blue: #0057B8;
-      --ps-blue-hover: #0070FF;
+.grid{display:grid;grid-template-columns:repeat(2,1fr);grid-gap:var(--gap);justify-items:center;}
+.tile{width:100%;max-width:var(--tile-width);height:var(--tile-height);border-radius:var(--card-radius);display:flex;align-items:center;gap:14px;padding:16px;position:relative;overflow:hidden;color:white;box-shadow:0 8px 20px rgba(11,18,32,0.08);transform:translateY(18px);opacity:0;animation:fadeUp .6s ease forwards;}
+.tile img.icon{width:40px;height:40px;flex-shrink:0}
+.tile .label{font-size:18px;font-weight:700;text-align:left}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
 
-      /* PS Plus */
-      --ps-plus: #FFD700;
-      --ps-plus-hover: #FFE55C;
+.tile::after{content:'';position:absolute;left:-120%;top:0;width:40%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.35),rgba(255,255,255,0.05));transform:skewX(-20deg) translateX(0);transition:transform .9s cubic-bezier(.2,.9,.2,1);opacity:0}
+.tile:hover::after{transform:translateX(300%);opacity:1}
+.tile:hover{transform:translateY(-6px) scale(1.02)}
 
-      /* Пополнение кошелька */
-      --ps-wallet: #673AB7;
-      --ps-wallet-hover: #7E57C2;
+/* specific colors */
+.ps-personal{background:linear-gradient(180deg,var(--ps-blue),var(--ps-blue-dark));}
+.ps-plus{background:linear-gradient(180deg,var(--ps-plus),#ffd64d);color:#111}
+.ps-wallet{background:linear-gradient(180deg,var(--ps-wallet),#5a1fb5)}
+.support{background:linear-gradient(180deg,#3b3b3b,var(--support-gray))}
 
-      /* Steam */
-      --steam-top: #171A21;
-      --steam-bottom: #2A475E;
+/* layout: 2-1-1 fixed even on mobile */
+.row-1{grid-column:1 / -1;display:grid;grid-template-columns:repeat(2,1fr);grid-gap:var(--gap)}
+.row-2{grid-column:1 / -1;display:flex;justify-content:center}
+.row-3{grid-column:1 / -1;display:flex;justify-content:center}
+.tile.single{max-width:calc(var(--tile-width) * 2 + var(--gap));width:100%}
 
-      /* FIFA */
-      --fifa-blue: #0098EA;
-      --fifa-blue-hover: #00B4FF;
+/* animation delays */
+.tile:nth-child(1){animation-delay:.18s}
+.tile:nth-child(2){animation-delay:.28s}
+.tile:nth-child(3){animation-delay:.38s}
+.tile:nth-child(4){animation-delay:.48s}
 
-      /* GamePass */
-      --gamepass-green: #107C10;
-      --gamepass-hover: #23A123;
+/* small screens keep fixed layout, center content */
+@media (max-width:420px){ .container{padding:6px} .tile{max-width:360px} .tile.single{max-width:360px} }
 
-      /* Valorant */
-      --valorant-red: #FF4655;
-      --valorant-hover: #FF5F6E;
-
-      /* Сервисы */
-      --services-brown: #5E4636;
-      --services-hover: #72594A;
-
-      /* Nintendo */
-      --nintendo-red: #E60012;
-      --nintendo-hover: #FF4D5A;
-
-      /* Support */
-      --support-bg: #1c1e25;
-      --support-hover: #2b2f3a;
-    }
-
-    body {
-      background: var(--bg-main);
-      color: var(--text-color);
-      font-family: "Segoe UI", Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo svg {
-      width: 40px;
-      height: 40px;
-    }
-
-    .username {
-      background: #1f212a;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-    }
-
-    h2 {
-      font-size: 22px;
-      margin-bottom: 20px;
-    }
-
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .row {
-      display: flex;
-      gap: 12px;
-    }
-
-    .btn {
-      flex: 1;
-      border: none;
-      border-radius: 16px;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 500;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn svg {
-      width: 24px;
-      height: 24px;
-    }
-
-    /* Цвета кнопок */
-    .ps-personal { background: var(--ps-blue); }
-    .ps-personal:hover { background: var(--ps-blue-hover); }
-
-    .ps-plus { background: var(--ps-plus); color: #111; }
-    .ps-plus:hover { background: var(--ps-plus-hover); }
-
-    .ps-wallet { background: var(--ps-wallet); }
-    .ps-wallet:hover { background: var(--ps-wallet-hover); }
-
-    .steam {
-      background: linear-gradient(180deg, var(--steam-top), var(--steam-bottom));
-    }
-
-    .fifa { background: var(--fifa-blue); }
-    .fifa:hover { background: var(--fifa-blue-hover); }
-
-    .gamepass { background: var(--gamepass-green); }
-    .gamepass:hover { background: var(--gamepass-hover); }
-
-    .valorant { background: var(--valorant-red); }
-    .valorant:hover { background: var(--valorant-hover); }
-
-    .services { background: var(--services-brown); }
-    .services:hover { background: var(--services-hover); }
-
-    .nintendo { background: var(--nintendo-red); }
-    .nintendo:hover { background: var(--nintendo-hover); }
-
-    .support {
-      background: var(--support-bg);
-      color: #fff;
-      border-radius: 16px;
-      padding: 16px;
-      margin-top: 20px;
-      text-align: center;
-      transition: background 0.3s;
-    }
-    .support:hover { background: var(--support-hover); }
-
-    .support small {
-      color: #a9a9a9;
-      display: block;
-      margin-top: 4px;
-      font-size: 14px;
-    }
-  </style>
+/* subtle text shadow for GS */
+.gs-logo{text-shadow:0 6px 18px rgba(0,112,209,0.18),0 1px 0 rgba(255,255,255,0.05)}
+</style>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <!-- Минималистичный логотип GS -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="url(#grad)">
-        <defs>
-          <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#0070FF" />
-            <stop offset="100%" stop-color="#001A5E" />
-          </linearGradient>
-        </defs>
-        <path d="M10 20L32 10l22 10v8L32 28 10 20zM10 44l22 10 22-10v-8L32 36 10 44z"/>
-      </svg>
-      <span><strong>GoshaStore</strong></span>
-    </div>
-    <div class="username">Gosha</div>
-  </header>
-
-  <h2>Выберите раздел</h2>
-
-  <div class="menu">
-    <div class="row">
-      <button class="btn ps-personal">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-20 0 10 10 0 0 0 20 0ZM9 16V8l6 3-6 3Z"/></svg>
-        PlayStation Личный
-      </button>
-
-      <button class="btn ps-plus">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 24 24"><path d="M11 5h2v4h4v2h-4v4h-2v-4H7v-2h4V5z"/></svg>
-        PS Plus
-      </button>
-    </div>
-
-    <button class="btn ps-wallet">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2H2V7zm0 4h20v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z"/></svg>
-      Пополнение кошелька
-    </button>
-
-    <div class="support">
-      <strong>Support</strong>
-      <small>Не нашли нужный товар? Остались вопросы?<br>Проблема с заказом? Напишите сюда!</small>
-    </div>
+<div class="container">
+  <div class="header">
+    <div class="gs-logo">GS</div>
   </div>
 
-  <script>
-    // Telegram WebApp API инициализация
-    if (window.Telegram && Telegram.WebApp) {
-      Telegram.WebApp.ready();
-      Telegram.WebApp.expand();
-    }
-  </script>
+  <div class="grid" role="grid" aria-label="Главное меню">
+    <!-- Row 1: two tiles -->
+    <div class="row-1" style="grid-column:1/-1">
+      <button class="tile ps-personal" style="cursor:pointer" aria-label="PlayStation Личный">
+        <img class="icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD5n0z7AAAgAElEQVR4nOy9X2wUV7bH/6d3Z3a3dnZs7p2m3Zk2Zk3Zk3Zl3Zk7Zk7Zk7Zk7Zk7Zl3Zk3Zk3Zk3Zl3Zk3Zk3Zk7Zk7Zk7Zk7Zk7Zk7Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk7Zk7Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk0a0kAAABJRU5ErkJggg==" alt="PS"/>
+        <div class="label">PlayStation<br><span style="font-weight:500;font-size:13px;opacity:.9">Личный</span></div>
+      </button>
+
+      <button class="tile ps-plus" style="cursor:pointer" aria-label="PS Plus">
+        <img class="icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABv0AAAMaCAYAAACpX...kSuQmCC" alt="PS Plus"/>
+        <div class="label">PS Plus</div>
+      </button>
+    </div>
+
+    <!-- Row 2: single wide -->
+    <div class="row-2" style="grid-column:1/-1">
+      <button class="tile ps-wallet single" style="cursor:pointer" aria-label="Пополнение кошелька">
+        <img class="icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD5n0z7AAAgAElEQVR4nOy9X2wUV7bH/6d3Z3a3dnZs7p2m3Zk2Zk3Zk3Zl3Zk7Zk7Zk7Zk7Zk7Zl3Zk3Zk3Zk3Zl3Zk3Zk3Zk7Zk7Zk7Zk7Zk7Zk7Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk7Zk7Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk3Zk0a0kAAABJRU5ErkJggg==" alt="PS"/>
+        <div class="label">Пополнение кошелька</div>
+      </button>
+    </div>
+
+    <!-- Row 3: single wide -->
+    <div class="row-3" style="grid-column:1/-1">
+      <button class="tile support single" style="cursor:pointer" aria-label="Support">
+        <svg class="icon" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 00-10 10 9.9 9.9 0 003 7v3l4-2h3a10 10 0 003-18z"/></svg>
+        <div class="label">Support<br><span style="font-weight:500;font-size:13px;opacity:.9">Связаться с поддержкой</span></div>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.tile').forEach((t,i)=>{
+  // keep focus outlines accessible
+  t.addEventListener('focus', ()=>t.style.outline='2px solid rgba(0,112,209,0.25)');
+  t.addEventListener('blur', ()=>t.style.outline='none');
+  // simple click handler placeholder
+  t.addEventListener('click', ()=>{ 
+    // in real app, navigate to section
+    alert('Нажата плитка: ' + (t.getAttribute('aria-label')||''));
+  });
+});
+</script>
 </body>
 </html>
