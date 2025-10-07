@@ -1,18 +1,19 @@
-from flask import Flask, send_from_directory
-import os
+from aiogram import Bot, Dispatcher, types
+from aiogram.types import WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.utils import executor
 
-app = Flask(__name__, static_folder='.')
+bot = Bot("YOUR_BOT_TOKEN")
+dp = Dispatcher(bot)
 
-@app.route('/')
-def index():
-    return send_from_directory('.', 'index.html')
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    keyboard = InlineKeyboardMarkup()
+    webapp_button = InlineKeyboardButton(
+        text="Открыть магазин",
+        web_app=WebAppInfo(url="https://your-domain.com/")
+    )
+    keyboard.add(webapp_button)
+    await message.answer("Добро пожаловать 👋", reply_markup=keyboard)
 
-@app.route('/<path:path>')
-def static_files(path):
-    if os.path.exists(path):
-        return send_from_directory('.', path)
-    else:
-        return "404 Not Found", 404
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+if __name__ == "__main__":
+    executor.start_polling(dp)
