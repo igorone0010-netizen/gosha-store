@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GS</title>
+  <title>GS Store</title>
   <style>
     :root {
       --bg-main: #0d0f1a;
@@ -23,181 +23,144 @@
       color: var(--text-color);
       font-family: "Segoe UI", Arial, sans-serif;
       margin: 0;
-      padding: 16px;
       display: flex;
-      justify-content: center;
-      overflow-x: hidden;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+      overflow: hidden;
     }
 
     .app {
-      width: 360px;
-      max-width: 90%;
-      animation: fadeIn 0.8s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
+      width: 380px;
+      max-width: 380px;
+      height: 600px;
+      margin: 0 auto;
+      overflow: hidden;
     }
 
     .logo {
-      background: linear-gradient(135deg, #0070FF, #001A5E);
-      color: #fff;
-      font-weight: 700;
-      font-size: 22px;
-      border-radius: 16px;
-      padding: 8px 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      font-size: 26px;
+      font-weight: 800;
+      background: linear-gradient(45deg, #0070FF, #4B0082);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
       letter-spacing: 1px;
     }
 
     h2 {
-      font-size: 18px;
-      color: #d0d0d0;
-      margin: 10px 0 16px 0;
-      text-align: left;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
     }
 
     .menu {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 10px; /* уменьшено расстояние между рядами */
+      gap: 10px;
+      width: 100%;
+      animation: fadeUp 0.7s ease both;
     }
 
     .row {
       display: flex;
-      justify-content: center;
-      gap: 10px; /* уменьшено расстояние между кнопками */
-      width: 100%;
+      gap: 10px;
     }
 
     .btn {
       flex: 1;
       border: none;
       border-radius: 14px;
-      height: 75px; /* чуть ниже, чтобы визуально сблизить */
+      padding: 14px 16px;
       font-size: 16px;
       font-weight: 600;
       color: #fff;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
+      justify-content: flex-start;
+      gap: 10px;
       cursor: pointer;
-      transition: all 0.25s ease;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeUp 0.6s ease forwards;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
-    .btn svg, .btn img {
-      width: 24px;
-      height: 24px;
+    .btn img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
     }
 
-    .row:nth-child(1) .btn:nth-child(1) { animation-delay: 0.1s; }
-    .row:nth-child(1) .btn:nth-child(2) { animation-delay: 0.25s; }
-    .ps-wallet { animation-delay: 0.4s; }
-    .support { animation-delay: 0.55s; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Цвета кнопок */
     .ps-personal { background: var(--ps-blue); }
     .ps-personal:hover { background: var(--ps-blue-hover); }
 
-    .ps-plus { background: var(--ps-plus); color: #111; }
+    .ps-plus { background: var(--ps-plus); color: #000; }
     .ps-plus:hover { background: var(--ps-plus-hover); }
 
-    .ps-wallet {
-      background: var(--ps-wallet);
-      width: 100%;
-    }
+    .ps-wallet { background: var(--ps-wallet); }
     .ps-wallet:hover { background: var(--ps-wallet-hover); }
 
     .support {
       background: var(--support-bg);
       color: #fff;
       border-radius: 14px;
-      height: 75px;
-      font-weight: 600;
-      width: 100%;
-      text-align: center;
+      padding: 16px;
+      text-align: left;
+      transition: background 0.3s;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeUp 0.6s ease forwards;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+      gap: 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
     .support:hover { background: var(--support-hover); }
 
+    .support strong {
+      font-size: 16px;
+    }
+
     .support small {
-      color: #a9a9a9;
+      color: #aaa;
       font-size: 13px;
-      font-weight: 400;
-      margin-top: 3px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <header>
-      <div class="logo">GS</div>
-    </header>
-
+    <div class="logo">GS</div>
     <h2>Выберите раздел</h2>
 
     <div class="menu">
       <div class="row">
         <button class="btn ps-personal">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
-            <path d="M22 12a10 10 0 1 0-20 0 10 10 0 0 0 20 0ZM9 16V8l6 3-6 3Z"/>
-          </svg>
-          PlayStation
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAz20lEQVR42uzBgQAAAACAoP2pF6kCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" alt="PlayStation">
+          PlayStation Личный
         </button>
 
         <button class="btn ps-plus">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 24 24">
-            <path d="M11 5h2v4h4v2h-4v4h-2v-4H7v-2h4V5z"/>
-          </svg>
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAr0AAACsCAYAAAB2MRTPAAB4KUlEQVR42uydB3hUZdbHb/pMQpEawIIFWcXuqutn2bWsfdXVXfu66rp2wS42mnSBFEJoKiggq1ixYEEIvYckk04ICZCQBEgILYG085" alt="PS Plus">
           PS Plus
         </button>
       </div>
 
-      <div class="row">
-        <button class="btn ps-wallet">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
-            <path d="M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2H2V7zm0 4h20v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z"/>
-          </svg>
-          Пополнение кошелька
-        </button>
-      </div>
+      <button class="btn ps-wallet">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAz20lEQVR42uzBgQAAAACAoP2pF6kCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" alt="Wallet">
+        Пополнение кошелька
+      </button>
 
-      <div class="row">
-        <div class="btn support">
-          Support
-          <small>Не нашли нужный товар?<br>Проблема с заказом?</small>
-        </div>
+      <div class="support">
+        <strong>Support</strong>
+        <small>Не нашли нужный товар? Остались вопросы?<br>Проблема с заказом? Напишите сюда!</small>
       </div>
     </div>
   </div>
 
   <script>
+    // Telegram WebApp адаптация
     if (window.Telegram && Telegram.WebApp) {
       Telegram.WebApp.ready();
       Telegram.WebApp.expand();
