@@ -4,6 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>GS</title>
+
+<!-- Telegram WebApp SDK (ВАЖНО: должен быть здесь) -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -12,8 +16,6 @@
   --ps-blue: #0057B8;
   --ps-plus: #FFD700;
   --ps-wallet: #673AB7;
-  --gp-green: #107C10;
-  --valorant-red: #FF4655;
   --support-bg: rgba(255,255,255,0.08);
   --profile-hover: #0070FF;
   --profile-bg: #0d0f1a;
@@ -52,7 +54,6 @@ header {
   width: 100%;
   margin-bottom: 8px;
 }
-
 .logo span {
   font-weight: 700;
   font-size: 22px;
@@ -80,170 +81,67 @@ header {
   backdrop-filter: blur(6px);
 }
 
-.profile-btn:hover {
-  background: rgba(0, 112, 255, 0.15);
-  box-shadow: 0 0 10px rgba(0,112,255,0.6);
-  transform: scale(1.03);
-}
-.profile-btn:active {
-  background: var(--profile-hover);
-  color: #fff;
-  transform: scale(0.98);
-}
-
-/* Заголовок */
-h2 {
-  font-size: 16px;
-  margin: 4px 0 10px 0;
-  text-align: left;
-  color: #d6e0ff;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-
-/* Меню */
-.menu {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Ряды кнопок */
-.row {
-  display: flex;
-  gap: 6px;
-  width: 100%;
-}
-
-/* Кнопки */
+/* Меню и кнопки */
+h2 { font-size: 16px; margin: 4px 0 10px 0; color: #d6e0ff; text-transform: uppercase; letter-spacing: 0.8px; }
+.menu { width: 100%; display:flex; flex-direction:column; gap:6px; }
+.row { display:flex; gap:6px; width:100%; }
 .btn {
-  flex: 1;
-  border: none;
-  border-radius: 18px;
-  padding: 14px 10px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(8px);
+  flex:1; border:none; border-radius:18px; padding:14px 10px; font-size:14px; font-weight:600; color:#fff;
+  display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;
+  background: rgba(255,255,255,0.08); backdrop-filter: blur(8px);
 }
+.btn img { width:26px; height:26px; object-fit:contain; filter: drop-shadow(0 0 4px rgba(255,255,255,0.3)); }
+.btn:hover { transform: translateY(-3px) scale(1.03); box-shadow:0 0 16px rgba(0,112,255,0.5); }
 
-.btn img {
-  width: 26px;
-  height: 26px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));
-}
-
-.btn:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 0 16px rgba(0,112,255,0.5);
-}
-
-/* Цвета */
 .ps-personal { border: 1px solid rgba(0,112,255,0.4); }
-.ps-plus     { border: 1px solid rgba(255,215,0,0.4); }
+.ps-plus     { border: 1px solid rgba(255,215,0,0.4); flex-direction:column; gap:4px; }
 .ps-wallet   { border: 1px solid rgba(120,80,255,0.4); }
 .gamepass    { border: 1px solid rgba(16,124,16,0.5); }
 .valorant    { border: 1px solid rgba(255,70,85,0.5); }
 
-/* PS Plus */
-.ps-plus {
-  flex-direction: column;
-  gap: 4px;
-}
-.ps-plus img {
-  width: 46px;
-  height: 46px;
-  filter: drop-shadow(0 0 6px rgba(255,255,255,0.4));
-}
-.ps-plus span {
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  color: #fff;
-}
+.ps-plus img { width:46px; height:46px; filter: drop-shadow(0 0 6px rgba(255,255,255,0.4)); }
+.ps-plus span { color:#fff; font-size:14px; letter-spacing:0.5px; }
 
-/* Game Pass и Valorant */
-.gamepass, .valorant {
-  flex-direction: column;
-  gap: 4px;
-}
-.gamepass img {
-  width: 100px;
-  height: auto;
-  filter: drop-shadow(0 0 5px rgba(255,255,255,0.4));
-}
-.valorant img {
-  width: 60px;
-  height: auto;
-  filter: drop-shadow(0 0 8px rgba(255,192,203,0.5));
-}
-
-/* Support */
 .support {
   background: var(--support-bg);
-  border-radius: 16px;
-  padding: 14px;
-  text-align: center;
-  transition: background 0.3s;
-  font-size: 13px;
+  border-radius: 16px; padding:14px; text-align:center; font-size:13px;
 }
-.support strong {
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.support:hover { background: rgba(255,255,255,0.15); }
-.support small {
-  color: #a9a9a9;
-  display: block;
-  margin-top: 4px;
-}
+.support small { color:#a9a9a9; display:block; margin-top:4px; }
 </style>
 </head>
 <body>
 <div class="app-container">
-  <!-- Главное меню -->
   <div class="section main-menu active">
     <header>
       <div class="logo"><span>GS</span></div>
-      <button class="profile-btn" id="openProfile">
-        <span id="username">@username</span>
-      </button>
+      <button class="profile-btn" id="openProfile"><span id="username">@username</span></button>
     </header>
 
     <h2>Выберите раздел</h2>
 
     <div class="menu">
       <div class="row">
-        <button class="btn ps-personal">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg">
+        <button class="btn ps-personal" id="psPersonalBtn">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg" alt="PS">
           PlayStation Личный
         </button>
-        <button class="btn ps-plus">
-          <img src="https://raw.githubusercontent.com/igorone0010-netizen/gosha-store/main/PlayStation%20Plus%20simple%20Logo%20Vector.svg%20.png">
+        <button class="btn ps-plus" id="psPlusBtn">
+          <img src="https://raw.githubusercontent.com/igorone0010-netizen/gosha-store/main/PlayStation%20Plus%20simple%20Logo%20Vector.svg%20.png" alt="PS Plus">
           <span>PS Plus</span>
         </button>
       </div>
 
-      <button class="btn ps-wallet">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg">
+      <button class="btn ps-wallet" id="walletBtn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg" alt="Wallet">
         Пополнение кошелька
       </button>
 
       <div class="row">
-        <button class="btn gamepass">
-          <img src="https://cms-assets.xboxservices.com/assets/aa/5b/aa5b0eb8-4950-4f28-88d5-12cf02052321.svg">
+        <button class="btn gamepass" id="gamepassBtn">
+          <img src="https://cms-assets.xboxservices.com/assets/aa/5b/aa5b0eb8-4950-4f28-88d5-12cf02052321.svg" alt="Game Pass">
         </button>
-        <button class="btn valorant">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/250px-Valorant_logo_-_pink_color_version.svg.png">
+        <button class="btn valorant" id="valorantBtn">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/250px-Valorant_logo_-_pink_color_version.svg.png" alt="Valorant">
         </button>
       </div>
 
@@ -255,53 +153,20 @@ h2 {
   </div>
 </div>
 
-<!-- 🔹 Новый скрипт -->
+<!-- подключаем единый скрипт для Telegram поведения -->
+<script src="/telegram.js"></script>
+
 <script>
-const openProfile = document.querySelector('#openProfile');
-openProfile.addEventListener('click', () => {
+/* локальные клики (минимум логики в страницах — основная логика в telegram.js) */
+document.getElementById('openProfile')?.addEventListener('click', () => {
+  // обычный переход на страницу профиля (telegram.js обработает BackButton)
   window.location.href = 'profile.html';
 });
 
-if (window.Telegram && Telegram.WebApp) {
-  Telegram.WebApp.ready();
-  const user = Telegram.WebApp.initDataUnsafe?.user;
-  if (user) {
-    document.getElementById('username').textContent = '@' + user.username;
-  }
-}
+/* полезный debug: покажем в консоли WebApp объект, если он доступен */
+setTimeout(() => {
+  console.log('Telegram object on index:', window.Telegram ? window.Telegram.WebApp : undefined);
+}, 300);
 </script>
-
-<script src="telegram.js"></script>
-<script>
-// Обработка перехода в профиль
-const openProfile = document.querySelector('#openProfile');
-if (openProfile) {
-    openProfile.addEventListener('click', () => {
-        window.location.href = 'profile.html';
-    });
-}
-
-// Персонализация (если нужно)
-if (window.Telegram && Telegram.WebApp) {
-    const tg = Telegram.WebApp;
-    const user = tg.initDataUnsafe?.user;
-    
-    if (user && user.first_name) {
-        const greeting = document.getElementById("greeting");
-        if (greeting) {
-            greeting.textContent = `Привет, ${user.first_name}!`;
-        }
-    }
-    
-    if (user && user.username) {
-        const username = document.getElementById('username');
-        if (username) {
-            username.textContent = '@' + user.username;
-        }
-    }
-}
-</script>
-
-  
 </body>
 </html>
