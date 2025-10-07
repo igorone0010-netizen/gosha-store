@@ -284,6 +284,24 @@ document.querySelectorAll('.menu__item').forEach(btn => {
 });
 </script>
 
-<script src="static/telegram.js"></script>
+<script>
+if (window.Telegram && Telegram.WebApp) {
+  Telegram.WebApp.ready();
+
+  // показать кнопку "Назад"
+  Telegram.WebApp.BackButton.show();
+
+  // действие по нажатию
+  Telegram.WebApp.onEvent('backButtonClicked', () => {
+    // если есть история — вернуться
+    if (document.referrer) {
+      window.history.back();
+    } else {
+      // иначе закрыть приложение
+      Telegram.WebApp.close();
+    }
+  });
+}
+</script>
 </body>
 </html>
