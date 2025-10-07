@@ -4,6 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>GS</title>
+
+<!-- Современный игровой шрифт -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+
 <style>
 :root {
   --bg-main: #0d0f1a;
@@ -21,7 +25,7 @@
 body {
   background: var(--bg-main);
   color: var(--text-color);
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: "Orbitron", Arial, sans-serif;
   margin: 0;
   padding: 12px 16px;
   display: flex;
@@ -31,6 +35,8 @@ body {
   max-width: 420px;
   margin: 0 auto;
   overflow: hidden;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 header {
@@ -49,16 +55,19 @@ header {
 
 .logo span {
   font-weight: 700;
-  font-size: 20px;
+  font-size: 22px;
   background: linear-gradient(90deg, #0070FF, #00D4FF);
   -webkit-background-clip: text;
   color: transparent;
+  letter-spacing: 1px;
 }
 
 h2 {
-  font-size: 18px;
+  font-size: 16px;
   margin: 4px 0 12px 0;
   text-align: left;
+  font-weight: 600;
+  opacity: 0.85;
 }
 
 .menu {
@@ -79,8 +88,8 @@ h2 {
   border: none;
   border-radius: 14px;
   padding: 14px 12px;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: #fff;
   display: flex;
   align-items: center;
@@ -106,7 +115,7 @@ h2 {
   }
 }
 
-/* Плавное появление с задержкой */
+/* Анимация появления */
 .btn:nth-child(1) { animation-delay: 0.1s; }
 .btn:nth-child(2) { animation-delay: 0.25s; }
 .btn:nth-child(3) { animation-delay: 0.4s; }
@@ -118,21 +127,22 @@ h2 {
 }
 .ps-personal:hover {
   background: var(--ps-blue-hover);
+  transform: translateY(-3px);
 }
 
 .ps-plus {
   background: var(--ps-plus);
-  color: #111;
-  justify-content: center;
-  height: 120px;
+  color: #fff;
 }
 .ps-plus:hover {
   background: var(--ps-plus-hover);
+  transform: translateY(-3px);
 }
 .ps-plus img {
-  width: 130px;
-  height: 130px;
+  width: 26px;
+  height: 26px;
   object-fit: contain;
+  margin-right: 4px;
 }
 
 .ps-wallet {
@@ -140,6 +150,7 @@ h2 {
 }
 .ps-wallet:hover {
   background: var(--ps-wallet-hover);
+  transform: translateY(-3px);
 }
 
 .support {
@@ -148,16 +159,18 @@ h2 {
   border-radius: 14px;
   padding: 16px;
   text-align: center;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.3s;
 }
 .support:hover {
   background: var(--support-hover);
+  transform: translateY(-3px);
 }
 .support small {
   color: #a9a9a9;
   display: block;
   margin-top: 4px;
-  font-size: 14px;
+  font-size: 13px;
+  letter-spacing: 0.4px;
 }
 </style>
 </head>
@@ -177,9 +190,9 @@ h2 {
       PlayStation Личный
     </button>
 
-    <!-- Только логотип PS Plus (увеличенный) -->
     <button class="btn ps-plus">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/PlayStationPlus.png/960px-PlayStationPlus.png" alt="PS Plus">
+      <img src="https://raw.githubusercontent.com/igorone0010-netizen/gosha-store/main/PlayStation%20Plus%20simple%20Logo%20Vector.svg%20.png" alt="PS Plus">
+      PS Plus
     </button>
   </div>
 
