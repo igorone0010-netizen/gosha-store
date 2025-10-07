@@ -4,82 +4,116 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GoshaStore</title>
-
   <style>
     :root {
-      --bg-dark: #0e0e12;
-      --text-light: #ffffff;
-      --ps-blue: #0072ff;
-      --ps-plus: #ffcc00;
-      --wallet-purple: #7a1aff;
-      --support-gray: #1a1a22;
-      --radius: 16px;
+      /* Основные цвета */
+      --bg-main: #0d0f1a;
+      --text-color: #ffffff;
+
+      /* PlayStation */
+      --ps-blue: #0057B8;
+      --ps-blue-hover: #0070FF;
+
+      /* PS Plus */
+      --ps-plus: #FFD700;
+      --ps-plus-hover: #FFE55C;
+
+      /* Пополнение кошелька */
+      --ps-wallet: #673AB7;
+      --ps-wallet-hover: #7E57C2;
+
+      /* Steam */
+      --steam-top: #171A21;
+      --steam-bottom: #2A475E;
+
+      /* FIFA */
+      --fifa-blue: #0098EA;
+      --fifa-blue-hover: #00B4FF;
+
+      /* GamePass */
+      --gamepass-green: #107C10;
+      --gamepass-hover: #23A123;
+
+      /* Valorant */
+      --valorant-red: #FF4655;
+      --valorant-hover: #FF5F6E;
+
+      /* Сервисы */
+      --services-brown: #5E4636;
+      --services-hover: #72594A;
+
+      /* Nintendo */
+      --nintendo-red: #E60012;
+      --nintendo-hover: #FF4D5A;
+
+      /* Support */
+      --support-bg: #1c1e25;
+      --support-hover: #2b2f3a;
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-light);
+      background: var(--bg-main);
+      color: var(--text-color);
+      font-family: "Segoe UI", Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
+      padding: 20px;
     }
 
     header {
-      width: 100%;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 16px 24px;
-      background: linear-gradient(90deg, var(--ps-blue), #6a00ff);
-      box-sizing: border-box;
+      align-items: center;
+      margin-bottom: 25px;
     }
 
     .logo {
       display: flex;
       align-items: center;
+      gap: 8px;
     }
 
-    .user-name {
-      font-weight: 500;
-      opacity: 0.9;
+    .logo svg {
+      width: 40px;
+      height: 40px;
     }
 
-    main {
-      width: 100%;
-      max-width: 420px;
-      padding: 20px;
-      box-sizing: border-box;
+    .username {
+      background: #1f212a;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
     }
 
     h2 {
-      font-size: 1.3rem;
+      font-size: 22px;
       margin-bottom: 20px;
-      text-align: center;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .row {
+      display: flex;
       gap: 12px;
     }
 
     .btn {
+      flex: 1;
+      border: none;
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      border: none;
-      border-radius: var(--radius);
-      color: var(--text-light);
-      font-size: 0.95rem;
-      padding: 14px;
+      gap: 10px;
       cursor: pointer;
-      transition: transform 0.2s ease, opacity 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .btn svg {
@@ -87,116 +121,104 @@
       height: 24px;
     }
 
-    .btn:hover {
-      transform: scale(1.03);
-      opacity: 0.9;
+    /* Цвета кнопок */
+    .ps-personal { background: var(--ps-blue); }
+    .ps-personal:hover { background: var(--ps-blue-hover); }
+
+    .ps-plus { background: var(--ps-plus); color: #111; }
+    .ps-plus:hover { background: var(--ps-plus-hover); }
+
+    .ps-wallet { background: var(--ps-wallet); }
+    .ps-wallet:hover { background: var(--ps-wallet-hover); }
+
+    .steam {
+      background: linear-gradient(180deg, var(--steam-top), var(--steam-bottom));
     }
 
-    .btn.ps {
-      background: var(--ps-blue);
-    }
+    .fifa { background: var(--fifa-blue); }
+    .fifa:hover { background: var(--fifa-blue-hover); }
 
-    .btn.plus {
-      background: var(--ps-plus);
-      color: #111;
-      font-weight: 600;
-    }
+    .gamepass { background: var(--gamepass-green); }
+    .gamepass:hover { background: var(--gamepass-hover); }
 
-    .btn.wallet {
-      grid-column: span 2;
-      background: var(--wallet-purple);
-    }
+    .valorant { background: var(--valorant-red); }
+    .valorant:hover { background: var(--valorant-hover); }
 
-    .btn.support {
-      grid-column: span 2;
-      background: var(--support-gray);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
+    .services { background: var(--services-brown); }
+    .services:hover { background: var(--services-hover); }
 
-    footer {
-      text-align: center;
-      font-size: 0.8rem;
-      opacity: 0.6;
+    .nintendo { background: var(--nintendo-red); }
+    .nintendo:hover { background: var(--nintendo-hover); }
+
+    .support {
+      background: var(--support-bg);
+      color: #fff;
+      border-radius: 16px;
       padding: 16px;
-      margin-top: auto;
+      margin-top: 20px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+    .support:hover { background: var(--support-hover); }
+
+    .support small {
+      color: #a9a9a9;
+      display: block;
+      margin-top: 4px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <header>
-    <!-- ✅ SVG логотип GS -->
     <div class="logo">
-      <svg width="48" height="48" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+      <!-- Минималистичный логотип GS -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="url(#grad)">
         <defs>
-          <linearGradient id="grad-gs" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#0072ff"/>
-            <stop offset="100%" stop-color="#6a00ff"/>
+          <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0070FF" />
+            <stop offset="100%" stop-color="#001A5E" />
           </linearGradient>
-          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0ff" flood-opacity="0.25"/>
-          </filter>
         </defs>
-        <rect x="2" y="2" width="52" height="52" rx="12" fill="url(#grad-gs)" filter="url(#shadow)"/>
-        <path d="M15 35 C15 27, 23 26, 27 30 S39 37, 41 26
-                 M23 20 L33 20 L33 23 L26 23 L26 25 L33 25" 
-              stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M10 20L32 10l22 10v8L32 28 10 20zM10 44l22 10 22-10v-8L32 36 10 44z"/>
       </svg>
+      <span><strong>GoshaStore</strong></span>
     </div>
-    <div class="user-name">Gosha</div>
+    <div class="username">Gosha</div>
   </header>
 
-  <main>
-    <h2>Выберите раздел</h2>
+  <h2>Выберите раздел</h2>
 
-    <div class="grid">
-      <!-- 🎮 PlayStation Личный -->
-      <button class="btn ps">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="white">
-          <path d="M40 10L22 4v40l18 6V10zM6 36l12 4v-4l-12-4v4zm40 8l12-4v-4l-12 4v4z"/>
-        </svg>
-        <span>PlayStation<br>Личный</span>
+  <div class="menu">
+    <div class="row">
+      <button class="btn ps-personal">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-20 0 10 10 0 0 0 20 0ZM9 16V8l6 3-6 3Z"/></svg>
+        PlayStation Личный
       </button>
 
-      <!-- 💠 PS Plus -->
-      <button class="btn plus">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor">
-          <path d="M28 8h8v12h12v8H36v12h-8V28H16v-8h12z"/>
-        </svg>
-        <span>PS Plus</span>
-      </button>
-
-      <!-- 💳 Пополнение кошелька (добавлен логотип PlayStation) -->
-      <button class="btn wallet">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="white">
-          <path d="M40 10L22 4v40l18 6V10zM6 36l12 4v-4l-12-4v4zm40 8l12-4v-4l-12 4v4z"/>
-        </svg>
-        <span>Пополнение кошелька</span>
-      </button>
-
-      <!-- 💬 Support -->
-      <button class="btn support">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="white">
-          <path d="M32 8a24 24 0 1 0 0 48h4v-8h-4a16 16 0 1 1 16-16h8A24 24 0 0 0 32 8z"/>
-        </svg>
-        <span>Support</span>
+      <button class="btn ps-plus">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 24 24"><path d="M11 5h2v4h4v2h-4v4h-2v-4H7v-2h4V5z"/></svg>
+        PS Plus
       </button>
     </div>
-  </main>
 
-  <footer>© 2025 GoshaStore</footer>
+    <button class="btn ps-wallet">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2H2V7zm0 4h20v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z"/></svg>
+      Пополнение кошелька
+    </button>
 
-  <!-- ✅ Telegram WebApp API -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <div class="support">
+      <strong>Support</strong>
+      <small>Не нашли нужный товар? Остались вопросы?<br>Проблема с заказом? Напишите сюда!</small>
+    </div>
+  </div>
+
   <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-
-    document.querySelectorAll('.btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        tg.HapticFeedback.impactOccurred('light');
-        alert(`Вы выбрали: ${btn.innerText}`);
-      });
-    });
+    // Telegram WebApp API инициализация
+    if (window.Telegram && Telegram.WebApp) {
+      Telegram.WebApp.ready();
+      Telegram.WebApp.expand();
+    }
   </script>
 </body>
 </html>
